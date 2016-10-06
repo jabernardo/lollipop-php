@@ -212,7 +212,7 @@
             
             // Head
             if ($firstRowHeader) {
-                echo '<thead>';
+                echo '<thead><tr>';
                 
                 $tr = array();
                 
@@ -221,16 +221,16 @@
                     array_shift($data);
                     
                     foreach ($tr as $td) {
-                        echo '<td>', $td, '</td>';
+                        echo '<th>', $td, '</th>';
                     }
                 }
                 
-                echo '</thead>';
+                echo '</tr></thead>';
             }
             
             // Foot
             if ($lastRowFooter) {
-                echo '<tfoot>';
+                echo '<tfoot><tr>';
                 
                 $tr = array();
                 
@@ -243,7 +243,7 @@
                     }
                 }
                 
-                echo '</tfoot>';
+                echo '</tr></tfoot>';
             }
             
             // Body
@@ -318,6 +318,8 @@
             foreach ($attr as $key => $value) {
                 echo $key, '="', $value, '" ';
             }
+            
+            echo '>';
             
             echo $closing ? '</' . $name . '>' : ' />';
         }
