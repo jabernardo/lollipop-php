@@ -43,7 +43,7 @@
          *
          * @return  string
          */
-        static function render($view, $data = array()) {
+        static function render($view, array $data = array()) {
             if (file_exists($view)) {
                 if (is_array($data)) {
                     foreach ($data as $_data => $_value) {
