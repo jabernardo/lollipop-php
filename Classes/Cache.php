@@ -30,78 +30,6 @@
         }
         
         /**
-         * is_serialized from WordPress
-         *
-         * @param   string  $data   Serialized data
-         * @param   bool    $strict
-         * @return  bool
-         *
-         */
-        static private function _isSerialized($data, $strict = true) {
-            // if it isn't a string, it isn't serialized.
-            if (!is_string($data)) {
-                return false;
-            }
-            
-            $data = trim($data);
-            
-            if ('N;' == $data) {
-                return true;
-            }
-            
-            if (strlen($data) < 4) {
-                return false;
-            }
-            
-            if (':' !== $data[1]) {
-                return false;
-            }
-            
-            if ($strict) {
-                $lastc = substr($data, -1);
-                
-                if (';' !== $lastc && '}' !== $lastc) {
-                    return false;
-                }
-            } else {
-                $semicolon = strpos($data, ';');
-                $brace     = strpos($data, '}');
-                // Either ; or } must exist.
-                if (false === $semicolon && false === $brace)
-                    return false;
-                // But neither must be in the first X characters.
-                if (false !== $semicolon && $semicolon < 3)
-                    return false;
-                if (false !== $brace && $brace < 4)
-                    return false;
-            }
-            
-            $token = $data[0];
-            
-            switch ($token) {
-                case 's':
-                    if ($strict) {
-                        if ('"' !== substr($data, -2, 1)) {
-                            return false;
-                        }
-                    } elseif (false === strpos($data, '"')) {
-                        return false;
-                    }
-                    // or else fall through
-                case 'a':
-                case 'O':
-                    return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
-                case 'b':
-                case 'i':
-                case 'd':
-                    $end = $strict ? '$' : '';
-                    return (bool)preg_match("/^{$token}:[0-9.E-]+;$end/", $data);
-            }
-            
-            return false;
-        }
-        
-        /**
          * Cache janitor
          *
          * @access  private
@@ -115,12 +43,12 @@
             if (file_exists($fn)) {
                 $contents = file_get_contents($fn);
                 
-                if (!self::_isSerialized($contents)) {
+                if (!base64_decode($contents, true)) {
                     unlink($fn);
                     return;
                 }
     
-                $data = unserialize($contents);
+                $data = unserialize(base64_decode($contents, true));
     
                 if (isset($data['date_created']) && isset($data['ttl']) && isset($data['data'])) {
                     if (time() - (int)$data['date_created'] >= $data['ttl']) {
@@ -170,7 +98,7 @@
                     'data' => $data
                 );
                 
-                file_put_contents(LOLLIPOP_CACHE . sha1($key), serialize($data));
+                file_put_contents(LOLLIPOP_CACHE . sha1($key), base64_encode(serialize($data)));
             }
         }
         
@@ -186,9 +114,13 @@
             self::_checkFolder();
             
             if (self::exists($key)) {
-                $data = unserialize(file_get_contents(LOLLIPOP_CACHE . sha1($key)));
+                $contents = file_get_contents(LOLLIPOP_CACHE . sha1($key));
                 
-                return isset($data['data']) ? $data['data'] : '';
+                if (base64_decode($contents, true)) {
+                    $data = unserialize(base64_decode($contents, true));
+                
+                    return isset($data['data']) ? $data['data'] : '';
+                }
             }
             
             return '';
