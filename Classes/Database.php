@@ -1,11 +1,14 @@
 <?php
     namespace Lollipop;
     
+    use \Lollipop\Cache;
+    
     /**
      * Database Driver for MySQLi
      *
      * @package     Candy
      * @version     2.0
+     * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @description MySQLi Database Adapter
@@ -138,11 +141,12 @@
          * Select fields
          * 
          * @param   array   $fields     Fields to select
+         * @param   bool    $cache      Enable cache (true)
          * 
          * @return  array 
          * 
          */
-        public function select($fields) {
+        public function select($fields, $cache = true) {
             if (is_array($fields)) {
                 $this->_fields = implode($fields, ', ');
             } else {
@@ -187,6 +191,14 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
+            // Get cache key
+            $cache_key = sha1($sql_query);
+            
+            // If cache exists and cache is enable
+            if (Cache::exists($cache_key) && $cache) {
+                return Cache::recover($cache_key);
+            }
+            
             // Execute query
             $return =  $this->__execute();
 
@@ -199,16 +211,20 @@
                 }
             }
             
-            return $results ? $results : null;
+            // Save cache (overwrites existing)
+            Cache::save($cache_key, $results, true);
+            
+            return $results ? $results : array();
         }
         
         /**
          * Select fields
          * 
+         * @param   bool    $cache  Enable cache (true)
          * @return  array
          * 
          */
-        public function selectAll() {
+        public function selectAll($cache = true) {
             // Build Select Command
             $sql_query = 'SELECT ' . $this->_distinct .
                          '* FROM ' . $this->_table;
@@ -247,6 +263,14 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
+            // Get cache key
+            $cache_key = sha1($sql_query);
+            
+            // If cache exists and cache is enable
+            if (Cache::exists($cache_key) && $cache) {
+                return Cache::recover($cache_key);
+            }
+            
             // Execute query
             $return =  $this->__execute();
 
@@ -259,7 +283,10 @@
                 }
             }
             
-            return $results ? $results : null;
+            // Save cache (overwrites existing)
+            Cache::save($cache_key, $results, true);
+            
+            return $results ? $results : array();
         }
         
         /**
@@ -717,10 +744,10 @@
             $db = \Lollipop\App::getConfig('db');
 
             if (!is_null($db)) {
-                $host = !is_null($db['host']) ?  $db['host'] : 'localhost';
-                $uid = !is_null($db['username']) ?  $db['username'] : 'root';
-                $pwd = !is_null($db['password']) ?  $db['password'] : '';
-                $db = !is_null($db['database']) ?  $db['database'] : 'lollipop';
+                $host = $db['host'] ?  $db['host'] : 'localhost';
+                $uid = $db['username'] ?  $db['username'] : 'root';
+                $pwd = $db['password'] ?  $db['password'] : '';
+                $db = $db['database'] ?  $db['database'] : 'lollipop';
                        
                 // Instantiate MySQLi
                 $this->_mysqli = new \mysqli($host, $uid, $pwd, $db);
