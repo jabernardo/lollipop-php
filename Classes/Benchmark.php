@@ -74,14 +74,14 @@
          * @param   string  $start  Keyname 1
          * @param   string  $end  Keyname 2
          *
-         * @return  float 
+         * @return  mixed 
          *
          */
         static public function elapsedTime($start, $end) {
             $start = isset(self::$_marks[$start]) ? self::$_marks[$start]['time'] : 0;
             $end = isset(self::$_marks[$end]) ? self::$_marks[$end]['time'] : 0;
     
-            return number_format($end - $start, 10);
+            return $start ? round($end - $start, 10) : null;
         }
     }
     
