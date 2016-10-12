@@ -4,7 +4,7 @@
     /**
      * Lollipop Application Class
      * 
-     * @version     4.1
+     * @version     4.2
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -122,13 +122,25 @@
         /**
          * Get response application response time 
          * 
-         * @return  float
+         * @return  mixed
          * 
          */
         static public function getResponseTime() {
             \Lollipop\Benchmark::mark('_l_app_end');
             
             return \Lollipop\Benchmark::elapsedTime('_l_app_start', '_l_app_end');
+        }
+        
+        /**
+         * Get Benchmark
+         * 
+         * @return  mixed
+         * 
+         */
+        static public function getBenchmark() {
+            \Lollipop\Benchmark::mark('_l_app_end');
+            
+            return \Lollipop\Benchmark::elapsed('_l_app_start', '_l_app_end');
         }
         
         /**
