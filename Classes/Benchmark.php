@@ -4,7 +4,7 @@
     /**
      * Benchmark Class
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -65,7 +65,7 @@
             
             $elapsed = !$real_usage ? ($end - $start) : $end;
             
-            return $inMB ? (($elapsed / 1024 / 1024) . ' MB') : $elapsed;
+            return $start ? ($inMB ? (($elapsed / 1024 / 1024) . ' MB') : $elapsed) : null;
         }
     
         /**
