@@ -209,8 +209,6 @@
                 });
 
                 foreach (self::$_stored_routes as $path => $route) {
-                    // Cache key 
-                    $cache_key = $path;
                     // Callback for route
                     $callback = isset($route['callback']) ? $route['callback'] : function(){};
                     // Check if route or url is cachable (defaults to false)
@@ -243,6 +241,13 @@
                             
                             // Remove unneeded data
                             array_shift($matches);
+                            
+                            // Cache key 
+                            $cache_key = $path;
+                            
+                            if ($matches) {
+                                $cache_key .= '|' . implode(',', $matches);
+                            }
                             
                             // Mark dispatcher is currently running
                             self::$_is_running = true;
