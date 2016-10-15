@@ -98,7 +98,7 @@
         }
 
         /**
-         * Get route
+         * GET route
          *
          * @param   string      $path       Route
          * @param   function    $callback   Callback function
@@ -112,6 +112,75 @@
             // Store route
             self::$_stored_routes[$path] = array(
                                                 'request_method' => 'GET',
+                                                'callback' => $callback,
+                                                'cachable' => $cachable,
+                                                'cache_time' => $cache_time
+                                            );
+            
+            self::_registerDispatch();
+        }
+        
+        /**
+         * POST route
+         *
+         * @param   string      $path       Route
+         * @param   function    $callback   Callback function
+         * @param   bool        $cachable   Is page cache enable? (default is false)
+         * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+         * 
+         * @return  void
+         *
+         */
+        static public function post($path, $callback, $cachable = false, $cache_time = 24) {
+            // Store route
+            self::$_stored_routes[$path] = array(
+                                                'request_method' => 'POST',
+                                                'callback' => $callback,
+                                                'cachable' => $cachable,
+                                                'cache_time' => $cache_time
+                                            );
+            
+            self::_registerDispatch();
+        }
+        
+        /**
+         * PUT route
+         *
+         * @param   string      $path       Route
+         * @param   function    $callback   Callback function
+         * @param   bool        $cachable   Is page cache enable? (default is false)
+         * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+         * 
+         * @return  void
+         *
+         */
+        static public function put($path, $callback, $cachable = false, $cache_time = 24) {
+            // Store route
+            self::$_stored_routes[$path] = array(
+                                                'request_method' => 'PUT',
+                                                'callback' => $callback,
+                                                'cachable' => $cachable,
+                                                'cache_time' => $cache_time
+                                            );
+            
+            self::_registerDispatch();
+        }
+        
+        /**
+         * DELETE route
+         *
+         * @param   string      $path       Route
+         * @param   function    $callback   Callback function
+         * @param   bool        $cachable   Is page cache enable? (default is false)
+         * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+         * 
+         * @return  void
+         *
+         */
+        static public function delete($path, $callback, $cachable = false, $cache_time = 24) {
+            // Store route
+            self::$_stored_routes[$path] = array(
+                                                'request_method' => 'DELETE',
                                                 'callback' => $callback,
                                                 'cachable' => $cachable,
                                                 'cache_time' => $cache_time
