@@ -215,8 +215,6 @@
                     $cachable = isset($route['cachable']) ? $route['cachable'] : false;
                     // Cache time
                     $cache_time = isset($route['cache_time']) ? $route['cache_time'] : 1;
-                    // Clean path route or url withour the regular expressions
-                    $route_path = trim(str_replace(array('(:alpha)', '(:num)', '(:all)'), array('', '', ''), $path), '/');
                     // Translate regular expressions
                     $path = str_replace(array('(:alpha)', '(:num)', '(:all)', '/'), array('([a-zA-Z \-_]+)', '([0-9]+)', '(.*)', '\/'), trim($path, '/'));
                     // Request URL
@@ -226,13 +224,6 @@
                     
                     $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
                                 preg_match('/^' . $as . $path . '$/i', $url, $matches);
-                    
-                    if (!$is_match && (strtolower(trim($route_path, '/')) == strtolower(str_replace('/', '\/', $url)) ||
-                            strtolower(trim($as . $route_path, '/')) == strtolower(str_replace('/', '\/', $url)))) {
-                        // If path without parameters only
-                        // this also includes checking for containing folder
-                        $is_match = true;
-                    }
                     
                     if ($is_match) {
                         if (!self::$_is_running && !self::$_is_listening) {
@@ -288,7 +279,7 @@
                             ob_start();
                             
                             // If not from Controller, then just call function
-                            $data = $callback($matches);
+                            $data = call_user_func_array($callback, $matches);
                             
                             // Show output
                             echo self::_returnData($data);
