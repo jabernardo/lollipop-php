@@ -111,6 +111,7 @@
         static public function get($path, $callback, $cachable = false, $cache_time = 24) {
             // Store route
             self::$_stored_routes[$path] = array(
+                                                'request_method' => 'GET',
                                                 'callback' => $callback,
                                                 'cachable' => $cachable,
                                                 'cache_time' => $cache_time
@@ -216,7 +217,7 @@
                     // Cache time
                     $cache_time = isset($route['cache_time']) ? $route['cache_time'] : 1;
                     // Translate regular expressions
-                    $path = str_replace(array('%s', '%d', '/'), array('(.*)', '([0-9]+)', '\/'), trim($path, '/'));
+                    $path = str_replace(array('%s', '%d', '/'), array('(.*)', '(\d+)', '\/'), trim($path, '/'));
                     // Request URL
                     $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
                     // Active script or running script (this is when no redirection is being done in .htaccess)
@@ -224,6 +225,11 @@
                     
                     $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
                                 preg_match('/^' . $as . $path . '$/i', $url, $matches);
+                    
+                    // Check if request method matches
+                    if (isset($route['request_method']) && $route['request_method'] !== $_SERVER['REQUEST_METHOD']) {
+                        $is_match = false;
+                    }
                     
                     if ($is_match) {
                         if (!self::$_is_running && !self::$_is_listening) {
