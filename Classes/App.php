@@ -288,7 +288,9 @@
                                 preg_match('/^' . $as . $path . '$/i', $url, $matches);
                     
                     // Check if request method matches
-                    if (isset($route['request_method']) && $route['request_method'] !== $_SERVER['REQUEST_METHOD']) {
+                    // Will be excluding GET method... because it can catch other method calls
+                    if (isset($route['request_method']) && $route['request_method'] !== $_SERVER['REQUEST_METHOD'] &&
+                        $route['request_method'] !== 'GET') {
                         $is_match = false;
                     }
                     
