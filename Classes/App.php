@@ -109,15 +109,7 @@
          *
          */
         static public function get($path, $callback, $cachable = false, $cache_time = 24) {
-            // Store route
-            self::$_stored_routes[$path] = array(
-                                                'request_method' => 'GET',
-                                                'callback' => $callback,
-                                                'cachable' => $cachable,
-                                                'cache_time' => $cache_time
-                                            );
-            
-            self::_registerDispatch();
+            self::serve('GET', $path, $callback, $cachable, $cachable);
         }
         
         /**
@@ -132,15 +124,7 @@
          *
          */
         static public function post($path, $callback, $cachable = false, $cache_time = 24) {
-            // Store route
-            self::$_stored_routes[$path] = array(
-                                                'request_method' => 'POST',
-                                                'callback' => $callback,
-                                                'cachable' => $cachable,
-                                                'cache_time' => $cache_time
-                                            );
-            
-            self::_registerDispatch();
+            self::serve('POST', $path, $callback, $cachable, $cachable);
         }
         
         /**
@@ -155,15 +139,7 @@
          *
          */
         static public function put($path, $callback, $cachable = false, $cache_time = 24) {
-            // Store route
-            self::$_stored_routes[$path] = array(
-                                                'request_method' => 'PUT',
-                                                'callback' => $callback,
-                                                'cachable' => $cachable,
-                                                'cache_time' => $cache_time
-                                            );
-            
-            self::_registerDispatch();
+            self::serve('PUT', $path, $callback, $cachable, $cachable);
         }
         
         /**
@@ -178,9 +154,25 @@
          *
          */
         static public function delete($path, $callback, $cachable = false, $cache_time = 24) {
+            self::serve('DELETE', $path, $callback, $cachable, $cachable);
+        }
+        
+        /**
+         * Serve route
+         *
+         * @param   string      $method     Request method
+         * @param   string      $path       Route
+         * @param   function    $callback   Callback function
+         * @param   bool        $cachable   Is page cache enable? (default is false)
+         * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+         * 
+         * @return  void
+         *
+         */
+        static public function serve($method, $path, $callback, $cachable = false, $cache_time = 24) {
             // Store route
             self::$_stored_routes[$path] = array(
-                                                'request_method' => 'DELETE',
+                                                'request_method' => $method,
                                                 'callback' => $callback,
                                                 'cachable' => $cachable,
                                                 'cache_time' => $cache_time
