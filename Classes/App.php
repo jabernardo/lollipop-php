@@ -158,6 +158,21 @@
         }
 
         /**
+         * ALL route
+         *
+         * @param   string      $path       Route
+         * @param   function    $callback   Callback function
+         * @param   bool        $cachable   Is page cache enable? (default is false)
+         * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+         *
+         * @return  void
+         *
+         */
+        static public function all($path, $callback, $cachable = false, $cache_time = 24) {
+            self::serve('', $path, $callback, $cachable, $cachable);
+        }
+
+        /**
          * Serve route
          *
          * @param   string      $method     Request method
@@ -288,9 +303,9 @@
                                 preg_match('/^' . $as . $path . '$/i', $url, $matches);
 
                     // Check if request method matches
-                    // Will be excluding GET method... because it can catch other method calls
+                    
                     if (isset($route['request_method']) && $route['request_method'] !== $_SERVER['REQUEST_METHOD'] &&
-                        $route['request_method'] !== 'GET') {
+                        $route['request_method'] !== '') {
                         $is_match = false;
                     }
 
