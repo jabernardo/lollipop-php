@@ -249,7 +249,7 @@
                 $callback = self::$_stored_routes[$path];
                 $callback = $callback['callback'];
 
-                $data = $callback($params);
+                $data = call_user_func_array($callback, $params);
 
                 echo self::_returnData($data);
             } else {
