@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>App Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\App Library</h4>
+                <p>App library offers URL routing and page caching build for tabilty and speed to tune-up your application.</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- How-to Start -->
+            <div class="docs-section">
+                <h6 class="docs-header">How-to Start?</h6>
+                In order to use <code>\Lollipop\App</code> Routing service you need first to configure
+                a <code>.htaccess</code> or Apache Configuration File for your application.
+                Below shows recommended <code>.htacces</code> file.
+                <pre>
+                    <code class="apache hljs">
+# Enable running of scripts
+AddHandler cgi-script .pl .cgi
+Options +ExecCGI +FollowSymLinks
+
+# Disable Indexing of Directories
+Options -Indexes
+
+# Enable RewriteEngine
+RewriteEngine on
+
+# Enable page access 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirect all pages to index
+RewriteRule ^(.*)$/? index.php [L]
+                    </code>
+                </pre>
+                This configuration redirects all request to your <code>index.php</code>
+            </div>
+            <!-- end of How-to Start -->
+            <!-- Configurations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Configurations for your application</h6>
+                Here are some configuration that are currently supported by other libraries and functionality of Lollipop:<br><br>
+                <ul>
+                    <li>
+                        <code>app_version</code> - Application buster. Also can be used in Cache Buster (see \Lollipop\Url)
+                    </li>
+                    <li>
+                        <code>autoload</code> - Set folder(s) to be autoload
+                    </li>
+                    <li>
+                        <code>db</code> - Connection settings for <code>\Lollipop\Database</code> library. Required parameters are:
+                        <ul>
+                            <li><code>host</code> - Hostname for database</li>
+                            <li><code>username</code> - UID for connection</li>
+                            <li><code>password</code> - PWD for authentication</li>
+                            <li><code>database</code> - Database to be use</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>dev_tools</code> - <code>true</code> or <code>false</code>. Activate developers tools for your own benefit. Options below only triggered by request (GET/POST) sent to application.
+                        <ul>
+                            <li><code>purge_all_cache</code> - Purges all cache</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>environment</code> - Set environment for you application
+                        <ul>
+                            <li><code>dev</code> or <code>development</code></li>
+                            <li><code>stg</code> or <code>staging</code></li>
+                            <li><code>prd</code> or <code>production</code></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>show_not_found</code> - Disable showing of 404 pages
+                    </li>
+                    <li>
+                        <code>not_found_page</code> - Path to 404 static page
+                    </li>
+                </ul>
+                <span class="note">NOTE:</span> you can add customized keys and values for your application here.
+                Below code shows a sample configuration for your application
+                <pre>
+                    <code class="php hljs">
+require_once('path/to/lollipop-php/autoload.php');
+
+use \Lollipop\App;
+                        
+// @var array Configuration for application
+$config = array(
+            // Enable developer tools
+            'dev_tools' => true,
+            // Set environment for application
+            'environment' => 'development',
+            // MySQL configuration
+            'db' = array(
+                'host' => '127.0.0.1',
+                'username' => 'root',
+                'password' => '',
+                'database' => 'lollipop'
+            )
+        );
+        
+// Initialize application
+App::init($config);
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Configurations-->
+            <!-- Let's start -->
+            <div class="docs-section">
+                <h6 class="docs-header">Let's Start</h6>
+                After defining the configuration for your application you now test it.
+                
+                <pre>
+                    <code class="php">
+// Index page
+App::get('/', function() {
+    echo 'Welcome!';
+});
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Let's Start -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\App</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Initialize Lollipop
+ * 
+ * @param   mixed   $config     Configuration variable
+ * 
+ * @type    void
+ *
+ */
+static public function init($config = array()) {...
+
+/**
+ * Example
+ *
+ * Initialize your web application with configuration
+ *
+ */
+\Lollipop\App::init($config);
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Route
+ *
+ * @param   string      $path       Route (can include regex) keys (:alpha), (:num), or (:all)
+ * @param   function    $callback   Callback function
+ * @param   bool        $cachable   Is page cache enable? (default is false)
+ * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+ * 
+ * @return  void
+ *
+ */
+static public function get($path, $callback, $cachable = false, $cache_time = 24) {...
+static public function post($path, $callback, $cachable = false, $cache_time = 24) {...
+static public function put($path, $callback, $cachable = false, $cache_time = 24) {...
+static public function delete($path, $callback, $cachable = false, $cache_time = 24) {...
+static public function all($path, $callback, $cachable = false, $cache_time = 24) {...
+
+/**
+ * Example
+ *
+ * Render yoursite.com/hello with caching features for 1 minute
+ *
+ * RegEx Availables
+ *      (%s) - Any word character (letter, number, underscore)
+ *      (%d) - Any digit
+ *      (%%) - Any
+ *
+ */
+\Lollipop\App::get('/hello', function() {
+    echo 'Hello World!';
+}, true, 1);
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get response application response time 
+ * 
+ * @return  mixed
+ * 
+ */
+static public function getResponseTime() {...
+
+/**
+ * Example
+ *
+ * Outputs web application's response time
+ *
+ */
+\Lollipop\App::get('/hello', function() {
+    echo \Lollipop\App::getResponseTime();
+});
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get Benchmark
+ * 
+ * @return  mixed
+ * 
+ */
+static public function getBenchmark() {...
+
+/**
+ * Example
+ *
+ * Get benchmark (elapsed time and memory)
+ *
+ */
+\Lollipop\App::get('/hello', function() {
+    var_dump(\Lollipop\App::getBenchmark());
+});
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Set header
+ * 
+ * @param string    $key    HTTP header key
+ * @param string    $value  HTTP header value
+ * 
+ */
+static public function setHeader($key, $value) {...
+
+/**
+ * Example
+ *
+ * Set response header
+ *
+ */
+\Lollipop\App::get('/hello/(%s)', function($name) {
+    \Lollipop\App::setHeader('content-type', 'application/json');
+    
+    echo json_encode(['name' => $name]);
+});
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Route forwarding
+ * 
+ * @param string $path Route
+ * @param array  $params Arguments
+ * 
+ */
+static public function forward($path, $params = null) {...
+
+/**
+ * Example
+ *
+ * Forward route to another route
+ *
+ */
+\Lollipop\App::get('/', function() {
+    \Lollipop\App::forward('/hello/(%s)', ['Programmer']);
+});
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+
+/**
+ * Get configuration key value
+ *
+ * @return  string
+ *
+ */
+static public function getConfig($key) {...
+
+/**
+ * Example
+ *
+ * Get configuration key value
+ *
+ */
+\Lollipop\App::get('/', function() {
+    echo \Lollipop\App::getConfig('message');
+});
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

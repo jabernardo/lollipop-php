@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Number Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/Numbero.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Number Library</h4>
+                <p>Format numbers</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Number</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Checks if number is in between the given range
+ *
+ * @param   double  $num    Number
+ * @param   double  $from   Start of range
+ * @param   double  $to     Range
+ * 
+ * @return  bool
+ */
+static function between($num, $from, $to) {...
+
+/**
+ * Example
+ *
+ */
+if (\Lollipop\Number::between(5, 0, 10)) {...
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns currency value
+ *
+ * @param   int     $currency   Currency symbol
+ * @param   double  $number     Number
+ * @param   int     $decimal    Decimal places
+ * 
+ * @return  string
+ */
+static function currency($currency = self::CURRENCY_PESO, $number, $decimal = 2) {...
+
+/**
+ * Example
+ *
+ * CURRENCY_EURO
+ * CURRENCY_GBP
+ * CURRENCY_USD
+ * CURRENCY_PESO
+ * CURRENCY_YEN
+ *
+ */
+echo \Lollipop\Number::currency(\Lollipop\Number::CURRENCY_PESO, 1800.50);
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Gets next fibonacci number
+ *
+ * @param   int     Number
+ * 
+ * @return  int
+ */
+static function fibonacci($number) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Number::fibonacci(3);
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Gets factorial of a number
+ *
+ * @param   int     $number     Number
+ * 
+ * @return  int
+ */
+static function factorial($number) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Number::factorial(4);
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns if string is parsable as number
+ *
+ * @param   string  $string     String
+ * 
+ * @return  bool
+ */
+static function parsable($string) {...
+
+/**
+ * Example
+ *
+ */
+if (\Lollipop\Number::parsable("55")) {...
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns percentage
+ *
+ * @param   double  $number Number
+ * @param   int     $decimal    Decimal places
+ * 
+ * @return  string
+ */
+static function percentage($number, $decimal = 2) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Number::percentage(50);
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns human readble size equivalent of bytes
+ *
+ * @param   double  $size   Size in bytes
+ * 
+ * @return  string
+ */
+static function readableSize($size) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Number::readableSize(1024);
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

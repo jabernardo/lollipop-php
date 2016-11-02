@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Scraper Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Scraper Library</h4>
+                <p>Scrap DOM elements from other URI</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Scraper</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Web Scrapper
+ *
+ * @param    string    $url    URI of webpage to scrap
+ *
+ */
+function __construct($url, $post = null, $user_agent = null) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get contents of an element by using attributes
+ *
+ * @param    string    $attr        Element attribute
+ * @param    string    $attr_value    Value of element attribute
+ *
+ * @return array
+ *
+ */
+public function getContentsByAttr($attr, $attr_value) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+$data = $scraper->getContentsByAttr('class', 'thumbnail');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get contents of an element by using element name
+ *
+ * @param    string    $elem        Element name
+ *
+ * @return array
+ *
+ */
+public function getContentsByElem($elem) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+$data = $scraper->getContentsByElem('div');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get attribute value using other attributes
+ * 
+ * @param    string    @attr            Element attribute
+ * @param    string    @attr_value        Element attribute value
+ * @param    string    @attr_to_get    Name of attribute to get    
+ *
+ * @return    array
+ *
+ */
+public function getAttrByAttr($attr, $attr_value, $attr_to_get) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+$data = $scraper->getAttrByAttr('class', 'thumbnail', 'href');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get attributes of elements
+ *
+ * @param    string    $element    Element (e.g. a, div, img)
+ *
+ * @return     array
+ *
+ */
+public function getAttrByElem($element) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+$data = $scraper->getAttrByElemWithAttr('a');
+                    </code>
+                </pre>
+
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get attributes by element using another attributes
+ *
+ * @param    string    $element    Element (e.g. a, div, img)
+ * @param    string    $attr        Attribute name (e.g. class, id)
+ * @param    string    $attr_value    Attribute value (e.g. thumbnail)
+ *
+ * @return     array
+ *
+ */
+public function getAttrByElemWithAttr($element, $attr, $attr_value) {...
+
+/**
+ * Example
+ *
+ */
+$scraper = \Lollipop\Scraper('http://path.domain');
+$data = $scraper->getAttrByElemWithAttr('a', 'class', 'thumbnail');
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

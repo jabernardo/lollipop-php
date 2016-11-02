@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Session Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Session Library</h4>
+                <p>A secure way to manage your session</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Session</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Starts session
+ *
+ */
+static function start() {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Session::start();
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Stops current session
+ *
+ */
+static function stop() {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Session::stop();
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Checks if a session variable exists
+ *
+ * @param   string  $key    Session variable name
+ * 
+ * @return  bool
+ */
+static function exists($key) {...
+
+/**
+ * Example
+ *
+ */
+if (\Lollipop\Session::exists('user_id')) {...
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns the key used in encrypting session variables
+ *
+ * @return string
+ */
+static function key() {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Session::key();
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Creates a new session or sets an existing sesssion
+ *
+ * @param   string  $key    Session variable name
+ * @param   string  $value  Session variable value
+ */
+static function set($key, $value) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Session::set('user_id', '4ldrich');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Gets session variable's value
+ *
+ * @param   string  $key    Session variable name
+ * 
+ * @return  string
+ */
+static function get($key) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Session::get('user_id');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Removes a session variable
+ *
+ * @param   string  $key    Session variable name
+ */
+static function drop($key) {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Session::drop('user_id');
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

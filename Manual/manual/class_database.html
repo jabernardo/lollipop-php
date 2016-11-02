@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Database Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Database Library</h4>
+                <p>Easy way to manage your data through MySQL</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Database</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Select table
+ * 
+ * @param   string  $table
+ * @return  object  New instance of Database
+ * 
+ */
+public static function table($table) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Select fields
+ * 
+ * @param   array   $fields     Fields to select
+ * @param   bool    $cache      Enable cache (true)
+ * 
+ * @return  array 
+ * 
+ */
+public function select($fields, $cache = true) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                    ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Select fields
+ * 
+ * @param   bool    $cache  Enable cache (true)
+ * @return  array
+ * 
+ */
+public function selectAll($cache = true) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                    ->selectAll();
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Insert data to table
+ * 
+ * @param   array   $fields Fields to put in data
+ * 
+ * @return  mixed   Returns $this when insert succeed and false on failure
+ * 
+ */
+public function insert($fields) {...
+
+$new_product = array(
+                'sku' => 'sample1',
+                'product_name' => 'sample-one',
+                'price' = '1'
+            );
+            
+/**
+ * Example
+ *
+ */
+\Lollipop\Database::table('catalog')
+                ->insert($new_product);
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Delete data from table
+ * 
+ * @return  mixed   Returns $this when insert succeed and false on failure
+ * 
+ */
+public function remove() {...
+
+/**
+ * Example
+ *
+ * Removes all records
+ *
+ */
+\Lollipop\Database::table('catalog')
+                ->remove();
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Update data from table
+ * 
+ * @param   array   $fields Fields to put in data
+ * 
+ * @return  mixed   Returns $this when insert succeed and false on failure
+ * 
+ */
+public function update($fields) {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Database::table('catalog')
+                ->update(['discount' => 0.2]);
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Sum rows in field/s
+ * 
+ * @param   array   Field/s name
+ * 
+ */
+public function sum($field) {...
+
+/**
+ * Example
+ *
+ */
+$inventory = \Lollipop\Database::table('catalog')
+                ->sum('qty');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Count rows in field/s
+ * 
+ * @param   array   Field/s name
+ * 
+ */
+public function count($field) {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->count('id');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Where statements
+ * 
+ * @param   string  $field Table field
+ * @param   string  $operator   Comparer
+ * @param   string  $value  Comparing value
+ * 
+ */
+public function where($field, $operator = '', $value = '') {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->where('type', 'electronics')
+                ->count('id');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Or statements
+ * 
+ * @param   string  $field Table field
+ * @param   string  $operator   Comparer
+ * @param   string  $value  Comparing value
+ * 
+ */
+public function orWhere($field, $operator = '', $value = '') {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->where('type', 'electronics')
+                ->orWhere('type', 'cunsumer electronics')
+                ->count('id');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Select distinct only
+ * 
+ */
+public function distinct() {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->distinct()
+                ->where('type', 'electronics')
+                ->count('id');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Order by ascending
+ * 
+ * @param   string/array    $fields
+ * 
+ */
+public function asc($fields) {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->distinct()
+                ->where('type', 'electronics')
+                ->asc()
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Order by descending
+ * 
+ * @param   string/array    $fields
+ * 
+ */
+public function desc($fields) {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->distinct()
+                ->where('type', 'electronics')
+                ->desc()
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Set limit
+ * 
+ * @param   int     $start
+ * @param   int     $offset
+ * 
+ */
+public function limit($start, $offset = null) {...
+
+/**
+ * Example
+ *
+ */
+$products_count = \Lollipop\Database::table('catalog')
+                ->distinct()
+                ->where('type', 'electronics')
+                ->desc()
+                ->limit(10)
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Join Tables
+ * 
+ * @param   string  $table  Table name
+ * @param   string  $field1  Table.Fieldname
+ * @param   string  $operator Operator
+ * @param   string  $field2  Table.Fieldname
+ *
+ */
+public function join($table, $field1, $operator, $field2) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                ->join('brands', 'brands.name', '=', 'catalog.brand')
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Left Join Tables
+ * 
+ * @param   string  $table  Table name
+ * @param   string  $field1  Table.Fieldname
+ * @param   string  $operator Operator
+ * @param   string  $field2  Table.Fieldname
+ * 
+ */
+public function leftJoin($table, $field1, $operator, $field2) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                ->leftJoin('brands', 'brands.name', '=', 'catalog.brand')
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Right Join Tables
+ * 
+ * @param   string  $table  Table name
+ * @param   string  $field1  Table.Fieldname
+ * @param   string  $operator Operator
+ * @param   string  $field2  Table.Fieldname
+ * 
+ */
+public function rightJoin($table, $field1, $operator, $field2) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                ->rightJoin('brands', 'brands.name', '=', 'catalog.brand')
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Group fields by
+ * 
+ * @param   string  $field
+ * 
+ */
+public function groupBy($field) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::table('catalog')
+                ->groupBy('brand');
+                ->select('*');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Run raw sql command
+ * 
+ * @param string $sql SQL commands
+ * 
+ */
+public static function raw($sql) {...
+
+/**
+ * Example
+ *
+ */
+$results = \Lollipop\Database::raw('SELECT * FROM `catalog`');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get last executed query
+ * 
+ * @return string
+ * 
+ */
+public static function getLastQuery() {...
+
+/**
+ * Example
+ *
+ */
+$history = \Lollipop\Database::getLastQuery();
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get query history
+ * 
+ * @return array
+ * 
+ */
+public static function getQueryHistory() {...
+
+/**
+ * Example
+ *
+ */
+$histories = \Lollipop\Database::getQueryHistory();
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

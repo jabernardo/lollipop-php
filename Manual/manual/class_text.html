@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Text Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" content="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Text Library</h4>
+                <p>Crypt does strings</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Text</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Checks if a string contains another string
+ * 
+ * @paramstring     $haystack   String where to find the occurance
+ * @param   string  $needle     String to be found
+ * 
+ * @return  bool
+ */
+static function contains($haystack, $needle) {...
+
+/**
+ * Example
+ *
+ */
+if (\Lollipop\Text::contains('Hello World', 'World') {...
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Encrypts values passed
+ *
+ * @param   string  $string     String to be encoded.
+ * @param   string  $key        Passphrase
+ * 
+ * @return  string
+ */
+static function lock($string, $key = null) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::lock('Hello World');
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Decrypts values passed
+ *
+ * @param   string  $cipher     Code to be decrypt.
+ * @param   string  $key        Passphrase
+ * 
+ * @return  string
+ */
+static function unlock($cipher, $key = null) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::unlock(\Lollipop\Text::lock('Hello World'));
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Alias addslashes
+ *
+ * @param   string  $string     String
+ * 
+ * @return  string
+ */
+static function escape($string) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::escape("&lt;script&gt;alert('Hello World!')&lt;/script&gt;");
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Returns HTML displayable string
+ *
+ * @param   string  $string     String
+ * 
+ * @return  string
+ */
+static function entities($string) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::entities("&lt;script&gt;alert('Hello World!')&lt;/script&gt;");
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Random string
+ *
+ * @param   string  $length     Random string length
+ * 
+ * @return  string
+ */
+static function random($length) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::random(8);
+                    </code>
+                </pre>
+
+                <pre>
+                    <code class="php hljs">
+/**
+ * Splits string
+ * 
+ * @param   string  $string     String to be split
+ * @param   string  $token      Token
+ * 
+ * @return  array
+ */
+static function split($string, $token) {...
+
+/**
+ * Example
+ *
+ */
+echo \Lollipop\Text::split("John Aldrich", " ");
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>

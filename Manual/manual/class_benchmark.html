@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- title -->
+        <title>Benchmark Library | Lollipop-PHP</title>
+        <!-- Page encoding -->
+        <meta charset="utf-8">
+        <!-- Keywords -->
+        <meta name="description" content="A slim and very flexible framework for PHP">
+        <meta name="keywords" content="lollipop, lollipop-php, john aldrich bernardo, 4ldrich, john aldrich dela cruz bernardo, php, php framework, framework">
+        <meta name="author" contet="John Aldrich Bernardo">
+        <!-- mobile -->
+        <meta content="follow, index, all" name="robots">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- style -->
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/skeleton.css">
+        <link rel="stylesheet" href="../static/css/default.css">
+        <link rel="stylesheet" href="../static/css/hjs.css">
+        <!-- favicon -->
+        <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon" >
+        <!-- open graph -->
+        <meta property="og:title" content="Lollipop-PHP: A slim and very flexible framework for PHP">
+        <meta property="og:description" content="A slim and very flexible framework for PHP">
+        <meta property="og:site_name" content="Lollipop-PHP">
+        <meta property="og:image" content="http://lollipop.aldrich.online/static/img/logo.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="128">
+        <meta property="og:image:height" content="128">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <section class="header">
+                <h4><a href="index.html">\Lollipop</a>\Benchmark Library</h4>
+                <p>A cool way to benchmark things up!</p>
+                <br>
+            </section>
+            <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Benchmark</code> library:<br><br>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Record benchmark
+ *
+ * @param   string  $mark   Key name
+ *
+ */
+static public function mark($mark) {...
+
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Benchmark::mark('app_start');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get detailed benchmark
+ *
+ * @access  public
+ * @param   string  $start  Start mark
+ * @param   string  $end    End mark
+ * @return  array
+ *
+ */
+static public function elapsed($start, $end) {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Benchmark::elapsed('app_start', 'app_stop');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Get elapsed memory between two marks
+ * 
+ * @access  public
+ * @param   string  $start  Start mark
+ * @param   string  $end    End mark
+ * @param   bool    $real_usage Get real memory usage
+ * @param   bool    $inMB   Show output in MB instead of Bytes
+ * @return  mixed   <string> if $inMB is <true>, <longint> if on <false>
+ * 
+ */
+static public function elapsedMemory($start, $end, $real_usage = false, $inMB = true) {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Benchmark::elapsedMemory('app_start', 'app_stop');
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Compute the elapsed time of two marks
+ *
+ * @param   string  $start  Keyname 1
+ * @param   string  $end  Keyname 2
+ *
+ * @return  mixed 
+ *
+ */
+static public function elapsedTime($start, $end) {...
+
+/**
+ * Example
+ *
+ */
+\Lollipop\Benchmark::elapsedTime('app_start', 'app_stop');
+                    </code>
+                </pre>
+            </div>
+            <!-- end of Class Declarations -->
+            <!-- Goto Top -->
+            <div class="row">
+                <div class="twelve columns" style="text-align: center;">
+                    <a href="#">Go-to-Top</a>
+                    <br><br><br>
+                </div>
+            </div>
+            <!-- end of Goto Top -->
+        </div>
+        <script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+        <script type="text/javascript" src="../static/js/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>
