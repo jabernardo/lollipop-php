@@ -24,11 +24,16 @@
         static function is($requests) {
             $is = true;
             
+            // Also support PUT and DELETE
+            parse_str(file_get_contents("php://input"), $_php_request);
+            // Merge with POST and GET
+            $_all_requests = array_merge($_REQUEST, $_php_request);
+            
             if (is_array($requests)) {
                 $returns = array();
                 
                 foreach ($requests as $request) {
-                    array_push($returns, isset($_REQUEST[$request]));
+                    array_push($returns, isset($_all_requests[$request]));
                 }
                 
                 foreach ($returns as $return) {
@@ -37,7 +42,7 @@
                     }
                 }
             } else {
-                $is = isset($_REQUEST[$requests]);
+                $is = isset($_all_requests[$requests]);
             }
             
             return $is;
@@ -54,12 +59,17 @@
         static function get($requests) {
             $var = array();
             
+            // Also support PUT and DELETE
+            parse_str(file_get_contents("php://input"), $_php_request);
+            // Merge with POST and GET
+            $_all_requests = array_merge($_REQUEST, $_php_request);
+            
             if (is_array($requests)) {
                 foreach ($requests as $request) {
-                    $var[$request] = isset($_REQUEST[$request]) ? $_REQUEST[$request] : null;
+                    $var[$request] = isset($_all_requests[$request]) ? $_all_requests[$request] : null;
                 }
             } else {
-                $var = (isset($_REQUEST[$requests])) ? $_REQUEST[$requests] : null;
+                $var = (isset($_all_requests[$requests])) ? $_all_requests[$requests] : null;
             }
             
             return $var;
