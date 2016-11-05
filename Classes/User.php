@@ -146,21 +146,16 @@
                     // Login user
                     $session_id = md5(\Lollipop\Cookie::key() . $uid);
                     
-                    $query = self::$_db->query('SELECT COUNT(`id`) FROM login WHERE `id` = \'' . $session_id . '\'');
-                    
-                    if ($query) {
-                        $islogged = $query->fetch_array();
-                        $islogged = (int)$islogged[0];
+                    if (self::in()) {
+                        \Lollipop\Log::error('An user was already logged-in.');
                     }
                     
-                    if (!$islogged) {
-                        self::$_db->query('INSERT INTO login(`id`, `username`, `role`, `ip_address`, `user_agent`, `last_in`) VALUES(\'' . $session_id . '\', \'' . $uid . '\', \'' . $role . '\', \'' . self::_getUserIP() . '\', \'' .  $_SERVER['HTTP_USER_AGENT'] . '\', NOW())');
-                        self::disconnect();
-                        
-                        // Save user's session id in cookie and session
-                        \Lollipop\Cookie::set('lsuid', $session_id);
-                        \Lollipop\Session::set('lsuid', $session_id);
-                    }
+                    self::$_db->query('INSERT INTO login(`id`, `username`, `role`, `ip_address`, `user_agent`, `last_in`) VALUES(\'' . $session_id . '\', \'' . $uid . '\', \'' . $role . '\', \'' . self::_getUserIP() . '\', \'' .  $_SERVER['HTTP_USER_AGENT'] . '\', NOW())');
+                    self::disconnect();
+                    
+                    // Save user's session id in cookie and session
+                    \Lollipop\Cookie::set('lsuid', $session_id);
+                    \Lollipop\Session::set('lsuid', $session_id);
 
                     // If anchor is available then redirect page
                     if (!is_null($anchor)) {
