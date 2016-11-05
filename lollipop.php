@@ -34,4 +34,16 @@
  */
 namespace Lollipop;
 
+/**
+ * Alternate a value to undefined variable
+ * 
+ * @param   reference   &$opt1  Variable
+ * @param   mixed       $opt2   Alternative value
+ * @return  mixed
+ * 
+ */
+function fuse(&$opt1, $opt2) {
+    return isset($opt1) ? $opt1 : (isset($opt2) ? $opt2 : null); 
+}
+
 ?>
