@@ -93,6 +93,17 @@
                 }
             }
 
+            // Register autoload
+            spl_autoload_register(function($class) {
+                foreach (self::$_autoload_folders as $aufolder) {
+                    $f = $aufolder . '/' . $class . '.php';
+
+                    if (file_exists($f)) {
+                        require_once($f);
+                    }
+                }
+            });
+
             // Register dispatch function
             self::_registerDispatch();
         }
