@@ -4,7 +4,7 @@
     /**
      * Url Class
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -36,6 +36,17 @@
          */
         static  function here() {
             return self::base($_SERVER['REQUEST_URI']);
+        }
+        
+        /**
+         * Is URL alive?
+         * 
+         * @param   string  $url    URL
+         * @return  boolean
+         * 
+         */
+        static function alive($url) {
+            return @get_headers($url);
         }
     }
 
