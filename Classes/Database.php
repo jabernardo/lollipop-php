@@ -1,6 +1,7 @@
 <?php
     namespace Lollipop;
     
+    use \Lollipop\App;
     use \Lollipop\Cache;
     
     /**
@@ -195,8 +196,14 @@
             $cache_key = sha1($sql_query);
             
             // If cache exists and cache is enable
-            if (Cache::exists($cache_key) && $cache) {
-                return Cache::recover($cache_key);
+            $config = App::getConfig('db');
+            $cache_enable = isset($config['cache']) ? $config['cache'] : false;
+            $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
+            
+            if ($cache_enable) {
+                if (Cache::exists($cache_key) && $cache) {
+                    return Cache::recover($cache_key);
+                }
             }
             
             // Execute query
@@ -212,7 +219,7 @@
             }
             
             // Save cache (overwrites existing)
-            Cache::save($cache_key, $results, true);
+            Cache::save($cache_key, $results, true, $cache_time);
             
             return $results ? $results : array();
         }
@@ -267,8 +274,14 @@
             $cache_key = sha1($sql_query);
             
             // If cache exists and cache is enable
-            if (Cache::exists($cache_key) && $cache) {
-                return Cache::recover($cache_key);
+            $config = App::getConfig('db');
+            $cache_enable = isset($config['cache']) ? $config['cache'] : false;
+            $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
+            
+            if ($cache_enable) {
+                if (Cache::exists($cache_key) && $cache) {
+                    return Cache::recover($cache_key);
+                }
             }
             
             // Execute query
@@ -284,7 +297,7 @@
             }
             
             // Save cache (overwrites existing)
-            Cache::save($cache_key, $results, true);
+            Cache::save($cache_key, $results, true, $cache_time);
             
             return $results ? $results : array();
         }
