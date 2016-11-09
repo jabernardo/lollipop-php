@@ -500,7 +500,7 @@
                 header('HTTP/1.0 404 Not Found');
 
                 if (!is_null(self::getConfig('not_found_page'))) {
-                    readfile(self::getConfig('not_found_page'));
+                    require_once(self::getConfig('not_found_page'));
                 } else {
                     echo '<!DOCTYPE html>';
                     echo '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
