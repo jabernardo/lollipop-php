@@ -4,7 +4,7 @@
     /**
      * Lollipop Application Class
      *
-     * @version     4.2
+     * @version     5.0
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
