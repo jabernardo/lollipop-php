@@ -198,7 +198,7 @@
         static public function serve($method, $path, $callback, $cachable = false, $cache_time = 24) {
             // Store route
             self::$_stored_routes[$path] = array(
-                                                'request_method' => $method,
+                                                'request_method' => is_array($method) ? array_map('strtoupper', $method) : strtoupper($method),
                                                 'callback' => $callback,
                                                 'cachable' => $cachable,
                                                 'cache_time' => $cache_time
@@ -313,11 +313,14 @@
                     $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
                                 preg_match('/^' . $as . $path . '$/i', $url, $matches);
 
-                    // Check if request method matches
-                    
-                    if (isset($route['request_method']) && $route['request_method'] !== $_SERVER['REQUEST_METHOD'] &&
-                        $route['request_method'] !== '') {
-                        $is_match = false;
+                    // Check if request method matches                    
+                    if (isset($route['request_method'])) {
+                        $_rm = $route['request_method'];
+                        
+                        if ((is_array($_rm) && !in_array($_SERVER['REQUEST_METHOD'], $_rm)) ||
+                            (is_string($_rm) && $_rm !== $_SERVER['REQUEST_METHOD'] && $_rm !== '')) {
+                            $is_match = false;
+                        }
                     }
 
                     if ($is_match) {
