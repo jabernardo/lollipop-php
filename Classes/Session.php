@@ -38,6 +38,8 @@
         static function exists($key) {
             \Lollipop\Session::start();
             
+            $key = substr(sha1($key), 0, 10);
+            
             if (isset($_SESSION[$key])) return true;
             
             return false;
@@ -49,7 +51,7 @@
          * @return string
          */
         static function key() {
-            return md5(\Lollipop\Text::lock($_SERVER['REMOTE_ADDR'], \Lollipop\App::SUGAR));
+            return md5(\Lollipop\Text::lock(\Lollipop\App::SUGAR));
         }
 
         /**
@@ -60,6 +62,8 @@
          */
         static function set($key, $value) {
             \Lollipop\Session::start();
+            
+            $key = substr(sha1($key), 0, 10);
             
             $_SESSION[$key] = \Lollipop\Text::lock($value, self::key());
         }
@@ -74,8 +78,10 @@
         static function get($key) {
             \Lollipop\Session::start();
             
+            $key = substr(sha1($key), 0, 10);
+            
             if (isset($_SESSION[$key])) {
-                return \Lollipop\Text::unlock($_SESSION[$key], self::key());
+                return trim(\Lollipop\Text::unlock($_SESSION[$key], self::key()));
             } else {
                 return '';
             }
@@ -88,6 +94,8 @@
          */
         static function drop($key) {
             \Lollipop\Session::start();
+            
+            $key = substr(sha1($key), 0, 10);
             
             if (isset($_SESSION[$key])) unset($_SESSION[$key]);
         }
