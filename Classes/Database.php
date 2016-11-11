@@ -769,7 +769,7 @@
                     \Lollipop\Log::error($this->_mysqli->connect_error);
                 }
             } else {
-                \Lollipop\Log::error('Lollipop is not initialized with wrong database configuration');
+                \Lollipop\Log::error('Lollipop is initialized with wrong database configuration');
             }
         }
 
