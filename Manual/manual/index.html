@@ -88,12 +88,13 @@ $config = array(
         );
         
 use \Lollipop\App;
+use \Lollipop\Route;
 
 // Initialize application
 App::init($config);
 
 // Index page
-App::get('/', function() {
+Route::get('/', function() {
     echo 'Welcome!';
 });
                     </code>

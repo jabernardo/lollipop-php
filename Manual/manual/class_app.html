@@ -33,39 +33,10 @@
             <!-- Header -->
             <section class="header">
                 <h4><a href="index.html">\Lollipop</a>\App Library</h4>
-                <p>App library offers URL routing and page caching build for tabilty and speed to tune-up your application.</p>
+                <p>App library to configure your web application.</p>
                 <br>
             </section>
             <!-- end of Header -->
-            <!-- How-to Start -->
-            <div class="docs-section">
-                <h6 class="docs-header">How-to Start?</h6>
-                In order to use <code>\Lollipop\App</code> Routing service you need first to configure
-                a <code>.htaccess</code> or Apache Configuration File for your application.
-                Below shows recommended <code>.htacces</code> file.
-                <pre>
-                    <code class="apache hljs">
-# Enable running of scripts
-AddHandler cgi-script .pl .cgi
-Options +ExecCGI +FollowSymLinks
-
-# Disable Indexing of Directories
-Options -Indexes
-
-# Enable RewriteEngine
-RewriteEngine on
-
-# Enable page access 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# Redirect all pages to index
-RewriteRule ^(.*)$/? index.php [L]
-                    </code>
-                </pre>
-                This configuration redirects all request to your <code>index.php</code>
-            </div>
-            <!-- end of How-to Start -->
             <!-- Configurations -->
             <div class="docs-section">
                 <h6 class="docs-header">Configurations for your application</h6>
@@ -138,21 +109,6 @@ App::init($config);
                 </pre>
             </div>
             <!-- end of Configurations-->
-            <!-- Let's start -->
-            <div class="docs-section">
-                <h6 class="docs-header">Let's Start</h6>
-                After defining the configuration for your application you now test it.
-                
-                <pre>
-                    <code class="php">
-// Index page
-App::get('/', function() {
-    echo 'Welcome!';
-});
-                    </code>
-                </pre>
-            </div>
-            <!-- end of Let's Start -->
             <!-- Class Declarations -->
             <div class="docs-section">
                 <h6 class="docs-header">Class Declarations</h6>
@@ -179,43 +135,7 @@ static public function init($config = array()) {...
 \Lollipop\App::init($config);
                     </code>
                 </pre>
-                
-                <pre>
-                    <code class="php hljs">
-/**
- * Route
- *
- * @param   string      $path       Route (can include regex) keys (:alpha), (:num), or (:all)
- * @param   function    $callback   Callback function
- * @param   bool        $cachable   Is page cache enable? (default is false)
- * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
- * 
- * @return  void
- *
- */
-static public function get($path, $callback, $cachable = false, $cache_time = 24) {...
-static public function post($path, $callback, $cachable = false, $cache_time = 24) {...
-static public function put($path, $callback, $cachable = false, $cache_time = 24) {...
-static public function delete($path, $callback, $cachable = false, $cache_time = 24) {...
-static public function all($path, $callback, $cachable = false, $cache_time = 24) {...
 
-/**
- * Example
- *
- * Render yoursite.com/hello with caching features for 1 minute
- *
- * RegEx Availables
- *      (%s) - Any word character (letter, number, underscore)
- *      (%d) - Any digit
- *      (%%) - Any
- *
- */
-\Lollipop\App::get('/hello', function() {
-    echo 'Hello World!';
-}, true, 1);
-                    </code>
-                </pre>
-                
                 <pre>
                     <code class="php hljs">
 /**
@@ -232,7 +152,7 @@ static public function getResponseTime() {...
  * Outputs web application's response time
  *
  */
-\Lollipop\App::get('/hello', function() {
+\Lollipop\Route::get('/hello', function() {
     echo \Lollipop\App::getResponseTime();
 });
                     </code>
@@ -254,56 +174,8 @@ static public function getBenchmark() {...
  * Get benchmark (elapsed time and memory)
  *
  */
-\Lollipop\App::get('/hello', function() {
+\Lollipop\Route::get('/hello', function() {
     var_dump(\Lollipop\App::getBenchmark());
-});
-                    </code>
-                </pre>
-                
-                <pre>
-                    <code class="php hljs">
-/**
- * Set header
- * 
- * @param string    $key    HTTP header key
- * @param string    $value  HTTP header value
- * 
- */
-static public function setHeader($key, $value) {...
-
-/**
- * Example
- *
- * Set response header
- *
- */
-\Lollipop\App::get('/hello/(%s)', function($name) {
-    \Lollipop\App::setHeader('content-type', 'application/json');
-    
-    echo json_encode(['name' => $name]);
-});
-                    </code>
-                </pre>
-                
-                <pre>
-                    <code class="php hljs">
-/**
- * Route forwarding
- * 
- * @param string $path Route
- * @param array  $params Arguments
- * 
- */
-static public function forward($path, $params = null) {...
-
-/**
- * Example
- *
- * Forward route to another route
- *
- */
-\Lollipop\App::get('/', function() {
-    \Lollipop\App::forward('/hello/(%s)', ['Programmer']);
 });
                     </code>
                 </pre>
@@ -325,7 +197,7 @@ static public function getConfig($key) {...
  * Get configuration key value
  *
  */
-\Lollipop\App::get('/', function() {
+\Lollipop\Route::get('/', function() {
     echo \Lollipop\App::getConfig('message');
 });
                     </code>
