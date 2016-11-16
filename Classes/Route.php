@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.1
+     * @version     1.2
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -36,12 +36,6 @@
          *
          */
         static private $_is_running = false;
-
-        /**
-         * @type    array   HTTP page headers set by user
-         *
-         */
-        static private $_page_headers = array();
 
         /**
          * GET route
@@ -153,11 +147,9 @@
             // Record HTTP header
             if (is_array($headers)) {
                 foreach ($headers as $header) {
-                    array_push(self::$_page_headers, $header);
                     header($header);
                 }
             } else if (is_string($headers)) {
-                array_push(self::$_page_headers, $headers);
                 header($headers);
             }
         }
@@ -347,8 +339,8 @@
 
             // If data is in array format then set content-type
             // to application/json
-            if (!count(self::$_page_headers) && (is_array($data) || is_object($data))) {
-                self::setHeader('Content-type', 'application/json');
+            if (is_array($data) || is_object($data)) {
+                self::setHeader('Content-type: application/json');
 
                 return json_encode($data);
             }
