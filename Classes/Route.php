@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -145,18 +145,21 @@
         /**
          * Set header
          *
-         * @param string    $key    HTTP header key
-         * @param string    $value  HTTP header value
+         * @param   mixed    $headers    HTTP header
+         * @return  void
          *
          */
-        static public function setHeader($key, $value) {
-            $header = $key . ': ' . $value;
-
+        static public function setHeader($headers) {
             // Record HTTP header
-            array_push(self::$_page_headers, $header);
-
-            // Set header
-            header($header);
+            if (is_array($headers)) {
+                foreach ($headers as $header) {
+                    array_push(self::$_page_headers, $header);
+                    header($header);
+                }
+            } else if (is_string($headers)) {
+                array_push(self::$_page_headers, $headers);
+                header($headers);
+            }
         }
 
         /**
@@ -279,7 +282,7 @@
 
                             // If not from Controller, then just call function
                             $data = call_user_func_array($callback, $matches);
-
+                            
                             // Show output
                             echo self::_returnData($data);
 
@@ -296,7 +299,7 @@
 
                                 \Lollipop\Cache::save($cache_key, $page_cache, false, $cache_time);
                             }
-
+                            
                             // Flush ob contents
                             ob_flush();
 

@@ -145,12 +145,12 @@ static public function all($path, $callback, $cachable = false, $cache_time = 24
                     <code class="php hljs">
 /**
  * Set header
- * 
- * @param string    $key    HTTP header key
- * @param string    $value  HTTP header value
- * 
+ *
+ * @param   mixed    $headers    HTTP header
+ * @return  void
+ *
  */
-static public function setHeader($key, $value) {...
+static public function setHeader($headers) {...
 
 /**
  * Example
@@ -159,7 +159,7 @@ static public function setHeader($key, $value) {...
  *
  */
 \Lollipop\Route::get('/hello/(%s)', function($name) {
-    \Lollipop\Route::setHeader('content-type', 'application/json');
+    \Lollipop\Route::setHeader('Content-type: application/json');
     
     echo json_encode(['name' => $name]);
 });
