@@ -39,8 +39,8 @@
          * @return  mixed
          * 
          */
-        static public function get($key) {
-            return isset(self::$_config[$key]) ? self::$_config[$key] : null;
+        static public function get($key = '') {
+            return $key ? (isset(self::$_config[$key]) ? self::$_config[$key] : null) : self::$_config;
         }
         
         /**
