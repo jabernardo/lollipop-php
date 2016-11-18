@@ -196,7 +196,7 @@
             $cache_key = sha1($sql_query);
             
             // If cache exists and cache is enable
-            $config = App::getConfig('db');
+            $config = Config::get('db');
             $cache_enable = isset($config['cache']) ? $config['cache'] : false;
             $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
             
@@ -274,7 +274,7 @@
             $cache_key = sha1($sql_query);
             
             // If cache exists and cache is enable
-            $config = App::getConfig('db');
+            $config = Config::get('db');
             $cache_enable = isset($config['cache']) ? $config['cache'] : false;
             $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
             
@@ -754,7 +754,7 @@
          *
          */
         private function __connect() {
-            $db = \Lollipop\App::getConfig('db');
+            $db = \Lollipop\Config::get('db');
 
             if (!is_null($db)) {
                 $host = $db['host'] ?  $db['host'] : 'localhost';

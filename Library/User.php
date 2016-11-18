@@ -47,7 +47,7 @@
          *
          */
         static private function connect() {
-            $db = \Lollipop\App::getConfig('db');
+            $db = \Lollipop\Config::get('db');
 
             if (!is_null($db)) {
                 $host = !is_null($db['host']) ?  $db['host'] : 'localhost';
@@ -79,7 +79,7 @@
                 self::$_db->query(base64_decode('Q1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgYGxvZ2luYCAoDQogIGBpZGAgdmFyY2hhcigzMikgQ09MTEFURSB1dGY4X3VuaWNvZGVfY2kgTk9UIE5VTEwsDQogIGB1c2VybmFtZWAgdmFyY2hhcig0MCkgQ09MTEFURSB1dGY4X3VuaWNvZGVfY2kgTk9UIE5VTEwsDQogIGByb2xlYCB2YXJjaGFyKDQwKSBDT0xMQVRFIHV0ZjhfdW5pY29kZV9jaSBOT1QgTlVMTCwNCiAgYGlwX2FkZHJlc3NgIHZhcmNoYXIoNDUpIENPTExBVEUgdXRmOF91bmljb2RlX2NpIE5PVCBOVUxMLA0KICBgdXNlcl9hZ2VudGAgdGV4dCBDT0xMQVRFIHV0ZjhfdW5pY29kZV9jaSBOT1QgTlVMTCwNCiAgYGxhc3RfaW5gIGRhdGV0aW1lIE5PVCBOVUxMLA0KICBQUklNQVJZIEtFWSAoYGlkYCkNCikgRU5HSU5FPUlubm9EQiBERUZBVUxUIENIQVJTRVQ9dXRmOCBDT0xMQVRFPXV0ZjhfdW5pY29kZV9jaTs='));
                 
                 // Get users limit
-                self::$_ulimit = \Lollipop\App::getConfig('users_limit') ? \Lollipop\App::getConfig('users_limit') : 1000000000;
+                self::$_ulimit = \Lollipop\Config::get('users_limit') ? \Lollipop\Config::get('users_limit') : 1000000000;
                 
                 // Auto logout users
                 self::_autoLogout();

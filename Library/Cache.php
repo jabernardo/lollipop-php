@@ -68,7 +68,7 @@
          * 
          */
         static private function _getStoragePath() {
-            return (\Lollipop\App::getConfig('cache_folder')) ? rtrim(\Lollipop\App::getConfig('cache_folder'), '/') . '/' : LOLLIPOP_STORAGE_CACHE;
+            return (\Lollipop\Config::get('cache_folder')) ? rtrim(\Lollipop\Config::get('cache_folder'), '/') . '/' : LOLLIPOP_STORAGE_CACHE;
         }
         
         /**

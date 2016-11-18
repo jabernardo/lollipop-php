@@ -23,7 +23,7 @@
          * 
          */
         static function base($url = '', $cacheBuster = false) {
-            $cacheb = $cacheBuster ? ('?' . (\Lollipop\App::getConfig('app_version') ? \Lollipop\App::getConfig('app_version') : '1.0.0')) : ''; 
+            $cacheb = $cacheBuster ? ('?' . (\Lollipop\Config::get('app_version') ? \Lollipop\Config::get('app_version') : '1.0.0')) : ''; 
             
             return ((@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://') . str_replace('//', '/', ($_SERVER['SERVER_NAME'] . '/' . $url)) . $cacheb;
         }

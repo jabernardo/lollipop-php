@@ -1,6 +1,8 @@
 <?php
     namespace Lollipop;
 
+    use \Lollipop\Config;
+
     /**
      * Lollipop Application Class
      *
@@ -8,6 +10,7 @@
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
+     * @uses        \Lollipop\Config
      *
      */
     class App
@@ -17,12 +20,6 @@
          *
          */
         CONST SUGAR = 'MTAwMDA1ODA3MTMyMjEy';
-
-        /**
-         * @type    array   Configuration settings
-         *
-         */
-        static private $_config = array();
 
         /**
          * @type    array   Autoload folders
@@ -38,25 +35,22 @@
          * @type    void
          *
          */
-        static public function init($config = array()) {
+        static public function init(array $config = array()) {
             // Parse config
             //  configuration can be on multidimensional array or
             if (is_array($config)) {
                 foreach ($config as $key => $value) {
-                    self::$_config[$key] = $value;
+                    Config::add($key, $value);
                 }
-            // Initialization files (*.ini)
-            } else if (file_exists($config)) {
-                self::$_config = parse_ini_file($config);
             }
 
             // Set application environment
             self::_setEnvironment();
 
             // Check for folders available for autoloading
-            if (!is_null(self::getConfig('autoload'))) {
-                if (is_array(self::getConfig('autoload'))) {
-                    foreach (self::getConfig('autoload') as $autoload_folder) {
+            if (!is_null(Config::get('autoload'))) {
+                if (is_array(Config::get('autoload'))) {
+                    foreach (Config::get('autoload') as $autoload_folder) {
                         array_push(self::$_autoload_folders, $autoload_folder);
                     }
                 }
@@ -99,16 +93,6 @@
         }
 
         /**
-         * Get configuration key value
-         *
-         * @return  string
-         *
-         */
-        static public function getConfig($key) {
-            return isset(self::$_config[$key]) ? self::$_config[$key] : null;
-        }
-
-        /**
          * Set environment for application
          *
          * @example
@@ -120,7 +104,7 @@
          *
          */
         static private function _setEnvironment() {
-            switch(strtolower(self::getConfig('environment') ? self::getConfig('environment') : 'dev')) {
+            switch(strtolower(Config::get('environment') ? Config::get('environment') : 'dev')) {
                 case 'dev':
                 case 'development':
                     // Report all errors
@@ -140,7 +124,7 @@
 
                     break;
                 default:
-                    Log::error('Invalid application environment: ' . self::getConfig('environment'));
+                    Log::error('Invalid application environment: ' . Config::get('environment'));
 
                     break;
             }

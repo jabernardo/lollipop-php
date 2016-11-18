@@ -238,7 +238,7 @@
                             self::$_is_running = true;
 
                             // Enable dev cache options
-                            if (\Lollipop\App::getConfig('dev_tools')) {
+                            if (\Lollipop\Config::get('dev_tools')) {
                                 // ?purge_all_cache
                                 if (isset($_REQUEST['purge_all_cache'])) {
                                     \Lollipop\Cache::purge();
@@ -355,13 +355,13 @@
          *
          */
         static private function _checkNotFound() {
-            if (!self::$_is_listening && (\Lollipop\App::getConfig('show_not_found') === null || \Lollipop\App::getConfig('show_not_found') !== false)) {
+            if (!self::$_is_listening && (\Lollipop\Config::get('show_not_found') === null || \Lollipop\Config::get('show_not_found') !== false)) {
                 \Lollipop\Log::notify('404 Not Found: ' . $_SERVER['REQUEST_URI']);
 
                 header('HTTP/1.0 404 Not Found');
 
-                if (!is_null(\Lollipop\App::getConfig('not_found_page'))) {
-                    require_once(\Lollipop\App::getConfig('not_found_page'));
+                if (!is_null(\Lollipop\Config::get('not_found_page'))) {
+                    require_once(\Lollipop\Config::get('not_found_page'));
                 } else {
                     echo '<!DOCTYPE html>';
                     echo '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
