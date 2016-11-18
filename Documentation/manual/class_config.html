@@ -2,7 +2,7 @@
 <html>
     <head>
         <!-- title -->
-        <title>App Library | Lollipop-PHP</title>
+        <title>Config Library | Lollipop-PHP</title>
         <!-- Page encoding -->
         <meta charset="utf-8">
         <!-- Keywords -->
@@ -32,11 +32,15 @@
         <div class="container">
             <!-- Header -->
             <section class="header">
-                <h4><a href="index.html">\Lollipop</a>\App Library</h4>
-                <p>App library to configure your web application.</p>
+                <h4><a href="index.html">\Lollipop</a>\Config Library</h4>
+                </p>Manage and customize Lollipop using configurations</p>
                 <br>
             </section>
             <!-- end of Header -->
+            <!-- Class Declarations -->
+            <div class="docs-section">
+                <h6 class="docs-header">Class Declarations</h6>
+                Below are the defined static functions and variables for <code>\Lollipop\Cache</code> library:<br><br>
             <!-- Configurations -->
             <div class="docs-section">
                 <h6 class="docs-header">Configurations for your application</h6>
@@ -118,76 +122,70 @@ App::init($config);
             <!-- Class Declarations -->
             <div class="docs-section">
                 <h6 class="docs-header">Class Declarations</h6>
-                Below are the defined static functions and variables for <code>\Lollipop\App</code> library:<br><br>
-                
+                Below are the defined static functions and variables for <code>\Lollipop\Config</code> library:<br><br>
                 <pre>
                     <code class="php hljs">
 /**
- * Initialize Lollipop
+ * Add configuration
  * 
- * @param   mixed   $config     Configuration variable
+ * @access  public
+ * @param   string  $key    Configuration key
+ * @param   string  $value  Configuration value
+ * @return  void
  * 
- * @type    void
- *
  */
-static public function init(array $config = array()) {...
+static public function add($key, $value) {...
 
 /**
  * Example
  *
- * Initialize your web application with configuration
- *
  */
-\Lollipop\App::init($config);
-                    </code>
-                </pre>
-
-                <pre>
-                    <code class="php hljs">
-/**
- * Get response application response time 
- * 
- * @return  mixed
- * 
- */
-static public function getResponseTime() {...
-
-/**
- * Example
- *
- * Outputs web application's response time
- *
- */
-\Lollipop\Route::get('/hello', function() {
-    echo \Lollipop\App::getResponseTime();
-});
+\Lollipop\Config::add('feature_a', true);
                     </code>
                 </pre>
                 
                 <pre>
                     <code class="php hljs">
 /**
- * Get Benchmark
+ * Get configuration
  * 
+ * @access  public
+ * @param   string  $key    Configuration key
  * @return  mixed
  * 
  */
-static public function getBenchmark() {...
+static public function get($key = '') {...
 
 /**
  * Example
  *
- * Get benchmark (elapsed time and memory)
+ */
+\Lollipop\Config::get('feature_a'); // Returns <true>
+\Lollipop\Config::get(); // Returns all configuration set
+                    </code>
+                </pre>
+                
+                <pre>
+                    <code class="php hljs">
+/**
+ * Remove configuration
+ * 
+ * @access  public
+ * @param   string  $key    Configuration key
+ * @return  void
+ * 
+ */
+static public function remove($key) {...
+
+/**
+ * Example
  *
  */
-\Lollipop\Route::get('/hello', function() {
-    var_dump(\Lollipop\App::getBenchmark());
-});
+\Lollipop\Config::remove('feature_a');
                     </code>
                 </pre>
             </div>
             <!-- end of Class Declarations -->
-            
             <!-- Goto Top -->
             <div class="row">
                 <div class="twelve columns" style="text-align: center;">
