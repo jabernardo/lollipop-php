@@ -4,7 +4,7 @@
     /**
      * Inflector Class
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -42,7 +42,7 @@
          * @return 	string
          */
         static function filename($str) {
-            return strtolower(str_replace(' ', '_', $str));
+            return strtolower(str_replace(array(' ', '\\', '/', ':', '*', '?', '<', '>', '|'), '_', $str));
         }
 
         /**
