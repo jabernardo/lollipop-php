@@ -25,14 +25,28 @@
      * 
      * 
      */
-    define('LOLLIPOP_CLASS', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Classes/'));
+    define('LOLLIPOP_LIBRARY', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Library/'));
+    
+    /**
+     * Lollipop Storage directory
+     * 
+     * 
+     */
+    define('LOLLIPOP_STORAGE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Storage/'));
     
     /**
      * Lollipop cache directory
      * 
      * 
      */
-    define('LOLLIPOP_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Cache/'));
+    define('LOLLIPOP_STORAGE_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'cache/'));
+    
+    /**
+     * Lollipop cache directory
+     * 
+     * 
+     */
+    define('LOLLIPOP_STORAGE_LOG', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'logs/'));
     
     /**
      * Check if PHP version is valid
@@ -66,7 +80,7 @@
         $tokens = explode('\\', $class);
 
         if (count($tokens) == 2) {
-            $file = LOLLIPOP_CLASS . ucfirst($tokens[1]) . '.php';
+            $file = LOLLIPOP_LIBRARY . ucfirst($tokens[1]) . '.php';
 
             if (file_exists($file)) {
                 require_once($file);

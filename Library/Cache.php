@@ -20,11 +20,11 @@
          *
          */
         static private function _checkFolder() {
-            if (!is_dir(LOLLIPOP_CACHE)) {
+            if (!is_dir(self::_getStoragePath())) {
                 throw new \Exception('Can\'t find app/cache folder');
             }
             
-            if (!is_writable(LOLLIPOP_CACHE)) {
+            if (!is_writable(self::_getStoragePath())) {
                 throw new \Exception('Permission denied for app/cache');
             }
         }
@@ -38,7 +38,7 @@
          * 
          */
         static private function _janitor($key) {
-            $fn = LOLLIPOP_CACHE . sha1($key);
+            $fn = self::_getStoragePath() . sha1($key);
             
             if (file_exists($fn)) {
                 $contents = file_get_contents($fn);
@@ -61,6 +61,17 @@
         }
         
         /**
+         * Storage Path
+         * 
+         * @access  private
+         * @return  string
+         * 
+         */
+        static private function _getStoragePath() {
+            return (\Lollipop\App::getConfig('cache_folder')) ? rtrim(\Lollipop\App::getConfig('cache_folder'), '/') . '/' : LOLLIPOP_STORAGE_CACHE;
+        }
+        
+        /**
          * Check if cache exists
          *
          * @access  public
@@ -72,7 +83,7 @@
             self::_checkFolder();
             self::_janitor($key);
             
-            return file_exists(LOLLIPOP_CACHE . sha1($key));
+            return file_exists(self::_getStoragePath() . sha1($key));
         }
         
         /**
@@ -98,7 +109,7 @@
                     'data' => $data
                 );
                 
-                file_put_contents(LOLLIPOP_CACHE . sha1($key), base64_encode(serialize($data)));
+                file_put_contents(self::_getStoragePath() . sha1($key), base64_encode(serialize($data)));
             }
         }
         
@@ -114,7 +125,7 @@
             self::_checkFolder();
             
             if (self::exists($key)) {
-                $contents = file_get_contents(LOLLIPOP_CACHE . sha1($key));
+                $contents = file_get_contents(self::_getStoragePath() . sha1($key));
                 
                 if (base64_decode($contents, true)) {
                     $data = unserialize(base64_decode($contents, true));
@@ -137,7 +148,7 @@
         static public function remove($key) {
             self::_checkFolder();
             
-            $cache = LOLLIPOP_CACHE . sha1($key);
+            $cache = self::_getStoragePath() . sha1($key);
             
             if (file_exists($cache)) {
                 unlink($cache);
@@ -157,7 +168,7 @@
             self::_checkFolder();
             
             // Get all files from the cache folder
-            $contents = glob(LOLLIPOP_CACHE . '*');
+            $contents = glob(self::_getStoragePath() . '*');
     
             // Remove cache files
             foreach ($contents as $content) {

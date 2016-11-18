@@ -21,7 +21,7 @@
          * 
          */
         private static function __writeOutLog($message) {
-            $log_path = (App::getConfig('log_folder') ? App::getConfig('log_folder'): LOLLIPOP_BASE . 'Logs');
+            $log_path = (App::getConfig('log_folder') ? App::getConfig('log_folder'): LOLLIPOP_STORAGE_LOG);
             
             if (!is_dir($log_path)) {
                throw new \Exception('Log folder doesn\'t exists.'); 
