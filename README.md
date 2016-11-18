@@ -7,10 +7,10 @@ You can use Lollipop when you're creating a simple and powerful web application.
 ###### IT's EASY!
 It's very easy to start with! See a sample below and love it!
 ```php
-use \Lollipop\App;
+use \Lollipop\Route;
 
 // Your index page
-App::get('/', function() {
+Route::get('/', function() {
     echo 'Hello World!';
 }, true);
            
