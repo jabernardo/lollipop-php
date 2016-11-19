@@ -527,6 +527,56 @@
         }
         
         /**
+         * Get max field/s value
+         * 
+         * @param   array   Field/s name
+         * 
+         */
+        public function max($field) {
+            // Temporary key sum strings
+            $_tmp_sum = array();
+            
+            if (is_array($field)) {
+                foreach($field as $key => $value) {
+                    // Multiple fields
+                    array_push($_tmp_sum, 'MAX(' . ($key ? $key : $value) . ') ' . ($key ? ' AS ' . $value : ''));
+                }
+            } else {
+                // Single field
+                array_push($_tmp_sum, 'MAX(' . $field . ')');
+            }
+            
+            $sql_query = 'SELECT ' . implode($_tmp_sum, ', ') .
+                         ' FROM ' . $this->_table;
+                         
+            // Where statements
+            if (count($this->_where)) {
+                $sql_query .= ' WHERE ';
+                $sql_query .= implode($this->_where, ' AND ');
+                
+                // or statements
+                if (count($this->_or)) {
+                    $sql_query .= ' OR ';
+                    $sql_query .= implode($this->_or, ' AND ');
+                }
+            }
+            
+            // Set the query
+            $this->_sql_query = $sql_query;
+            
+            // Execute query
+            $return = $this->__execute();
+
+            $results = array();
+            
+            if (is_object($return)) {
+                $results = $return->fetch_array();
+            }
+            
+            return count($results) ? $results : null;
+        }
+        
+        /**
          * Where statements
          * 
          * @param   string  $field Table field
