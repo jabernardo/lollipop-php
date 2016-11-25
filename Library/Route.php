@@ -161,7 +161,7 @@
          * @param array  $params Arguments
          *
          */
-        static public function forward($path, $params = null) {
+        static public function forward($path, array $params = array()) {
             if (isset(self::$_stored_routes[$path])) {
                 $callback = self::$_stored_routes[$path];
                 $callback = $callback['callback'];
