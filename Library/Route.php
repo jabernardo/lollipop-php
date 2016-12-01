@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.3
+     * @version     1.4
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -273,7 +273,7 @@
                             ob_start();
 
                             // If not from Controller, then just call function
-                            $data = call_user_func_array($callback, $matches);
+                            $data = self::_callback($callback, $matches);
                             
                             // Show output
                             echo self::_returnData($data);
@@ -305,6 +305,58 @@
                     }
                 }
             }
+        }
+        
+        /**
+         * Call callback and return data
+         *
+         * @access  private
+         * @param   mixed   $callback   (string or callable) string must be {abc}.{abc} format to use controller action
+         * @oaram   array   $args       Parameters to be passed to callback
+         * @return  mixed
+         *
+         */
+        static private function _callback($callback, array $args = array()) {
+            if (is_string($callback)) {
+                // If callback was string then
+                // Explode it by (dot) to determine the Controller and Action
+                $ctoks = explode('.', $callback);
+                
+                switch (count($ctoks)) {
+                    case 1: // Function only
+                        if (!function_exists($action = $ctoks[0])) {
+                            \Lollipop\Log::error('Callback is not a function', true);
+                        }
+                        
+                        return call_user_func_array($action, $args); // Update callback
+                        
+                        break;
+                    case 2: // Controller and Action
+                        if (class_exists($ctoks[0]) &&
+                            is_callable(array($controller = new $ctoks[0], $action = $ctoks[1]))) {
+                            
+                            
+                            return call_user_func_array(array($controller, $action), $args);
+                        }
+                        
+                        \Lollipop\Log::error('Can\'t find controller and action', true);
+                    
+                        break;
+                    
+                    default: // Invalid callback
+                        \Lollipop\Log::error('Callback is not a function', true);
+                        
+                        break;
+                }
+            }
+            
+            // Only if sent parameter is callable
+            if (is_callable($callback)) {
+                return call_user_func_array($callback, $args); // Return anonymous function
+            }
+            
+            // Automatically return null from everything that is not an string or callable
+            return 'Invalid callback.';
         }
 
         /**
