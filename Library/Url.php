@@ -4,7 +4,7 @@
     /**
      * Url Class
      *
-     * @version     1.1
+     * @version     1.2
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -23,7 +23,7 @@
          * 
          */
         static function base($url = '', $cacheBuster = false) {
-            $cacheb = $cacheBuster ? ('?' . (\Lollipop\Config::get('app_version') ? \Lollipop\Config::get('app_version') : '1.0.0')) : ''; 
+            $cacheb = $cacheBuster ? ('?' . (is_object(\Lollipop\Config::get('app')) && isset(\Lollipop\Config::get('app')->version) ? \Lollipop\Config::get('app')->version : '1.0.0')) : ''; 
             
             return ((@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://') . str_replace('//', '/', ($_SERVER['SERVER_NAME'] . '/' . $url)) . $cacheb;
         }
