@@ -4,7 +4,7 @@
     /**
      * Simple page Caching
      *
-     * @version     3.0.3
+     * @version     3.0.4
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -68,7 +68,7 @@
          * 
          */
         static private function _getStoragePath() {
-            return (\Lollipop\Config::get('cache_folder')) ? rtrim(\Lollipop\Config::get('cache_folder'), '/') . '/' : LOLLIPOP_STORAGE_CACHE;
+            return (is_object(\Lollipop\Config::get('cache')) && isset(\Lollipop\Config::get('cache')->folder)) ? rtrim(\Lollipop\Config::get('cache')->folder, '/') . '/' : LOLLIPOP_STORAGE_CACHE;
         }
         
         /**
