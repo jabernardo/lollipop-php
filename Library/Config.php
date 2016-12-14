@@ -40,7 +40,7 @@
          * 
          */
         static public function get($key = '') {
-            return $key ? (isset(self::$_config[$key]) ? self::$_config[$key] : null) : self::$_config;
+            return $key ? (isset(self::$_config[$key]) ? (is_array(self::$_config[$key]) ? (object)self::$_config[$key] : self::$_config[$key]) : null) : self::$_config;
         }
         
         /**

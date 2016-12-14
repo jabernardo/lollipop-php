@@ -49,11 +49,11 @@
         static private function connect() {
             $db = \Lollipop\Config::get('db');
 
-            if (!is_null($db)) {
-                $host = !is_null($db['host']) ?  $db['host'] : 'localhost';
-                $uid = !is_null($db['username']) ?  $db['username'] : 'root';
-                $pwd = !is_null($db['password']) ?  $db['password'] : '';
-                $db = !is_null($db['database']) ?  $db['database'] : 'lollipop';
+            if (is_object($db)) {
+                $host = isset($db->host) ?  $db->host : 'localhost';
+                $uid = isset($db->username) ?  $db->username : 'root';
+                $pwd = isset($db->password) ?  $db->password : '';
+                $db = isset($db->database) ?  $db->database : 'lollipop';
                 
                 // Instantiate MySQLi
                 self::$_db = new \mysqli($host, $uid, $pwd, $db);

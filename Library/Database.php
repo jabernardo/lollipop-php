@@ -807,10 +807,10 @@
             $db = \Lollipop\Config::get('db');
 
             if (!is_null($db)) {
-                $host = $db['host'] ?  $db['host'] : 'localhost';
-                $uid = $db['username'] ?  $db['username'] : 'root';
-                $pwd = $db['password'] ?  $db['password'] : '';
-                $db = $db['database'] ?  $db['database'] : 'lollipop';
+                $host = isset($db->host) ?  $db->host : 'localhost';
+                $uid = isset($db->username) ?  $db->username : 'root';
+                $pwd = isset($db->password) ?  $db->password : '';
+                $db = isset($db->database) ?  $db->database : 'lollipop';
                        
                 // Instantiate MySQLi
                 $this->_mysqli = new \mysqli($host, $uid, $pwd, $db);

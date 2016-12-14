@@ -49,10 +49,8 @@
 
             // Check for folders available for autoloading
             if (!is_null(Config::get('autoload'))) {
-                if (is_array(Config::get('autoload'))) {
-                    foreach (Config::get('autoload') as $autoload_folder) {
-                        array_push(self::$_autoload_folders, $autoload_folder);
-                    }
+                foreach ((array)Config::get('autoload') as $autoload_folder) {
+                    array_push(self::$_autoload_folders, $autoload_folder);
                 }
             }
 
