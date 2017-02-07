@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.4.1
+     * @version     1.4.2
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
