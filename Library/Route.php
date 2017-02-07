@@ -419,6 +419,7 @@
                     echo '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
                     echo '<html>';
                     echo '<head><title>404 Not Found</title></head>';
+                    echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
                     echo '<body>';
                     echo '<h1>404 Not Found</h1>';
                     echo '<p>The page that you have requested could not be found.</p>';
