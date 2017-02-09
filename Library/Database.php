@@ -8,7 +8,7 @@
      * Database Driver for MySQLi
      *
      * @package     Candy
-     * @version     2.0
+     * @version     2.1
      * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
@@ -31,6 +31,14 @@
          * @type string
          */
         private $_table = '';
+        
+        /**
+         * Alias
+         * 
+         * @type string
+         * 
+         */
+        private $_alias  = '';
         
         /**
          * Updates
@@ -86,6 +94,22 @@
         private $_joins = array();
         
         /**
+         * Unions
+         * 
+         * @type array
+         * 
+         */
+        private $_union = array();
+        
+        /**
+         * Union All
+         * 
+         * @type array
+         * 
+         */
+        private $_union_all = array();
+        
+        /**
          * Group by
          * 
          * @type string
@@ -125,29 +149,57 @@
          */
         private static $_last_commands = array();
         
+        
+        /**
+         * To string magic function
+         * 
+         * @return  string
+         * 
+         */
+        public function __toString() {
+            return $this->_sql_query;
+        }
+        
         /**
          * Select table
          * 
          * @param   string  $table
+         * @param   bool    $isQuery
          * 
          */
-        public static function table($table) {
+        public static function table($table, $isQuery = false) {
             $new_self = new self();
-            $new_self->_table = $table;
+            
+            if ($isQuery) {
+                $new_self->_table = '(' . $table . ')';
+            } else {
+                $new_self->_table = $table;
+            }
 
             return $new_self;
+        }
+        
+        /**
+         * Set alias for query
+         * 
+         * @param 
+         * 
+         */
+        public function alias($alias) {
+            $this->_alias = $alias;
+            
+            return $this;
         }
         
         /**
          * Select fields
          * 
          * @param   array   $fields     Fields to select
-         * @param   bool    $cache      Enable cache (true)
          * 
          * @return  array 
          * 
          */
-        public function select($fields, $cache = true) {
+        public function select($fields) {
             if (is_array($fields)) {
                 $this->_fields = implode($fields, ', ');
             } else {
@@ -174,6 +226,21 @@
                 }
             }
             
+            // Alias
+            if ($this->_alias) {
+                $sql_query .= ' AS ' . $this->_alias;
+            }
+            
+            // Union
+            if (count($this->_union)) {
+                $sql_query .= ' UNION ' . implode($this->_union, ' UNION ');
+            }
+            
+            // Union All
+            if (count($this->_union_all)) {
+                $sql_query .= ' UNION ALL ' . implode($this->_union_all, ' UNION ALL ');
+            }
+            
             // Group By
             if (count($this->_group_by)) {
                 $sql_query .= $this->_group_by;
@@ -192,46 +259,16 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Get cache key
-            $cache_key = sha1($sql_query);
-            
-            // If cache exists and cache is enable
-            $config = Config::get('db');
-            $cache_enable = isset($config['cache']) ? $config['cache'] : false;
-            $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
-            
-            if ($cache_enable) {
-                if (Cache::exists($cache_key) && $cache) {
-                    return Cache::recover($cache_key);
-                }
-            }
-            
-            // Execute query
-            $return =  $this->__execute();
-
-            // Return contents
-            $results = array();
-            
-            if (is_object($return)) {
-                while ($row = $return->fetch_array()) {
-                    array_push($results, $row);
-                }
-            }
-            
-            // Save cache (overwrites existing)
-            Cache::save($cache_key, $results, true, $cache_time);
-            
-            return $results ? $results : array();
+            return $this;
         }
         
         /**
          * Select fields
          * 
-         * @param   bool    $cache  Enable cache (true)
          * @return  array
          * 
          */
-        public function selectAll($cache = true) {
+        public function selectAll() {
             // Build Select Command
             $sql_query = 'SELECT ' . $this->_distinct .
                          '* FROM ' . $this->_table;
@@ -270,36 +307,7 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Get cache key
-            $cache_key = sha1($sql_query);
-            
-            // If cache exists and cache is enable
-            $config = Config::get('db');
-            $cache_enable = isset($config['cache']) ? $config['cache'] : false;
-            $cache_time = isset($config['cache_time']) ? $config['cache_time'] : 1440;
-            
-            if ($cache_enable) {
-                if (Cache::exists($cache_key) && $cache) {
-                    return Cache::recover($cache_key);
-                }
-            }
-            
-            // Execute query
-            $return =  $this->__execute();
-
-            // Return contents
-            $results = array();
-            
-            if (is_object($return)) {
-                while ($row = $return->fetch_array()) {
-                    array_push($results, $row);
-                }
-            }
-            
-            // Save cache (overwrites existing)
-            Cache::save($cache_key, $results, true, $cache_time);
-            
-            return $results ? $results : array();
+            return $this;
         }
         
         /**
@@ -341,9 +349,7 @@
             $this->_sql_query = $sql_query;
             
             // Execute query
-            $q = $this->__execute();
-            
-            return ($q) ? $this : false;
+            return $this;
         }
         
         /**
@@ -375,10 +381,7 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Execute query
-            $q = $this->__execute();
-            
-            return ($q) ? $this : false;
+            return $this;
         }
         
         /**
@@ -420,10 +423,7 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Execute query
-            $q = $this->__execute();
-            
-            return ($q) ? $this : false;
+            return $this;
         }
         
         /**
@@ -464,16 +464,31 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Execute query
-            $return = $this->__execute();
-
-            $results = array();
+            return $this;
+        }
+        
+        /**
+         * Union 
+         * 
+         * @param   string  $sql    SQL string
+         * 
+         */
+        public function union($sql) {
+            array_push($this->_union, $sql);
             
-            if (is_object($return)) {
-                $results = $return->fetch_array();
-            }
+            return $this;
+        }
+        
+        /**
+         * Union All
+         * 
+         * @param   string  $sql    SQL string
+         * 
+         */
+        public function unionAll($sql) {
+            array_push($this->_union_all, $sql);
             
-            return count($results) ? $results : null;
+            return $this;
         }
         
         /**
@@ -514,16 +529,7 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Execute query
-            $return = $this->__execute();
-
-            $results = array();
-            
-            if (is_object($return)) {
-                $results = $return->fetch_array();
-            }
-            
-            return count($results) ? $results : null;
+            return $this;
         }
         
         /**
@@ -564,16 +570,7 @@
             // Set the query
             $this->_sql_query = $sql_query;
             
-            // Execute query
-            $return = $this->__execute();
-
-            $results = array();
-            
-            if (is_object($return)) {
-                $results = $return->fetch_array();
-            }
-            
-            return count($results) ? $results : null;
+            return $this;
         }
         
         /**
@@ -754,19 +751,6 @@
         }
         
         /**
-         * Set raw sql query
-         * 
-         */
-        public function executeRaw($sql) {
-            $this->_sql_query = $sql;
-            
-            // Execute
-            $result = $this->__execute();
-            
-            return $result;
-        }
-        
-        /**
          * Get last executed query
          * 
          * @return string
@@ -787,14 +771,15 @@
         }
         
         /**
-         * Run raw sql command
+         * Raw sql command
          * 
          * @param string $sql SQL commands
          * 
          */
         public static function raw($sql) {
-            $_exec_raw = new self();
-            return $_exec_raw->executeRaw($sql);
+            $this->_sql_query = $sql;
+            
+            return $this;
         }
         
         /**
@@ -826,23 +811,52 @@
         /**
          * Execute query
          * 
+         * @param   bool    $cache  Enable cache (for queries)
+         * @return  mixed
+         * 
          */
-        private function __execute() {
+        public function execute($cache = true) {
             // @todo Execute sql here
             if (strlen($this->_sql_query)) {
+                // Get cache key
+                $cache_key = sha1($this->_sql_query);
+                
+                // If cache exists and cache is enable
+                $config = Config::get('db');
+                $cache_enable = isset($config->cache) ? $config->cache : false;
+                $cache_time = isset($config->cache_time) ? $config->cache_time : 1440;
+                
+                if ($cache_enable) {
+                    if (Cache::exists($cache_key) && $cache) {
+                        return Cache::recover($cache_key);
+                    }
+                }
+                
                 // Open connection
                 $this->__connect();
 
                 // Execute command
                 $return = $this->_mysqli->query($this->_sql_query);
 
-                // Log executed query
-                array_push(self::$_last_commands, $this->_sql_query);
-
                 // Close connection
                 $this->_mysqli->close();
+                
+                // Log executed query
+                array_push(self::$_last_commands, $this->_sql_query);
+            
+                // Return contents
+                $results = array();
+                
+                if (is_object($return) && isset($return->num_rows)) {
+                    while ($row = $return->fetch_array()) {
+                        array_push($results, $row);
+                    }
+                }
+                
+                // Save cache (overwrites existing)
+                Cache::save($cache_key, $results, true, $cache_time);
 
-                return $return;
+                return count($results) ? $results : $return;
             }
         }
     }
