@@ -8,7 +8,7 @@
      * Database Driver for MySQLi
      *
      * @package     Candy
-     * @version     2.1
+     * @version     2.2
      * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
@@ -578,15 +578,15 @@
          * 
          * @param   string  $field Table field
          * @param   string  $operator   Comparer
-         * @param   string  $value  Comparing value
+         * @param   mixed   $value  Comparing value
          * 
          */
-        public function where($field, $operator = '', $value = '') {
+        public function where($field, $operator = '', $value = null) {
             if (strlen($field) && strlen($operator) == 0 && strlen($value) == 0) {
                 // For RAW string
                 array_push($this->_where, $field);
             } else {
-                if (strlen($value) == 0) {
+                if (is_null($value)) {
                     $value = $operator;
                     $operator = '=';
                 }
@@ -606,15 +606,15 @@
          * 
          * @param   string  $field Table field
          * @param   string  $operator   Comparer
-         * @param   string  $value  Comparing value
+         * @param   mixed   $value  Comparing value
          * 
          */
-        public function orWhere($field, $operator = '', $value = '') {
+        public function orWhere($field, $operator = '', $value = null) {
             if (strlen($field) && strlen($operator) == 0 && strlen($value) == 0) {
                 // For RAW string
                 array_push($this->_or, $field);
             } else {
-                if (strlen($value) == 0) {
+                if (is_null($value)) {
                     $value = $operator;
                     $operator = '=';
                 }
