@@ -8,7 +8,7 @@
      * Database Driver for MySQLi
      *
      * @package     Candy
-     * @version     2.3
+     * @version     2.4
      * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
@@ -777,9 +777,10 @@
          * 
          */
         public static function raw($sql) {
-            $this->_sql_query = $sql;
+            $new_self = new self();
+            $new_self->_sql_query = $sql;
             
-            return $this;
+            return $new_self;
         }
         
         /**
