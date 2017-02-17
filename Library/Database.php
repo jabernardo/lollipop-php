@@ -8,7 +8,7 @@
      * Database Driver for MySQLi
      *
      * @package     Candy
-     * @version     2.4
+     * @version     2.5
      * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
@@ -852,12 +852,14 @@
                     while ($row = $return->fetch_array()) {
                         array_push($results, $row);
                     }
+                    
+                    // Save cache (overwrites existing)
+                    Cache::save($cache_key, $results, true, $cache_time);
+                    
+                    return $results;
                 }
                 
-                // Save cache (overwrites existing)
-                Cache::save($cache_key, $results, true, $cache_time);
-
-                return count($results) ? $results : $return;
+                return $return;
             }
         }
     }
