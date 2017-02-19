@@ -1,16 +1,20 @@
 <?php
     namespace Lollipop;
 
+    use \Lollipop\Benchmark;
     use \Lollipop\Config;
+    use \Lollipop\Log;
 
     /**
      * Lollipop Application Class
      *
-     * @version     6.0
+     * @version     6.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
      * @uses        \Lollipop\Config
+     *              \Lollipop\Benchmark
+     *              \Lollipop\Log
      *
      */
     class App
@@ -73,9 +77,9 @@
          *
          */
         static public function getResponseTime() {
-            \Lollipop\Benchmark::mark('_l_app_end');
+            Benchmark::mark('_l_app_end');
 
-            return \Lollipop\Benchmark::elapsedTime('_l_app_start', '_l_app_end');
+            return Benchmark::elapsedTime('_l_app_start', '_l_app_end');
         }
 
         /**
@@ -85,9 +89,9 @@
          *
          */
         static public function getBenchmark() {
-            \Lollipop\Benchmark::mark('_l_app_end');
+            Benchmark::mark('_l_app_end');
 
-            return \Lollipop\Benchmark::elapsed('_l_app_start', '_l_app_end');
+            return Benchmark::elapsed('_l_app_start', '_l_app_end');
         }
 
         /**

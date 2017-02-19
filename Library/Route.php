@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.4.2
+     * @version     1.4.3
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -298,7 +298,7 @@
                             // Off
                             self::$_is_running = false;
                         } else {
-                            Log::error('Dispatcher is already running. Can\'t run multiple routes.');
+                            \Lollipop\Log::error('Dispatcher is already running. Can\'t run multiple routes.');
                         }
 
                         exit; // Just stop it
