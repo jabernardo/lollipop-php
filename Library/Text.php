@@ -4,7 +4,7 @@
     /**
      * Text Class 
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -58,7 +58,7 @@
                 $decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cipher), MCRYPT_MODE_CBC, md5(md5($key))), '\0');
             }
             
-            return $decoded;
+            return trim($decoded);
         }
 
         /**
