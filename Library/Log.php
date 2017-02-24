@@ -4,7 +4,7 @@
     /**
      * Log Class
      * 
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -21,7 +21,10 @@
          * 
          */
         private static function __writeOutLog($message) {
-            $log_path = (\Lollipop\Config::get('log_folder') ? \Lollipop\Config::get('log_folder'): LOLLIPOP_STORAGE_LOG);
+            $config = \Lollipop\Config::get('log');
+
+            $log_path = (isset($config->folder) && $config->folder) ? $config->folder : LOLLIPOP_STORAGE_LOG;
+            $log_enable = (isset($config->enable)) ? $config->enable : true;
             
             if (!is_dir($log_path)) {
                throw new \Exception('Log folder doesn\'t exists.'); 
@@ -34,7 +37,8 @@
             
             $filename = $log_path . DIRECTORY_SEPARATOR . date('Y-m-d') . '.log';
             
-            file_put_contents($filename, $message . "\n", FILE_APPEND);
+            if ($log_enable)
+                file_put_contents($filename, $message . "\n", FILE_APPEND);
         }
         
         /**
