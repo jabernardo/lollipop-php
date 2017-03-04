@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.4.3
+     * @version     1.5.0
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -322,21 +322,30 @@
                 // Explode it by (dot) to determine the Controller and Action
                 $ctoks = explode('.', $callback);
                 
+                $output = null;
+                
                 switch (count($ctoks)) {
                     case 1: // Function only
                         if (!function_exists($action = $ctoks[0])) {
                             \Lollipop\Log::error('Callback is not a function', true);
                         }
                         
-                        return call_user_func_array($action, $args); // Update callback
+                        ob_start();
+                        $output = call_user_func_array($action, $args); // Update callback
+                        ob_get_clean();
+                        
+                        return $output;
                         
                         break;
                     case 2: // Controller and Action
                         if (class_exists($ctoks[0]) &&
                             is_callable(array($controller = new $ctoks[0], $action = $ctoks[1]))) {
                             
+                            ob_start();
+                            $output = call_user_func_array(array($controller, $action), $args);
+                            ob_get_clean();
                             
-                            return call_user_func_array(array($controller, $action), $args);
+                            return $output;
                         }
                         
                         \Lollipop\Log::error('Can\'t find controller and action', true);
@@ -352,11 +361,13 @@
             
             // Only if sent parameter is callable
             if (is_callable($callback)) {
-                return call_user_func_array($callback, $args); // Return anonymous function
+                ob_start();
+                $output = call_user_func_array($callback, $args); // Return anonymous function
+                ob_get_clean();
             }
             
             // Automatically return null from everything that is not an string or callable
-            return 'Invalid callback.';
+            return $output;
         }
 
         /**

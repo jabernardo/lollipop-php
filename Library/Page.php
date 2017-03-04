@@ -4,7 +4,7 @@
     /**
      * Page Class 
      *
-     * @version     1.0
+     * @version     1.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -66,10 +66,8 @@
                 }
                 
                 $output = ob_get_clean();
-                    
-                echo $output;
                 
-                return true;
+                return $output;
             }
             
             return false;
