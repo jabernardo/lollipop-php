@@ -4,7 +4,7 @@
     /**
      * Request Class 
      *
-     * @version     1.1
+     * @version     1.2
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -56,7 +56,7 @@
          * @return  array
          * 
          */
-        static function get($requests) {
+        static function get($requests = null) {
             $var = array();
             
             // Also support PUT and DELETE
@@ -68,6 +68,8 @@
                 foreach ($requests as $request) {
                     $var[$request] = isset($_all_requests[$request]) ? $_all_requests[$request] : null;
                 }
+            } else if (is_null($requests)) {
+                $var = $_all_requests;
             } else {
                 $var = (isset($_all_requests[$requests])) ? $_all_requests[$requests] : null;
             }
