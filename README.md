@@ -11,7 +11,7 @@ use \Lollipop\Route;
 
 // Your index page
 Route::get('/', function() {
-    echo 'Hello World!';
+    return 'Hello World!';
 }, true);
            
 ```
