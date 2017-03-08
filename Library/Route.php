@@ -4,7 +4,7 @@
     /**
      * Lollipop Route Class
      *
-     * @version     1.5.0
+     * @version     1.5.1
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop
@@ -399,16 +399,25 @@
                 // Throw 404 not found if $data is empty
                 self::_checkNotFound();
             }
-
+            
+            // Set Content coding a gzip
+            self::setHeader('Content-Encoding: gzip');
+            
+            // Set headers for gzip
+            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+            
             // If data is in array format then set content-type
             // to application/json
             if (is_array($data) || is_object($data)) {
                 self::setHeader('Content-type: application/json');
-
-                return json_encode($data);
+                // Convert to json
+                $output .= gzcompress(json_encode($data));
+            } else {
+                // Default
+                $output .= gzcompress($data);
             }
 
-            return $data;
+            return $output;
         }
 
         /**
