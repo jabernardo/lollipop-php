@@ -4,7 +4,7 @@
     /**
      * Simple page Caching
      *
-     * @version     3.0.4
+     * @version     3.0.5
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
      * @package     Lollipop 
@@ -151,7 +151,7 @@
             $cache = self::_getStoragePath() . sha1($key);
             
             if (file_exists($cache)) {
-                unlink($cache);
+                return unlink($cache);
             }
             
             return false;
