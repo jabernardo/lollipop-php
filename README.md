@@ -5,7 +5,7 @@ A slim and very flexible framework for PHP
 You can use Lollipop when you're creating a simple and powerful web application. Lollipop removed the weight of large frameworks. Also Lollipop was created to offer cool functionalities and speed.
 
 ###### IT's EASY!
-It's very easy to start with! See a sample below!
+It's very easy to start with!
 ```php
 use \Lollipop\Route;
 
