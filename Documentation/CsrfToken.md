@@ -12,10 +12,10 @@ $token = CsrfToken::get();
 
 ```
 
-### isValid($token) ```(bool)```
+### isValid(\$token) ```(bool)```
 Check if token is valid
 
-### hook($die = true)```(mixed)```
+### hook(\$die = true)```(mixed)```
 Returns ```bool``` if ```$die``` is ```true``` then kill the entire application
 
 ```php
