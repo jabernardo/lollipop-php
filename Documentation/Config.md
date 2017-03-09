@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Config``` 
 
-###```add($key, $value)``` (void)
+### add($key, $value) ```(void)```
 Add configuration
 
 ```php
@@ -13,8 +13,8 @@ Config::add('pages', ['page1', 'page2']);
 
 ```
 
-###```get($key = '')``` (mixed)
+### get($key = '') ```(mixed)```
 Get configuration value
 
-###```remove($key)``` (void)
+### remove($key)``` (void)```
 Remove configuration key

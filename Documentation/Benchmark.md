@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Benchmark``` 
 
-###```mark($mark)``` (void)
+### mark($mark) ```(void)```
 Mark this time.
 
 ```php
@@ -19,7 +19,7 @@ $end = Benchmark::mark('end');
 
 ```
 
-###```elapsed($start, $end)``` (mixed)
+### elapsed($start, $end) ```(mixed)```
 Compute memory and time used between marks
 
 ```php
@@ -38,7 +38,7 @@ echo Benchmark::elapsed($start, $end);
 
 ```
 
-###```elapsedMemory($start, $end, $real_usage = false, $inMB = true)``` (mixed)
+### elapsedMemory($start, $end, $real_usage = false, $inMB = true) ```(mixed)```
 Get elapsed memory between two marks
 
 ```php
@@ -57,7 +57,7 @@ echo Benchmark::elapsedMemory($start, $end);
 
 ```
 
-###```elapsedTime($start, $end)``` (mixed)
+### elapsedTime($start, $end) ```(mixed)```
 Compute the elapsed time of two marks
 
 ```php

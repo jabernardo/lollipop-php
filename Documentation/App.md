@@ -33,13 +33,13 @@ $config = [
 
 ### Configurations for your application
 
-####```app``` (array)
+#### app ```(array)```
 - ```version``` (Application version)
 
-####```autoload``` (array)
+#### autoload ```(array)```
 Folder(s) to include in autoload
 
-####```db``` (array)
+#### db ```(array)```
 - ```host``` Hostname for database
 - ```username``` UID for connection
 - ```password``` Password for authentication
@@ -47,35 +47,35 @@ Folder(s) to include in autoload
 - ```cache``` Enable or disable results caching
 - ```cache_time``` Cache expiration in minutes
 
-####```dev_tools``` (bool)
+#### dev_tools ```(bool)```
 Activate developers tools for your own benefit. Options below only triggered by request (GET/POST) sent to application.
 
 - ```purge_all_cache``` Purges all stored cache
 
-####```environment``` (string)
+#### environment ```(string)```
 Set current environment used
 
 - ```dev``` or ```development```
 - ```stg``` or ```staging```
 - ```prd``` or ```production```
 
-####```show_not_found``` (bool)
+#### show_not_found ```(bool)```
 Show or hide 404 page
 
-####```not_found_page``` (string)
+#### not_found_page ```(string)```
 Change 404 page
 
-####```cache``` (array)
+#### cache ```(array)```
 
 - ```folder``` Path for cache
 
-####```log``` (array)
+#### log ```(array)```
 
 - ```folder``` Path for logs
 
 
-###```getResponseTime``` (double)
+### getResponseTime ```(double)```
 Returns applications response time
 
-###```getBenchmark``` (array)
+### getBenchmark ```(array)```
 Returns applications memory used and response time
