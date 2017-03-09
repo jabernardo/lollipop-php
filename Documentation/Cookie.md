@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Cookie``` 
 
-### set(\$key, \$value, \$path = '/', \$expiration = 2592000) ```(void)```
+### set($key, $value, $path = '/', $expiration = 2592000) ```(void)```
 Create or update a cookie
 
 ```php
@@ -13,7 +13,7 @@ Cookie::set('session_id', rand());
 
 ```
 
-### get(\$key) ```(mixed)```
+### get($key) ```(mixed)```
 Get value of cookie
 
 ```php
@@ -24,8 +24,8 @@ echo Cookie::get('session_id');
 
 ```
 
-### exists(\$key) ```(bool)```
+### exists($key) ```(bool)```
 Check if cookie exists
 
-### drop(\$key, \$path = '/') ```(void)```
+### drop($key, $path = '/') ```(void)```
 Remove cookie

@@ -14,7 +14,7 @@ $f = new File('sample.txt');
 
 ```
 
-### contents(\$contents = null) ```(bool)```
+### contents($contents = null) ```(bool)```
 Get or set file contents
 
 ```php

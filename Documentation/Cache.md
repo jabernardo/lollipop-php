@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Cache``` 
 
-### save(\$key, \$data, \$force = false, \$ttl = 1440) ```(void)```
+### save($key, $data, $force = false, $ttl = 1440) ```(void)```
 Save cache for data.
 
 **Parameters:**
@@ -21,7 +21,7 @@ Cache::save('message', 'Hello World!');
 
 ```
 
-### recover(\$key) ```(string)```
+### recover($key) ```(string)```
 Recover saved cache.
 
 ```php
@@ -34,10 +34,10 @@ echo Cache::recover('message');
 
 ```
 
-### exists(\$key) ```(string)```
+### exists($key) ```(string)```
 Check if cache is existing.
 
-### remove(\$key) ```(string)```
+### remove($key) ```(string)```
 Remove cache from storage.
 
 ### purge() ```(string)```
