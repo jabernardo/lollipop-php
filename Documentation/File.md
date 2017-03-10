@@ -28,5 +28,5 @@ echo $f->contents();
 
 ```
 
-### size() ```float```
+### size() ```(float)```
 Return file size
