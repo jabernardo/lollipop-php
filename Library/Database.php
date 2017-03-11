@@ -8,7 +8,7 @@
      * Database Driver for MySQLi
      *
      * @package     Candy
-     * @version     2.5
+     * @version     2.6
      * @uses        \Lollipop\Cache
      * @author      John Aldrich Bernardo
      * @email       4ldrich@protonmail.com
@@ -287,6 +287,21 @@
                     $sql_query .= ' OR ';
                     $sql_query .= implode($this->_or, ' AND ');
                 }
+            }
+            
+            // Alias
+            if ($this->_alias) {
+                $sql_query .= ' AS ' . $this->_alias;
+            }
+            
+            // Union
+            if (count($this->_union)) {
+                $sql_query .= ' UNION ' . implode($this->_union, ' UNION ');
+            }
+            
+            // Union All
+            if (count($this->_union_all)) {
+                $sql_query .= ' UNION ALL ' . implode($this->_union_all, ' UNION ALL ');
             }
             
             // Group By
@@ -590,11 +605,24 @@
                     $value = $operator;
                     $operator = '=';
                 }
-                
-                if (is_string($value)) {
-                    array_push($this->_where, $field . ' ' . $operator . ' \'' . $value . '\'');
+
+                if (is_array($value)) {
+                    $str = '(';
+                    
+                    for ($i = 0; $i < count($value); $i++) {
+                        $d = $value[$i];
+                        $str .= is_numeric($d) ? $d : "'$d'";
+                        $str .= count($value) === $i + 1 ? '' : ', ';
+                    }
+                    
+                    $str .= ')';
+                    
+                    $value = $str;
+                    
+                    array_push($this->_where, $field . ' ' . $operator . $value);
                 } else {
-                    array_push($this->_where, $field . ' ' . $operator . ' ' . $value);
+                    $value = (string)$value;
+                    array_push($this->_where, $field . ' ' . $operator . (strtolower($operator) == 'in' ? "($value)" : ' \'' . $value . '\''));
                 }
             }
             
@@ -619,10 +647,23 @@
                     $operator = '=';
                 }
                 
-                if (is_string($value)) {
-                    array_push($this->_or, $field . ' ' . $operator . ' \'' . $value . '\'');
+                if (is_array($value)) {
+                    $str = '(';
+                    
+                    for ($i = 0; $i < count($value); $i++) {
+                        $d = $value[$i];
+                        $str .= is_numeric($d) ? $d : "'$d'";
+                        $str .= count($value) === $i + 1 ? '' : ', ';
+                    }
+                    
+                    $str .= ')';
+                    
+                    $value = $str;
+                    
+                    array_push($this->_or, $field . ' ' . $operator . $value);
                 } else {
-                    array_push($this->_or, $field . ' ' . $operator . ' ' . $value);
+                    $value = (string)$value;
+                    array_push($this->_or, $field . ' ' . $operator . (strtolower($operator) == 'in' ? "($value)" : ' \'' . $value . '\''));
                 }
             }
             
