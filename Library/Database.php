@@ -2,14 +2,13 @@
 
 namespace Lollipop;
 
-use \Lollipop\App;
 use \Lollipop\Cache;
 
 /**
  * Database Driver for MySQLi
  *
  * @package     Candy
- * @version     2.6
+ * @version     2.7
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
