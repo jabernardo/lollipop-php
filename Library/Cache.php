@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Simple page Caching
  *
- * @version     3.0.5
+ * @version     3.0.6
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -22,11 +22,11 @@ class Cache
      */
     static private function _checkFolder() {
         if (!is_dir(self::_getStoragePath())) {
-            throw new \Exception('Can\'t find app/cache folder');
+            \Lollipop\Log::error('Can\'t find app/cache folder', true);
         }
         
         if (!is_writable(self::_getStoragePath())) {
-            throw new \Exception('Permission denied for app/cache');
+            \Lollipop\Log::error('Permission denied for app/cache', true);
         }
     }
     
