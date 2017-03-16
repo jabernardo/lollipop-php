@@ -50,7 +50,7 @@ class Route
      *
      */
     static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve('GET', $path, $callback, $cachable, $cachable);
+        self::serve('GET', $path, $callback, $cachable, $cache_time);
     }
 
     /**
@@ -65,7 +65,7 @@ class Route
      *
      */
     static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve('POST', $path, $callback, $cachable, $cachable);
+        self::serve('POST', $path, $callback, $cachable, $cache_time);
     }
 
     /**
@@ -80,7 +80,7 @@ class Route
      *
      */
     static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve('PUT', $path, $callback, $cachable, $cachable);
+        self::serve('PUT', $path, $callback, $cachable, $cache_time);
     }
 
     /**
@@ -95,7 +95,7 @@ class Route
      *
      */
     static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve('DELETE', $path, $callback, $cachable, $cachable);
+        self::serve('DELETE', $path, $callback, $cachable, $cache_time);
     }
 
     /**
@@ -110,7 +110,7 @@ class Route
      *
      */
     static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve('', $path, $callback, $cachable, $cachable);
+        self::serve('', $path, $callback, $cachable, $cache_time);
     }
 
     /**
