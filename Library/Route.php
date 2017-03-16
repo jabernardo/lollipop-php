@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.5.1
+ * @version     1.5.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -49,7 +49,7 @@ class Route
      * @return  void
      *
      */
-    static public function get($path, $callback, $cachable = false, $cache_time = 24) {
+    static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('GET', $path, $callback, $cachable, $cachable);
     }
 
@@ -64,7 +64,7 @@ class Route
      * @return  void
      *
      */
-    static public function post($path, $callback, $cachable = false, $cache_time = 24) {
+    static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('POST', $path, $callback, $cachable, $cachable);
     }
 
@@ -79,7 +79,7 @@ class Route
      * @return  void
      *
      */
-    static public function put($path, $callback, $cachable = false, $cache_time = 24) {
+    static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('PUT', $path, $callback, $cachable, $cachable);
     }
 
@@ -94,7 +94,7 @@ class Route
      * @return  void
      *
      */
-    static public function delete($path, $callback, $cachable = false, $cache_time = 24) {
+    static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('DELETE', $path, $callback, $cachable, $cachable);
     }
 
@@ -109,7 +109,7 @@ class Route
      * @return  void
      *
      */
-    static public function all($path, $callback, $cachable = false, $cache_time = 24) {
+    static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('', $path, $callback, $cachable, $cachable);
     }
 
@@ -125,7 +125,7 @@ class Route
      * @return  void
      *
      */
-    static public function serve($method, $path, $callback, $cachable = false, $cache_time = 24) {
+    static public function serve($method, $path, $callback, $cachable = false, $cache_time = 1440) {
         // Store route
         self::$_stored_routes[$path] = array(
                                             'request_method' => is_array($method) ? array_map('strtoupper', $method) : strtoupper($method),
@@ -199,7 +199,7 @@ class Route
                 // Check if route or url is cachable (defaults to false)
                 $cachable = isset($route['cachable']) ? $route['cachable'] : false;
                 // Cache time
-                $cache_time = isset($route['cache_time']) ? $route['cache_time'] : 1;
+                $cache_time = isset($route['cache_time']) ? $route['cache_time'] : 1440;
                 // Translate regular expressions
                 $path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
                 // Request URL
