@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.5.2
+ * @version     1.6.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -401,23 +401,33 @@ class Route
             self::_checkNotFound();
         }
         
-        // Set Content coding a gzip
-        self::setHeader('Content-Encoding: gzip');
-        
-        // Set headers for gzip
-        $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+        $output = '';
+        $output_config = \Lollipop\Config::get('output');
+        $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
+        $output_callback_function = '';
         
         // If data is in array format then set content-type
         // to application/json
         if (is_array($data) || is_object($data)) {
             self::setHeader('Content-type: application/json');
             // Convert to json
-            $output .= gzcompress(json_encode($data));
+            $output_callback_function = json_encode($data);
         } else {
             // Default
-            $output .= gzcompress($data);
+            $output_callback_function = $data;
         }
-
+        
+        $output = $output_callback_function;
+        
+        if ($output_compression) {
+            // Set Content coding a gzip
+            self::setHeader('Content-Encoding: gzip');
+            
+            // Set headers for gzip
+            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+            $output .= gzcompress($output_callback_function);
+        }
+        
         return $output;
     }
 
