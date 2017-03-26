@@ -8,7 +8,7 @@ use \Lollipop\Cache;
  * Database Driver for MySQLi
  *
  * @package     Candy
- * @version     2.7
+ * @version     2.8
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
@@ -422,6 +422,72 @@ class Database
         
         $sql_query = 'UPDATE ' . $this->_table . 
                      ' SET ' . implode($this->_updates, ', ');
+        
+        // Where statements
+        if (count($this->_where)) {
+            $sql_query .= ' WHERE ';
+            $sql_query .= implode($this->_where, ' AND ');
+            
+            // or statements
+            if (count($this->_or)) {
+                $sql_query .= ' OR ';
+                $sql_query .= implode($this->_or, ' AND ');
+            }
+        }
+        
+        // Set the query
+        $this->_sql_query = $sql_query;
+        
+        return $this;
+    }
+
+    /**
+     * Increment value
+     * 
+     * @param   string  $field  Field to increment
+     * @param   double  $val    Increment value
+     * 
+     * @return  mixed   Returns $this when insert succeed and false on failure
+     * 
+     */
+    public function increment($field, $val) {
+        if (!is_numeric($val)) return false;
+
+        $sql_query = 'UPDATE ' . $this->_table . 
+                     ' SET ' . $field . ' = ' . $field . ' + ' . (double)$val;
+        
+        // Where statements
+        if (count($this->_where)) {
+            $sql_query .= ' WHERE ';
+            $sql_query .= implode($this->_where, ' AND ');
+            
+            // or statements
+            if (count($this->_or)) {
+                $sql_query .= ' OR ';
+                $sql_query .= implode($this->_or, ' AND ');
+            }
+        }
+        
+        // Set the query
+        $this->_sql_query = $sql_query;
+        
+        return $this;
+    }
+
+    /**
+     * Decrement value
+     * 
+     * @param   string  $field  Field to decrement
+     * @param   double  $val    Decrement value
+     * 
+     * @return  mixed   Returns $this when insert succeed and false on failure
+     * 
+     */
+    public function decrement($field, $val) {
+        if (!is_numeric($val)) return false;
+        
+        $sql_query = 'UPDATE ' . $this->_table . 
+                     ' SET ' . $field . ' = ' . $field . ' - ' . (double)$val;
         
         // Where statements
         if (count($this->_where)) {
