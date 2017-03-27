@@ -5,7 +5,7 @@
  * An extensive and flexible library for PHP
  *
  * @package    Lollipop
- * @version    6.0.1
+ * @version    6.0.2
  * @author     John Aldrich Bernardo <bjohnaldrich@gmail.com>
  * @copyright  Copyright (C) 2015 John Aldrich Bernardo. All rights reserved.
  * @license
@@ -44,6 +44,17 @@ namespace Lollipop;
  */
 function fuse(&$opt1, $opt2) {
     return isset($opt1) ? $opt1 : (isset($opt2) ? $opt2 : null); 
+}
+
+/**
+ * Get value if variable is set and not null
+ *
+ * @param    reference   &$var  Variable
+ * @return   mixed
+ *
+ */
+function getvar(&$var) {
+    return isset($var) && $var ? $var : false;
 }
 
 ?>
