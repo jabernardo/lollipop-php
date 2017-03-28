@@ -121,6 +121,19 @@ $sql = Database::table('products')
 
 ```
 
+## Increment and Decrement
+
+```php
+
+use \Lollipop\Database;
+
+$sql = Database::table('cart')
+        ->where('id', 1)
+        ->where('sku', 'ABCDE-56')
+        ->increment('qty', 1);
+        // ->decrement('qty', 1);
+```
+
 ## Remove
 
 ```php

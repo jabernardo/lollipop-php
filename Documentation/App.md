@@ -39,6 +39,9 @@ $config = [
 #### autoload ```(array)```
 Folder(s) to include in autoload
 
+#### output ```(array)```
+- ```compression``` Enable output compression (gzip)
+
 #### db ```(array)```
 - ```host``` Hostname for database
 - ```username``` UID for connection
