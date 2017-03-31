@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.6.2
+ * @version     1.6.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -169,7 +169,7 @@ class Route
 
             $data = self::_callback($callback, $params);
 
-            echo self::_returnData($data);
+            return self::_returnData($data);
         } else {
             self::$_is_listening = false;
             self::_checkNotFound();

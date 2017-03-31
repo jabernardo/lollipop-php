@@ -41,7 +41,7 @@ Route::all('/newpage', function() {
 });
 
 Route::all('/oldpage', function() {
-    Route::forward('newpage'); 
+    return Route::forward('newpage'); 
 });
 
 
