@@ -19,7 +19,6 @@ class Route
      */
     static private $_is_listening = false;
 
-
     /**
      * @type    bool    Is Dispatch function already registered on shutdown?
      *
