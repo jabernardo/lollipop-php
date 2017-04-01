@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.6.3
+ * @version     1.6.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -37,6 +37,30 @@ class Route
      *
      */
     static private $_is_running = false;
+    
+    /**
+     * @type    mixed   Prepare function (no-cache)
+     * 
+     */
+    static private $_prepare_function = null;
+    
+    /**
+     * @type    array   Prepare function parameters
+     * 
+     */
+    static private $_prepare_function_params = array();
+    
+    /**
+     * @type    mixed   Clean function (no-cache)
+     * 
+     */
+    static private $_clean_function = null;
+    
+    /**
+     * @type    array   Clean function parameters
+     * 
+     */
+    static private $_clean_function_params = array();
 
     /**
      * GET route
@@ -136,6 +160,41 @@ class Route
 
         self::_registerDispatch();
     }
+    
+    /**
+     * Prepare function
+     * 
+     * @param   function    $callback   Set prepare callback
+     * @param   array       $params     Parameters to be sent
+     * @return  void
+     * 
+     */
+    static public function prepare($callback, array $params = array()) {
+        if (!is_callable($callback)) {
+            \Lollipop\Exception::error('Invalid prepare callback');
+        }
+        
+        self::$_prepare_function = $callback;
+        self::$_prepare_function_params = $params;
+    }
+    
+    /**
+     * Clean function
+     * 
+     * @param   function    $callback   Set clean callback
+     * @param   array       $params     Parameters to be sent
+     * 
+     * @return  void
+     * 
+     */
+    static public function clean($callback, array $params = array()) {
+        if (!is_callable($callback)) {
+            \Lollipop\Exception::error('Invalid clean callback');
+        }
+        
+        self::$_clean_function = $callback;
+        self::$_clean_function_params = $params;
+    }
 
     /**
      * Set header
@@ -174,6 +233,26 @@ class Route
             self::$_is_listening = false;
             self::_checkNotFound();
         }
+    }
+    
+    /**
+     * Prepare function
+     * 
+     * @return  mixed
+     * 
+     */
+    static private function _prepare() {
+        return self::$_prepare_function && is_callable(self::$_prepare_function) ? call_user_func_array(self::$_prepare_function, self::$_prepare_function_params) : null;
+    }
+    
+    /**
+     * Clean function
+     * 
+     * @return  mixed
+     * 
+     */
+    static private function _clean() {
+        return self::$_clean_function && is_callable(self::$_clean_function) ? call_user_func_array(self::$_clean_function, self::$_clean_function_params) : null;
     }
 
     /**
@@ -222,6 +301,9 @@ class Route
 
                 if ($is_match) {
                     if (!self::$_is_running && !self::$_is_listening) {
+                        // Call prepare function used by programmer
+                        self::_prepare();
+                    
                         // Mark that the router already found a match
                         self::$_is_listening = true;
 
@@ -301,6 +383,9 @@ class Route
                     } else {
                         \Lollipop\Log::error('Dispatcher is already running. Can\'t run multiple routes.');
                     }
+                    
+                    // Call clean function
+                    self::_clean();
 
                     exit; // Just stop it
                 }

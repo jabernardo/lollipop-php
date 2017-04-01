@@ -28,6 +28,20 @@ Route::all('/', function() {
 
 ```
 
+## Prepare & Clean
+Prepare and Clean callbacks will enable you to set custom function to run before
+or after a route executed.
+
+```php
+
+use \Lollipop\Route;
+
+Route::prepare(function($param) { // Route::clean(function($param) {
+    // Functions here
+}, $param);
+
+```
+
 ## Forwarding response
 Let's you'll be removing to new routing keyword and don't want to lose your
 visitors you can forward the action to another route. It'll run like a 301 header.
