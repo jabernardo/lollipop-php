@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.6.4
+ * @version     1.6.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -241,7 +241,11 @@ class Route
      * 
      */
     static private function _prepare() {
-        return self::$_prepare_function && is_callable(self::$_prepare_function) ? call_user_func_array(self::$_prepare_function, self::$_prepare_function_params) : null;
+        ob_start();
+        $o = self::$_prepare_function && is_callable(self::$_prepare_function) ? call_user_func_array(self::$_prepare_function, self::$_prepare_function_params) : null;
+        ob_get_clean();
+        
+        return $o;
     }
     
     /**
@@ -251,7 +255,11 @@ class Route
      * 
      */
     static private function _clean() {
-        return self::$_clean_function && is_callable(self::$_clean_function) ? call_user_func_array(self::$_clean_function, self::$_clean_function_params) : null;
+        ob_start();
+        $o = self::$_clean_function && is_callable(self::$_clean_function) ? call_user_func_array(self::$_clean_function, self::$_clean_function_params) : null;
+        ob_get_clean();
+        
+        return $o;
     }
 
     /**
