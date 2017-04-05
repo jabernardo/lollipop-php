@@ -531,7 +531,7 @@ class Route
      */
     static private function _checkNotFound() {
         if (!self::$_is_listening && (\Lollipop\Config::get('show_not_found') === null || \Lollipop\Config::get('show_not_found') !== false)) {
-            \Lollipop\Log::notify('404 Not Found: ' . $_SERVER['REQUEST_URI']);
+            \Lollipop\Log::notice('404 Not Found: ' . $_SERVER['REQUEST_URI']);
 
             header('HTTP/1.0 404 Not Found');
 

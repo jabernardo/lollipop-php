@@ -3,7 +3,7 @@
 /**
  * Lollipop Autoload 
  * 
- * @version 4.0.0
+ * @version 4.1.0
  * @author  John Aldrich Bernardo
  * 
  */
@@ -48,30 +48,6 @@ define('LOLLIPOP_STORAGE_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP
  * 
  */
 define('LOLLIPOP_STORAGE_LOG', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'logs/'));
-
-/**
- * Check if PHP version is valid
- * 
- */
-if (!function_exists('phpversion')) {
-    exit('You PHP is too old! Try upgrading.');
-}
-
-$_lol_toks = explode('.', phpversion());
-
-if (count($_lol_toks) >= 2) {
-    $_lol_major_minor = (double)($_lol_toks[0] . '.' . $_lol_toks[1]);
-    
-    /**
-     * if PHP version is 5.3 or below exit
-     * 
-     */
-    if ($_lol_major_minor < (5.4)) {
-        exit('You PHP is too old! Try upgrading.');
-    }
-} else {
-    exit('The version of your PHP can\'t be verified');
-}
 
 /**
  * __autoload function

@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Log Class
  * 
- * @version     1.1
+ * @version     2.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -13,6 +13,19 @@ namespace Lollipop;
  */
 class Log
 {
+    /**
+     * Messages
+     * 
+     * @type    array   Messages
+     * 
+     */
+    private static $_messages = array(
+                    'info' => array(),
+                    'warn' => array(),
+                    'error' => array(),
+                    'notice' => array()
+                );
+    
     /**
      * Append to log file
      * 
@@ -28,13 +41,12 @@ class Log
         $log_enable = (isset($config->enable)) ? $config->enable : true;
         
         if (!is_dir($log_path)) {
-           throw new \Exception('Log folder doesn\'t exists.'); 
+           die('Lollipop Application has been terminated due to unhandled error: Log folder doesn\'t exists.'); 
         }
         
         if (!is_writeable($log_path)) {
-           throw new \Exception('Log folder is not writeable.'); 
+           die('Lollipop Application has been terminated due to unhandled error: Log folder is not writeable.'); 
         }
-        
         
         $filename = $log_path . DIRECTORY_SEPARATOR . date('Y-m-d') . '.log';
         
@@ -51,6 +63,7 @@ class Log
      * 
      */
     public static function info($message) {
+        array_push(self::$_messages['info'], $message);
         self::__writeOutLog('INFO: ' . date('H:i:s') . ': ' . $message);
     }
     
@@ -63,6 +76,7 @@ class Log
      * 
      */
     public static function warn($message) {
+        array_push(self::$_messages['warning'], $message);
         self::__writeOutLog('WARNING: ' . date('H:i:s') . ': ' . $message);
     }
     
@@ -70,16 +84,16 @@ class Log
      * Log error message
      * 
      * @param   string  $message    Message
+     * @param   bool    $die        Die
      * 
      * @return  void
      * 
      */
-    public static function error($message, $exception = true) {
+    public static function error($message, $die = false) {
+        array_push(self::$_messages['error'], $message);
         self::__writeOutLog('ERROR: ' . date('H:i:s') . ': ' . $message);
         
-        if ($exception) {
-            throw new \Exception($message);
-        }
+        if ($die) exit('Lollipop Application has been terminated due to unhandled error: ' . $message);
     }
     
     /**
@@ -90,8 +104,20 @@ class Log
      * @return  void
      * 
      */
-    public static function notify($message) {
-        self::__writeOutLog('NOTIFICATION: ' . date('H:i:s') . ': ' . $message);
+    public static function notice($message) {
+        array_push(self::$_messages['notice'], $message);
+        self::__writeOutLog('NOTICE: ' . date('H:i:s') . ': ' . $message);
+    }
+    
+    /**
+     * Get messages
+     * 
+     * @param   string  $type   Message type
+     * @return  array
+     * 
+     */
+    public static function get($type = null) {
+        return is_null($type) ? self::$_messages : (isset(self::$_messages[$type]) ? self::$_messages[$type] : array());
     }
 }
 
