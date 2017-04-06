@@ -76,7 +76,7 @@ class Log
      * 
      */
     public static function warn($message) {
-        array_push(self::$_messages['warning'], $message);
+        array_push(self::$_messages['warn'], $message);
         self::__writeOutLog('WARNING: ' . date('H:i:s') . ': ' . $message);
     }
     
