@@ -356,6 +356,9 @@ class Route
                             // Output from cache
                             echo isset($page_cache['HTTP_CONTENT']) ? $page_cache['HTTP_CONTENT'] : '';
 
+                            // Call clean function
+                            self::_clean();
+
                             exit; // Just recover this page
                         }
 
