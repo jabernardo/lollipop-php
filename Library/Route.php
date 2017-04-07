@@ -552,6 +552,9 @@ class Route
                 echo '</body>';
                 echo '</html>';
             }
+            
+            // Call clean function
+            self::_clean();
 
             exit;
         }
