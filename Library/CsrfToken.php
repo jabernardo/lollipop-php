@@ -6,12 +6,13 @@ use \Lollipop\App;
 use \Lollipop\Config;
 use \Lollipop\Cookie;
 use \Lollipop\Request;
+use \Lollipop\Route;
 use \Lollipop\Text;
 
 /**
  * Csrf Token Class
  *
- * @version     1.0
+ * @version     1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -31,6 +32,31 @@ class CsrfToken
         $key = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->key) && Config::get('anti_csrf')->key ? Config::get('anti_csrf')->key : App::SUGAR;
         
         return Text::lock(microtime(true), $key);
+    }
+    
+    /**
+     * Get token name
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public static function getName() {
+        return Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) && Config::get('anti_csrf')->name ? Config::get('anti_csrf')->name : 'sugar';
+    }
+    
+    /**
+     * Get Form input
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public static function getFormInput() {
+        $name = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) && Config::get('anti_csrf')->name ? Config::get('anti_csrf')->name : 'sugar';
+        $value = self::get();
+        
+        return "<input type=\"hidden\" name=\"$name\" value=\"$value\">";
     }
     
     /**
@@ -61,9 +87,10 @@ class CsrfToken
     public static function hook($die = true) {
         $acsrf_enable = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->enable) ? Config::get('anti_csrf')->enable : false;
         $acsrf_name = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) ? Config::get('anti_csrf')->name : 'sugar';
+        $expiration = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->expiration) && Config::get('anti_csrf')->expiration ? Config::get('anti_csrf')->expiration : 1800;
         
         // Create a cookie for front end use
-        Cookie::set($acsrf_name, self::get(), '/', 1800);
+        Cookie::set($acsrf_name, self::get(), '/', $expiration);
         
         // Validate cookie
         if (Request::get() && $acsrf_enable) {
@@ -85,16 +112,32 @@ class CsrfToken
      * 
      */
     private static function _kill() {
-        echo '<!DOCTYPE html>';
-        echo '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
-        echo '<html>';
-        echo '<head><title>Not Enough Tokens</title></head>';
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-        echo '<body>';
-        echo '<h1>Not Enough Tokens</h1>';
-        echo '<p>Oops! Make sure you have enough tokens before you can play.</p>';
-        echo '</body>';
-        echo '</html>';
+        $net = '<!DOCTYPE html>';
+        $net .= '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
+        $net .= '<html>';
+        $net .= '<head><title>Not Enough Tokens</title></head>';
+        $net .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
+        $net .= '<body>';
+        $net .= '<h1>Not Enough Tokens</h1>';
+        $net .= '<p>Oops! Make sure you have enough tokens before you can play.</p>';
+        $net .= '</body>';
+        $net .= '</html>';
+        
+        $output = $net;
+        $output_config = Config::get('output');
+        $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
+        
+        if ($output_compression) {
+            // Set Content coding a gzip
+            Route::setHeader('Content-Encoding: gzip');
+            
+            // Set headers for gzip
+            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+            $output .= gzcompress($net);
+        }
+        
+        echo $output;
+        
         exit;
     }
 }

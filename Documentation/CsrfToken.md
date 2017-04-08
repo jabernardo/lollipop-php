@@ -12,6 +12,24 @@ $token = CsrfToken::get();
 
 ```
 
+### getName() ```(string)```
+Get a token name
+
+```php
+use \Lollipop\CsrfToken;
+
+$token_name = CsrfToken::getName();
+
+```
+
+### getFormInput() ```(string)```
+Get hidden input for anti_csrf
+
+```php
+<form action="" method="post">
+<?= \Lollipop\CsrfToken::getFormInput() ?>
+```
+
 ### isValid($token) ```(bool)```
 Check if token is valid
 
