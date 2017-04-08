@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     1.6.5
+ * @version     1.7.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -225,9 +225,7 @@ class Route
             $callback = self::$_stored_routes[$path];
             $callback = $callback['callback'];
 
-            $data = self::_callback($callback, $params);
-
-            return self::_returnData($data);
+            return self::_callback($callback, $params);
         } else {
             self::$_is_listening = false;
             self::_checkNotFound();
@@ -538,19 +536,21 @@ class Route
 
             header('HTTP/1.0 404 Not Found');
 
-            if (!is_null(\Lollipop\Config::get('not_found_page'))) {
-                require_once(\Lollipop\Config::get('not_found_page'));
+            if (\Lollipop\Config::get('not_found_page')) {
+                echo self::_returnData(self::forward(\Lollipop\Config::get('not_found_page')));
             } else {
-                echo '<!DOCTYPE html>';
-                echo '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
-                echo '<html>';
-                echo '<head><title>404 Not Found</title></head>';
-                echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-                echo '<body>';
-                echo '<h1>404 Not Found</h1>';
-                echo '<p>The page that you have requested could not be found.</p>';
-                echo '</body>';
-                echo '</html>';
+                $pagenotfound = '<!DOCTYPE html>';
+                $pagenotfound .= '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
+                $pagenotfound .= '<html>';
+                $pagenotfound .= '<head><title>404 Not Found</title></head>';
+                $pagenotfound .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
+                $pagenotfound .= '<body>';
+                $pagenotfound .= '<h1>404 Not Found</h1>';
+                $pagenotfound .= '<p>The page that you have requested could not be found.</p>';
+                $pagenotfound .= '</body>';
+                $pagenotfound .= '</html>';
+
+                echo self::_returnData($pagenotfound);
             }
             
             // Call clean function
