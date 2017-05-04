@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Page Class 
  *
- * @version     1.1
+ * @version     1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -20,6 +20,7 @@ class Page
      */
     static function reload() {
         header('location: ' . $_SERVER['REQUEST_URI']);
+        exit();
     }
     
     /**
@@ -34,6 +35,7 @@ class Page
         }
         
         header('location: ' . $uri);
+        exit();
     }
     
     /**
