@@ -25,10 +25,13 @@ class Url
      */
     static function base($url = '', $cacheBuster = false) {
         $cacheb = $cacheBuster ? ('?' . (is_object(\Lollipop\Config::get('app')) && isset(\Lollipop\Config::get('app')->version) ? \Lollipop\Config::get('app')->version : '1.0.0')) : ''; 
-        
+        $servern = $_SERVER['SERVER_NAME']; 
+        $serverp = $_SERVER['SERVER_PORT'];
+        $server = $serverp == '8080' || $serverp == '80' ? $servern : "$servern:$serverp";
+
         return (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
                 (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))
-                    ? 'https://' : 'http://') . str_replace('//', '/', ($_SERVER['SERVER_NAME'] . '/' . $url)) . $cacheb;
+                    ? 'https://' : 'http://') . str_replace('//', '/', ($server . '/' . $url)) . $cacheb;
     }
     
     /**
