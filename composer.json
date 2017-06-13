@@ -5,6 +5,7 @@
     "keywords": ["framework","library"],
     "homepage": "https://github.com/4ldrich/lollipop-php",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "John Aldrich Bernardo",
@@ -17,8 +18,8 @@
         "php": ">=5.4.0"
     },
     "autoload": {
-        "psr-0": {
-            "lollipop-php": "src"
+        "psr-4": {
+            "Lollipop\\": "Library/"
         }
     }
 }
