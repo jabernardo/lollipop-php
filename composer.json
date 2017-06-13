@@ -1,0 +1,24 @@
+{
+    "name": "4ldrich/lollipop-php",
+    "type": "library",
+    "description": "A slim and very flexible framework for PHP",
+    "keywords": ["framework","library"],
+    "homepage": "https://github.com/4ldrich/lollipop-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Aldrich Bernardo",
+            "email": "4ldrich@protonmail.com",
+            "homepage": "https://github.com/4ldrich",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "lollipop-php": "src"
+        }
+    }
+}
