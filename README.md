@@ -16,7 +16,12 @@ Route::get('/', function() {
            
 ```
 ###### DOWNLOAD
-Get the latest version of Lollipop-PHP framework from our Git repository hosted on GitHub and start the development of your projects
+Get the latest version of Lollipop-PHP framework from our Git repository hosted on GitHub
 ```bash
 git clone https://github.com/4ldrich/lollipop-php.git lollipop-php
 ```
+or get it via ```composer```
+```bash
+composer require "4ldrich/lollipop-php"
+```
+start the development of your projects.
