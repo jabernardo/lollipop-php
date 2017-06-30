@@ -1,7 +1,5 @@
 <?php
 
-require_once('autoload.php');
-
 use \Lollipop\Cache;
 use \PHPUnit\Framework\TestCase;
 

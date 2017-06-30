@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="vendor/autoload.php">
+<phpunit colors="true" bootstrap="autoload.php">
     <testsuite name="Lollipop-PHP Test Suite">
         <directory>./Test/</directory>
     </testsuite>
