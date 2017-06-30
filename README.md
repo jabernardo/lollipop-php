@@ -1,4 +1,4 @@
-# [Lollipop](http://github.com/4ldrich/lollipop-php) ![alt text](https://api.travis-ci.org/4ldrich/lollipop-php.svg?branch=master "Logo Title Text 1")
+# [Lollipop](http://github.com/4ldrich/lollipop-php) ![Travis: Build Status](https://api.travis-ci.org/4ldrich/lollipop-php.svg?branch=master "Travis: Build Status")
 
 A slim and very flexible framework for PHP
 
