@@ -1,4 +1,5 @@
-# [Lollipop](http://github.com/4ldrich/lollipop-php)
+# [Lollipop](http://github.com/4ldrich/lollipop-php) ![alt text](https://api.travis-ci.org/4ldrich/lollipop-php.svg?branch=master "Logo Title Text 1")
+
 A slim and very flexible framework for PHP
 
 ###### IS LOLLIPOP FOR YOU?
