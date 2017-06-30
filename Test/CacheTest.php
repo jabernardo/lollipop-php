@@ -1,5 +1,8 @@
 <?php
 
+if (file_exists('PHPUnit/Autoload.php'))
+    require_once('PHPUnit/Autoload.php');
+
 use \Lollipop\Cache;
 use \PHPUnit\Framework\TestCase;
 
