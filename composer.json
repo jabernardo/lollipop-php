@@ -24,8 +24,8 @@
         "psr-4": {
             "Lollipop\\": "Library/"
         },
-        "files": {
+        "files": [
             "lollipop.php"
-        }
+        ]
     }
 }
