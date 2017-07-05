@@ -23,6 +23,9 @@
     "autoload": {
         "psr-4": {
             "Lollipop\\": "Library/"
+        },
+        "files": {
+            "lollipop.php"
         }
     }
 }
