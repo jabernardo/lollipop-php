@@ -5,12 +5,12 @@
  * An extensive and flexible library for PHP
  *
  * @package    Lollipop
- * @version    6.1.2
+ * @version    6.1.3
  * @author     John Aldrich Bernardo <bjohnaldrich@gmail.com>
- * @copyright  Copyright (C) 2015 John Aldrich Bernardo. All rights reserved.
+ * @copyright  Copyright (C) 2015-2017 John Aldrich Bernardo. All rights reserved.
  * @license
  *
- * Copyright (c) 2016 John Aldrich Bernardo
+ * Copyright (c) 2015-2017 John Aldrich Bernardo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -122,6 +122,3 @@ function lollipop_exception_handler($ex) {
 set_exception_handler('lollipop_exception_handler');
 set_error_handler('lollipop_error_handler');
 
-
-
-?>
