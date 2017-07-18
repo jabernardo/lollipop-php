@@ -8,7 +8,7 @@ use \Lollipop\Cache;
  * Database Driver for MySQLi
  *
  * @package     Candy
- * @version     2.8
+ * @version     2.8.1
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
@@ -961,7 +961,9 @@ class Database
                 }
                 
                 // Save cache (overwrites existing)
-                Cache::save($cache_key, $results, true, $cache_time);
+                if ($cache) {
+                    Cache::save($cache_key, $results, true, $cache_time);
+                }
                 
                 return $results;
             }
