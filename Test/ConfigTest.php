@@ -22,6 +22,15 @@ class ConfigTest extends TestCase
                 Config::get('cache')
             );
     }
+
+    public function testAddMulti() {
+        Config::add('log.enable', true);
+        
+        $this->assertEquals(
+                true,
+                Config::get('log')->enable
+            );
+    }
     
     public function testRemove() {
         Config::add('cache', true);
@@ -30,6 +39,16 @@ class ConfigTest extends TestCase
         $this->assertEquals(
                 null,
                 Config::get('cache')
+            );
+    }
+
+    public function testRemoveMulti() {
+        Config::add('log.enable', true);
+        Config::remove('log');
+
+        $this->assertEquals(
+                null,
+                Config::get('log')->enable
             );
     }
 }
