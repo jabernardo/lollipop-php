@@ -2,10 +2,14 @@
 
 namespace Lollipop;
 
+use \Lollipop\Config;
+use \Lollipop\Log;
+
+
 /**
  * Simple page Caching
  *
- * @version     3.0.6
+ * @version     3.0.7
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -22,11 +26,11 @@ class Cache
      */
     static private function _checkFolder() {
         if (!is_dir(self::_getStoragePath())) {
-            \Lollipop\Log::error('Can\'t find app/cache folder', true);
+            Log::error('Can\'t find app/cache folder', true);
         }
         
         if (!is_writable(self::_getStoragePath())) {
-            \Lollipop\Log::error('Permission denied for app/cache', true);
+            Log::error('Permission denied for app/cache', true);
         }
     }
     
@@ -69,7 +73,7 @@ class Cache
      * 
      */
     static private function _getStoragePath() {
-        return (is_object(\Lollipop\Config::get('cache')) && isset(\Lollipop\Config::get('cache')->folder)) ? rtrim(\Lollipop\Config::get('cache')->folder, '/') . '/' : LOLLIPOP_STORAGE_CACHE;
+        return (is_object(Config::get('cache')) && isset(Config::get('cache')->folder)) ? rtrim(Config::get('cache')->folder, '/') . '/' : LOLLIPOP_STORAGE_CACHE;
     }
     
     /**
