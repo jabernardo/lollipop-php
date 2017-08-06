@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\App;
+
 /**
  * Text Class 
  *
- * @version     1.1
+ * @version     1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -36,7 +38,7 @@ class Text
      */
     static function lock($string, $key = null) {
         if (is_null($key)) {
-            $encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(\Lollipop\App::SUGAR), $string, MCRYPT_MODE_CBC, md5(md5(\Lollipop\App::SUGAR))));
+            $encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(App::SUGAR), $string, MCRYPT_MODE_CBC, md5(md5(App::SUGAR))));
         } else {
             $encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, md5(md5($key))));
         }
@@ -54,7 +56,7 @@ class Text
      */
     static function unlock($cipher, $key = null) {
         if (is_null($key)) {
-            $decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(\Lollipop\App::SUGAR), base64_decode($cipher), MCRYPT_MODE_CBC, md5(md5(\Lollipop\App::SUGAR))), '\0');
+            $decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(App::SUGAR), base64_decode($cipher), MCRYPT_MODE_CBC, md5(md5(App::SUGAR))), '\0');
         } else {
             $decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cipher), MCRYPT_MODE_CBC, md5(md5($key))), '\0');
         }
