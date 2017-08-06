@@ -2,10 +2,17 @@
 
 namespace Lollipop;
 
+use \Lollipop\Config;
+use \Lollipop\Cookie;
+use \Lollipop\Log;
+use \Lollipop\Page;
+use \Lollipop\Session;
+use \Lollipop\Url;
+
 /**
  * User Class
  *
- * @version     2.0
+ * @version     2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -48,7 +55,7 @@ class User {
      *
      */
     static private function connect() {
-        $db = \Lollipop\Config::get('db');
+        $db = Config::get('db');
 
         if (is_object($db)) {
             $host = isset($db->host) ?  $db->host : 'localhost';
@@ -60,7 +67,7 @@ class User {
             self::$_db = new \mysqli($host, $uid, $pwd, $db);
             
             if (self::$_db->connect_errno > 0) {
-                \Lollipop\Log::error(self::$_db->connect_error);
+                Log::error(self::$_db->connect_error);
             }
             
             /**
@@ -80,7 +87,7 @@ class User {
             self::$_db->query(base64_decode('Q1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgYGxvZ2luYCAoDQogIGBpZGAgdmFyY2hhcigzMikgQ09MTEFURSB1dGY4X3VuaWNvZGVfY2kgTk9UIE5VTEwsDQogIGB1c2VybmFtZWAgdmFyY2hhcig0MCkgQ09MTEFURSB1dGY4X3VuaWNvZGVfY2kgTk9UIE5VTEwsDQogIGByb2xlYCB2YXJjaGFyKDQwKSBDT0xMQVRFIHV0ZjhfdW5pY29kZV9jaSBOT1QgTlVMTCwNCiAgYGlwX2FkZHJlc3NgIHZhcmNoYXIoNDUpIENPTExBVEUgdXRmOF91bmljb2RlX2NpIE5PVCBOVUxMLA0KICBgdXNlcl9hZ2VudGAgdGV4dCBDT0xMQVRFIHV0ZjhfdW5pY29kZV9jaSBOT1QgTlVMTCwNCiAgYGxhc3RfaW5gIGRhdGV0aW1lIE5PVCBOVUxMLA0KICBQUklNQVJZIEtFWSAoYGlkYCkNCikgRU5HSU5FPUlubm9EQiBERUZBVUxUIENIQVJTRVQ9dXRmOCBDT0xMQVRFPXV0ZjhfdW5pY29kZV9jaTs='));
             
             // Get users limit
-            self::$_ulimit = \Lollipop\Config::get('users_limit') ? \Lollipop\Config::get('users_limit') : 1000000000;
+            self::$_ulimit = Config::get('users_limit') ? Config::get('users_limit') : 1000000000;
             
             // Auto logout users
             self::_autoLogout();
@@ -91,7 +98,7 @@ class User {
             // Check if user's IP is still the same
             self::_checkIP();
         } else {
-            \Lollipop\Log::error('Lollipop is not initialized with wrong configuration');
+            Log::error('Lollipop is not initialized with wrong configuration');
         }
     }
     
@@ -123,7 +130,7 @@ class User {
         if (!is_null(self::$_db)) {
             // Check if user is logged in
             if (!strlen($uid)) {
-                $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+                $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
                 
                 $query = self::$_db->query('SELECT COUNT(`id`) FROM login WHERE `id` = \'' . $sidsession . '\'');
                 
@@ -145,23 +152,23 @@ class User {
 
             if ($logged < self::$_ulimit + 1) {
                 // Login user
-                $session_id = md5(\Lollipop\Cookie::key() . $uid);
+                $session_id = md5(Cookie::key() . $uid);
                 
                 if (self::in()) {
-                    \Lollipop\Log::error('An user was already logged-in.');
+                    Log::error('An user was already logged-in.');
                 }
                 
                 self::$_db->query('INSERT INTO login(`id`, `username`, `role`, `ip_address`, `user_agent`, `last_in`) VALUES(\'' . $session_id . '\', \'' . $uid . '\', \'' . $role . '\', \'' . self::_getUserIP() . '\', \'' .  $_SERVER['HTTP_USER_AGENT'] . '\', NOW())');
                 self::disconnect();
                 
                 // Save user's session id in cookie and session
-                \Lollipop\Cookie::set('lsuid', $session_id);
-                \Lollipop\Session::set('lsuid', $session_id);
+                Cookie::set('lsuid', $session_id);
+                Session::set('lsuid', $session_id);
 
                 // If anchor is available then redirect page
                 if (!is_null($anchor)) {
-                    $anchor = ($anchor == '/') ? \Lollipop\Url::here() : $anchor;
-                    \Lollipop\Page::redirect($anchor);
+                    $anchor = ($anchor == '/') ? Url::here() : $anchor;
+                    Page::redirect($anchor);
                 }
             } else {
                 self::disconnect();
@@ -171,7 +178,7 @@ class User {
             }
         } else {
             //return -1; // Not connected to the database
-            \Lollipop\Log::error('Not connected to the database. Please initialize Lollipop');
+            Log::error('Not connected to the database. Please initialize Lollipop');
         }
     }
     
@@ -189,13 +196,13 @@ class User {
             //throw new \Exception('Not connected to the database');
         }
         
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
         
         self::$_db->query('DELETE FROM login WHERE `id` = \'' . $sidsession . '\'');
         $sidsession = null;
 
-        \Lollipop\Cookie::drop('lsuid');
-        \Lollipop\Session::drop('lsuid');
+        Cookie::drop('lsuid');
+        Session::drop('lsuid');
 
         self::disconnect();
     }
@@ -214,7 +221,7 @@ class User {
             //throw new \Exception('Not connected to the database');
         }
         
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
 
         $query = self::$_db->query('SELECT `username` FROM login WHERE `id` = \'' . $sidsession . '\'');
         
@@ -245,7 +252,7 @@ class User {
             //throw new \Exception('Not connected to the database');
         }
         
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
         
         $query = self::$_db->query('SELECT `role` FROM login WHERE `id` = \'' . $sidsession . '\' AND `role` = \'' . self::ROLE_ADMIN . '\'');
         
@@ -276,7 +283,7 @@ class User {
             //throw new \Exception('Not connected to the database');
         }
         
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
         
         $query = self::$_db->query('SELECT `role` FROM login WHERE `id` = \'' . $sidsession . '\' AND `role` = \'' . $role . '\'');
         
@@ -298,7 +305,7 @@ class User {
      * 
      */
     static private function _setAsActive() {
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
         
         $query = self::$_db->query('SELECT COUNT(`id`) FROM login WHERE `id` = \'' . $sidsession . '\'');
         
@@ -335,7 +342,7 @@ class User {
      * 
      */
     static private function _checkIP() {
-        $sidsession = !is_null(\Lollipop\Cookie::get('lsuid')) ? \Lollipop\Cookie::get('lsuid') : \Lollipop\Session::get('lsuid');
+        $sidsession = !is_null(Cookie::get('lsuid')) ? Cookie::get('lsuid') : Session::get('lsuid');
 
         if ($sidsession) {
             $query = self::$_db->query('SELECT `ip_address` FROM login WHERE `id` = \'' . $sidsession . '\'');
@@ -351,8 +358,8 @@ class User {
                     if ($ip_address != self::_getUserIP()) {
                         self::$_db->query('DELETE FROM login WHERE `id` = \'' . $sidsession . '\'');
             
-                        \Lollipop\Cookie::drop('lsuid');
-                        \Lollipop\Session::drop('lsuid');
+                        Cookie::drop('lsuid');
+                        Session::drop('lsuid');
                     }
                 }
             }
