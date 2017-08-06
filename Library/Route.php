@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Route Class
  *
- * @version     1.7.1
+ * @version     1.7.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -175,7 +175,7 @@ class Route
      */
     static public function prepare($callback, array $params = array()) {
         if (!is_callable($callback)) {
-            Log::error('Invalid prepare callback');
+            Log::error('Invalid prepare callback', true);
         }
         
         self::$_prepare_function = $callback;
@@ -193,7 +193,7 @@ class Route
      */
     static public function clean($callback, array $params = array()) {
         if (!is_callable($callback)) {
-            Log::error('Invalid clean callback');
+            Log::error('Invalid clean callback', true);
         }
         
         self::$_clean_function = $callback;
