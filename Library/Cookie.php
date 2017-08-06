@@ -2,10 +2,13 @@
 
 namespace Lollipop;
 
+use \Lollipop\App;
+use \Lollipop\Text;
+
 /**
  * Cookie Class
  * 
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -71,7 +74,7 @@ class Cookie
      * @return string
      */
     static function key() {
-        return md5(\Lollipop\Text::lock($_SERVER['REMOTE_ADDR'], \Lollipop\App::SUGAR));
+        return md5(Text::lock($_SERVER['REMOTE_ADDR'], App::SUGAR));
     }
 }
 
