@@ -10,6 +10,7 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
 }
 
 use \Lollipop\Cache;
+use \Lollipop\Config;
 use \PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
@@ -23,7 +24,29 @@ class CacheTest extends TestCase
             );
     }
     
+    public function testCacheSQLite() {
+        Config::set('cache.driver', 'sqlite3');
+        Cache::save('message', 'hello');
+        
+        $this->assertEquals(
+                'hello',
+                Cache::recover('message')
+            );
+    }
+
     public function testRemove() {
+        Cache::save('message', 'hello');
+
+        $this->assertEquals(
+                true,
+                Cache::remove('message')
+            );
+    }
+
+    public function testRemoveSQLite() {
+        Config::set('cache.driver', 'sqlite3');
+        Cache::save('message', 'hello');
+        
         $this->assertEquals(
                 true,
                 Cache::remove('message')
@@ -31,6 +54,20 @@ class CacheTest extends TestCase
     }
     
     public function testExists() {
+        Cache::save('message', 'hello');
+        Cache::remove('message');
+
+        $this->assertEquals(
+                false,
+                Cache::exists('message')
+            );
+    }
+
+    public function testExistsSQLite() {
+        Config::set('cache.driver', 'sqlite3');
+        Cache::save('message', 'hello');
+        Cache::remove('message');
+
         $this->assertEquals(
                 false,
                 Cache::exists('message')
@@ -39,11 +76,24 @@ class CacheTest extends TestCase
     
     public function testPurge() {
         Cache::save('message', 'hello');
+        Cache::save('name', 'Aldrich');
         Cache::purge();
         
         $this->assertEquals(
                 false,
-                Cache::exists('message')
+                Cache::exists('message') && Cache::exists('message')
+            );
+    }
+
+    public function testPurgeSQLite3() {
+        Config::set('cache.driver', 'sqlite3');
+        Cache::save('message', 'hello');
+        Cache::save('name', 'Aldrich');
+        Cache::purge();
+        
+        $this->assertEquals(
+                false,
+                Cache::exists('message') && Cache::exists('message')
             );
     }
 }
