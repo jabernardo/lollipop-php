@@ -8,7 +8,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Caching Library
  *
- * @version     4.0.0-RC1
+ * @version     4.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
