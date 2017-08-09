@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\Log;
+
 /**
  * Page Class 
  *
- * @version     1.2
+ * @version     1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -31,7 +33,7 @@ class Page
     static function redirect($uri) {
         // Check first if given string is a valid URL 
         if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-            \Lollipop\Log::error('URL is invalid', true);
+            Log::error('URL is invalid', true);
         }
         
         header('location: ' . $uri);
@@ -53,7 +55,7 @@ class Page
                     $$_data = $_value;
                 }
             } else {
-                \Lollipop\Log::error('Lollipop Exception: Can\'t define variable');
+                Log::error('Lollipop Exception: Can\'t define variable');
             }
         
             $file = new \SplFileInfo($view);

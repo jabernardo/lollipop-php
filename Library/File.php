@@ -2,6 +2,8 @@
 
 namespace Lollipop;
 
+use \Lollipop\FileSystem;
+
 /**
  * File Class
  *
@@ -46,10 +48,10 @@ class File
      */
     function contents($contents = null) {
         if (is_null($contents))
-            return \Lollipop\FileSystem::fileRead($this->_current_file);
+            return FileSystem::fileRead($this->_current_file);
         
         if ($this->_overwrite_old) {
-            \Lollipop\FileSystem::fileWrite($this->_current_file, $contents);
+            FileSystem::fileWrite($this->_current_file, $contents);
             return true;
         }
         
@@ -63,7 +65,7 @@ class File
      *
      */
     function size() {
-        return \Lollipop\FileSystem::fileSize($this->_current_file);
+        return FileSystem::fileSize($this->_current_file);
     }
 }
 

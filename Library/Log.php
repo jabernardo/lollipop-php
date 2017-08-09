@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\Config;
+
 /**
  * Log Class
  * 
- * @version     2.0
+ * @version     2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -35,7 +37,7 @@ class Log
      * 
      */
     private static function __writeOutLog($message) {
-        $config = \Lollipop\Config::get('log');
+        $config = Config::get('log');
 
         $log_path = (isset($config->folder) && $config->folder) ? $config->folder : LOLLIPOP_STORAGE_LOG;
         $log_enable = (isset($config->enable)) ? $config->enable : true;

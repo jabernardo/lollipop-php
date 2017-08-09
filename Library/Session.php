@@ -2,10 +2,13 @@
 
 namespace Lollipop;
 
+use \Lollipop\App;
+use \Lollipop\Text;
+
 /**
  * Session Class 
  *
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -37,7 +40,7 @@ class Session
      * @return  bool
      */
     static function exists($key) {
-        \Lollipop\Session::start();
+        self::start();
         
         $key = substr(sha1($key), 0, 10);
         
@@ -52,7 +55,7 @@ class Session
      * @return string
      */
     static function key() {
-        return md5(\Lollipop\Text::lock(\Lollipop\App::SUGAR));
+        return md5(Text::lock(App::SUGAR));
     }
 
     /**
@@ -62,11 +65,11 @@ class Session
      * @param   string  $value  Session variable value
      */
     static function set($key, $value) {
-        \Lollipop\Session::start();
+        self::start();
         
         $key = substr(sha1($key), 0, 10);
         
-        $_SESSION[$key] = \Lollipop\Text::lock($value, self::key());
+        $_SESSION[$key] = Text::lock($value, self::key());
     }
 
     /**
@@ -77,12 +80,12 @@ class Session
      * @return  string
      */
     static function get($key) {
-        \Lollipop\Session::start();
+        self::start();
         
         $key = substr(sha1($key), 0, 10);
         
         if (isset($_SESSION[$key])) {
-            return trim(\Lollipop\Text::unlock($_SESSION[$key], self::key()));
+            return trim(Text::unlock($_SESSION[$key], self::key()));
         } else {
             return '';
         }
@@ -94,7 +97,7 @@ class Session
      * @param   string  $key    Session variable name
      */
     static function drop($key) {
-        \Lollipop\Session::start();
+        self::start();
         
         $key = substr(sha1($key), 0, 10);
         

@@ -2,10 +2,15 @@
 
 namespace Lollipop;
 
+use \Lollipop\Benchmark;
+use \Lollipop\Cache;
+use \Lollipop\Config;
+use \Lollipop\Log;
+
 /**
  * Lollipop Route Class
  *
- * @version     1.7.0
+ * @version     1.7.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -170,7 +175,7 @@ class Route
      */
     static public function prepare($callback, array $params = array()) {
         if (!is_callable($callback)) {
-            \Lollipop\Exception::error('Invalid prepare callback');
+            Log::error('Invalid prepare callback', true);
         }
         
         self::$_prepare_function = $callback;
@@ -188,7 +193,7 @@ class Route
      */
     static public function clean($callback, array $params = array()) {
         if (!is_callable($callback)) {
-            \Lollipop\Exception::error('Invalid clean callback');
+            Log::error('Invalid clean callback', true);
         }
         
         self::$_clean_function = $callback;
@@ -270,7 +275,7 @@ class Route
     static private function _dispatch() {
         if (is_array(self::$_stored_routes)) {
             // Lollipop Application Start
-            \Lollipop\Benchmark::mark('_l_app_start');
+            Benchmark::mark('_l_app_start');
 
             // Check if page is not found
             register_shutdown_function(function() {
@@ -326,23 +331,23 @@ class Route
                         self::$_is_running = true;
 
                         // Enable dev cache options
-                        if (\Lollipop\Config::get('dev_tools')) {
+                        if (Config::get('dev_tools')) {
                             // ?purge_all_cache
                             if (isset($_REQUEST['purge_all_cache'])) {
-                                \Lollipop\Cache::purge();
+                                Cache::purge();
                             }
                         }
 
                         // If page is not cacheable make sure to remove existing keys
                         if (!$cachable) {
-                            \Lollipop\Cache::remove($cache_key);
+                            Cache::remove($cache_key);
                         }
 
                         // Check if page cache is enabled and recover cache if available
                         // Also we could use ?nocache as parameter
                         // to force caching to be disabled
-                        if ($cachable && !isset($_REQUEST['nocache']) && \Lollipop\Cache::exists($cache_key)) {
-                            $page_cache = \Lollipop\Cache::recover($cache_key);
+                        if ($cachable && !isset($_REQUEST['nocache']) && Cache::exists($cache_key)) {
+                            $page_cache = Cache::recover($cache_key);
 
                             // Recover HTTP headers from cache
                             if (isset($page_cache['HTTP_HEADER'])) {
@@ -380,7 +385,7 @@ class Route
                                     'DATE_CREATE' => date('Y-m-d H:i:s')
                                 );
 
-                            \Lollipop\Cache::save($cache_key, $page_cache, false, $cache_time);
+                            Cache::save($cache_key, $page_cache, false, $cache_time);
                         }
                         
                         // Flush ob contents
@@ -389,7 +394,7 @@ class Route
                         // Off
                         self::$_is_running = false;
                     } else {
-                        \Lollipop\Log::error('Dispatcher is already running. Can\'t run multiple routes.');
+                        Log::error('Dispatcher is already running. Can\'t run multiple routes.');
                     }
                     
                     // Call clean function
@@ -421,7 +426,7 @@ class Route
             switch (count($ctoks)) {
                 case 1: // Function only
                     if (!function_exists($action = $ctoks[0])) {
-                        \Lollipop\Log::error('Callback is not a function', true);
+                        Log::error('Callback is not a function', true);
                     }
                     
                     ob_start();
@@ -442,12 +447,12 @@ class Route
                         return $output;
                     }
                     
-                    \Lollipop\Log::error('Can\'t find controller and action', true);
+                    Log::error('Can\'t find controller and action', true);
                 
                     break;
                 
                 default: // Invalid callback
-                    \Lollipop\Log::error('Callback is not a function', true);
+                    Log::error('Callback is not a function', true);
                     
                     break;
             }
@@ -495,7 +500,7 @@ class Route
         }
         
         $output = '';
-        $output_config = \Lollipop\Config::get('output');
+        $output_config = Config::get('output');
         $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
         $output_callback_function = '';
         
@@ -531,13 +536,13 @@ class Route
      *
      */
     static private function _checkNotFound() {
-        if (!self::$_is_listening && (\Lollipop\Config::get('show_not_found') === null || \Lollipop\Config::get('show_not_found') !== false)) {
-            \Lollipop\Log::notice('404 Not Found: ' . $_SERVER['REQUEST_URI']);
+        if (!self::$_is_listening && (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
+            Log::notice('404 Not Found: ' . $_SERVER['REQUEST_URI']);
 
             header('HTTP/1.0 404 Not Found');
 
-            if (\Lollipop\Config::get('not_found_page')) {
-                echo self::_returnData(self::forward(\Lollipop\Config::get('not_found_page')));
+            if (Config::get('not_found_page')) {
+                echo self::_returnData(self::forward(Config::get('not_found_page')));
             } else {
                 $pagenotfound = '<!DOCTYPE html>';
                 $pagenotfound .= '<!-- Lollipop for PHP by John Aldrich Bernardo -->';

@@ -3,12 +3,14 @@
 namespace Lollipop;
 
 use \Lollipop\Cache;
+use \Lollipop\Config;
+use \Lollipop\Log;
 
 /**
  * Database Driver for MySQLi
  *
  * @package     Candy
- * @version     2.8.1
+ * @version     2.8.2
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
@@ -897,7 +899,7 @@ class Database
      *
      */
     private function __connect() {
-        $db = \Lollipop\Config::get('db');
+        $db = Config::get('db');
 
         if (!is_null($db)) {
             $host = isset($db->host) ?  $db->host : 'localhost';
@@ -909,10 +911,10 @@ class Database
             $this->_mysqli = new \mysqli($host, $uid, $pwd, $db);
             
             if ($this->_mysqli->connect_errno > 0) {
-                \Lollipop\Log::error($this->_mysqli->connect_error);
+                Log::error($this->_mysqli->connect_error);
             }
         } else {
-            \Lollipop\Log::error('Lollipop is initialized with wrong database configuration');
+            Log::error('Lollipop is initialized with wrong database configuration');
         }
     }
 

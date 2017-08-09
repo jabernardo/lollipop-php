@@ -13,7 +13,7 @@ Log in user or check if user is logged
 
 use \Lollipop\User;
 
-User::in('4ldirch', 'USER'); // Track user as active
+User::in('4ldrich', 'USER'); // Track user as active
 User::in(); // Returns <true> if there is an active user
 
 

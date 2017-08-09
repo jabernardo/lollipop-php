@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\Number;
+
 /**
  * FileSystem Class
  *
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -54,7 +56,7 @@ class FileSystem
      */
     static function fileSize($filename, $returnFormatted = false) {
         if ($returnFormatted) {
-            return \Lollipop\Number::readableSize((double)filesize($filename));
+            return Number::readableSize((double)filesize($filename));
         }
 
         return file_exists($filename) ? filesize($filename) : 0;

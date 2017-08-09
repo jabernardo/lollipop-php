@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\Log;
+
 /**
  * Web Scraper Class
  * 
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -47,7 +49,7 @@ class Scraper
     function __construct($url, $post = null, $user_agent = null) {
         // Check first if given string is a valid URL 
         if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-            \Lollipop\Log::error('URL is invalid', true);
+            Log::error('URL is invalid', true);
         }
         
         // Set current url
@@ -78,7 +80,7 @@ class Scraper
         $resp = curl_exec($curl);
         
         if (!$resp) {
-            \Lollipop\Log::error($url . ' not Found!');
+            Log::error($url . ' not Found!');
         }
         
         // Close request to clear up some resources
