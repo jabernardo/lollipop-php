@@ -8,7 +8,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Caching Library
  *
- * @version     4.0.0
+ * @version     4.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -112,7 +112,7 @@ EOL;
             $tbl = $sqlite->exec($sql);
 
             if (!$tbl) {
-                Log::error($sqlite->lastErrorMsg(), true);
+                Log::error('Error on creating cache table "' . $sqlite->lastErrorMsg() . "'", true);
             }
 
             $sqlite->close();
@@ -143,7 +143,7 @@ EOL;
             $select = $sqlite->query($sql);
 
             if (!$select) {
-                Log::error($sqlite->lastErrorMsg(), true);
+                Log::error('Error on finding cache "' . $sqlite->lastErrorMsg() . '"', true);
             }
 
             $ret = $select->fetchArray(SQLITE3_ASSOC);
@@ -216,7 +216,7 @@ EOL;
                 $q = $sqlite->exec($sql);
 
                 if (!$q) {
-                    Log::error($sqlite->lastErrorMsg(), true);
+                    Log::error('Can\'t add or update cache "' . $sqlite->lastErrorMsg() . '"', true);
                 }
 
                 $sqlite->close();
@@ -255,7 +255,7 @@ EOL;
                 $select = $sqlite->query($sql);
 
                 if (!$select) {
-                    Log::error($sqlite->lastErrorMsg(), true);
+                    Log::error('Can\'t recover cache data "' . $sqlite->lastErrorMsg() . '"', true);
                 }
 
                 $ret = $select->fetchArray(SQLITE3_ASSOC);
@@ -298,7 +298,7 @@ EOL;
             $jan = $sqlite->exec($sql);
 
             if (!$jan) {
-                Log::error($sqlite->lastErrorMsg(), true);
+                Log::error('Can\'t remove cache "' . $sqlite->lastErrorMsg() . '"', true);
             }
 
             $sqlite->close();
@@ -333,7 +333,7 @@ EOL;
 
             if (!$jan) {
                 // Failed to execute sql
-                Log::error($sqlite->lastErrorMsg(), true);
+                Log::error('Can\'t purge cache data "' . $sqlite->lastErrorMsg() . '"', true);
             }
 
             $sqlite->close();
