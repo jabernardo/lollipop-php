@@ -26,3 +26,7 @@ or get it via ```composer```
 composer require "4ldrich/lollipop-php"
 ```
 start the development of your projects.
+
+## License
+
+The LMVC framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

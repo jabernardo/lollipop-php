@@ -5,7 +5,7 @@
  * An extensive and flexible library for PHP
  *
  * @package    Lollipop
- * @version    6.1.3
+ * @version    6.1.4
  * @author     John Aldrich Bernardo <bjohnaldrich@gmail.com>
  * @copyright  Copyright (C) 2015-2017 John Aldrich Bernardo. All rights reserved.
  * @license
