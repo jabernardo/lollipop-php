@@ -8,7 +8,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Caching Library
  *
- * @version     4.0.1
+ * @version     4.1.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -49,16 +49,16 @@ class Cache
      * 
      */
     static private function _getStoragePath() {
-        $cache_file = '';
-
         if (self::_isDriver('sqlite3')) {
             // Add cache file in path if driver is SQLite3
-            $cache_file = 'cache.db';
+            return (is_object(Config::get('localdb')) && isset(Config::get('localdb')->folder)) 
+                ? rtrim(Config::get('localdb')->folder, '/') . '/cache.db'
+                : LOLLIPOP_STORAGE_LOCALDB . 'cache.db';
         }
 
         return (is_object(Config::get('cache')) && isset(Config::get('cache')->folder)) 
-            ? rtrim(Config::get('cache')->folder, '/') . '/' . $cache_file 
-            : LOLLIPOP_STORAGE_CACHE . $cache_file;
+            ? rtrim(Config::get('cache')->folder, '/') . '/' 
+            : LOLLIPOP_STORAGE_CACHE;
     }
 
     /**

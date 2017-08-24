@@ -3,7 +3,7 @@
 /**
  * Lollipop Autoload 
  * 
- * @version 4.1.0
+ * @version 4.1.1
  * @author  John Aldrich Bernardo
  * 
  */
@@ -41,6 +41,13 @@ define('LOLLIPOP_STORAGE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE 
  * 
  */
 define('LOLLIPOP_STORAGE_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'cache/'));
+
+/**
+ * Lollipop local database directory
+ * 
+ * 
+ */
+define('LOLLIPOP_STORAGE_LOCALDB', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'db/'));
 
 /**
  * Lollipop cache directory
