@@ -71,6 +71,13 @@ Change 404 page
 #### cache ```(array)```
 
 - ```folder``` Path for cache
+- ```driver``` Cache driver (sqlite/filesystem)
+
+> When using `sqlite` please do define `localdb` in config
+
+#### localdb ```(array)```
+
+- ```folder``` Path to localdb storage
 
 #### log ```(array)```
 
