@@ -10,11 +10,26 @@ use \Lollipop\Log;
 /**
  * Lollipop Route Class
  *
- * @version     1.7.2
+ * @version     1.8.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
- *
+ * @request-headers
+ * 
+ *      lollipop-gzip: true/false
+ *          - Force gzip compression return
+ * 
+ * @response-headers
+ * 
+ *      lollipop-forwarded: true/false
+ *          - If `Route::forward` is called
+ * 
+ *      lollipop-cache: true/false
+ *          - If page is from cache
+ * 
+ *      lollipop-cache-saved: true/false
+ *          - If cache is saved
+ * 
  */
 class Route
 {
@@ -227,6 +242,10 @@ class Route
      */
     static public function forward($path, array $params = array()) {
         if (isset(self::$_stored_routes[$path])) {
+            // Set custom header for forwarded
+            // lollipop-forwarded: true/false
+            self::setHeader('lollipop-forwarded: true');
+            
             $callback = self::$_stored_routes[$path];
             $callback = $callback['callback'];
 
@@ -352,9 +371,13 @@ class Route
                             // Recover HTTP headers from cache
                             if (isset($page_cache['HTTP_HEADER'])) {
                                 foreach($page_cache['HTTP_HEADER'] as $header) {
-                                    header($header);
+                                    self::setHeader($header);
                                 }
                             }
+                            
+                            // Set lollipop-cache in headers
+                            // lollipop-cache: true/false
+                            self::setHeader('lollipop-cache: true');
 
                             // Output from cache
                             echo isset($page_cache['HTTP_CONTENT']) ? $page_cache['HTTP_CONTENT'] : '';
@@ -384,6 +407,10 @@ class Route
                                     'HTTP_CONTENT' => ob_get_contents(),
                                     'DATE_CREATE' => date('Y-m-d H:i:s')
                                 );
+                            
+                            // Set identifier if cache was saved
+                            // lollipop-cache-saved: true/false
+                            self::setHeader('lollipop-cache-saved: true');
 
                             Cache::save($cache_key, $page_cache, false, $cache_time);
                         }
@@ -517,7 +544,18 @@ class Route
         
         $output = $output_callback_function;
         
-        if ($output_compression) {
+        // Request header to force gzip
+        $force_gzip = false;
+        
+        foreach(getallheaders() as $k => $v) {
+            // `lollipop-gzip` is the key, and allowed value is `true`
+            if (strtolower($k) == 'lollipop-gzip' &&
+                strtolower($v) == 'true') {
+                    $force_gzip = true;
+                }
+        }
+        
+        if ($output_compression || $force_gzip) {
             // Set Content coding a gzip
             self::setHeader('Content-Encoding: gzip');
             

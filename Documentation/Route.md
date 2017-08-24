@@ -60,3 +60,19 @@ Route::all('/oldpage', function() {
 
 
 ```
+
+## Request Headers
+
+`lollipop-gzip` (true/false)
+- Force gzip compression
+
+## Response Headers
+
+`lollipop-forwarded` (true/false)
+- Will be set if `Route::forward` was called
+
+`lollipop-cache` (true/false)
+- Is page from cache?
+
+`lollipop-cache-saved` (true/false)
+- If new cache is saved
