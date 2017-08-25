@@ -24,7 +24,7 @@ class TagTest extends TestCase
         
         $this->assertEquals(
                 (string)$h,
-                '<p class="error log" id="message">Hello<b>World!</b></p><br/>'
+                '<p class="error log" id="message">Hello<b>World!</b></p>'
             );
     }
     
