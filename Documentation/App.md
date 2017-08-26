@@ -50,6 +50,12 @@ Folder(s) to include in autoload
 - ```cache``` Enable or disable results caching
 - ```cache_time``` Cache expiration in minutes
 
+#### text ```(array)```
+* ```security```
++ ```key``` The key.
++ ```method``` See [openssl methods](https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)
++ ```iv``` Initialization Vector
+
 #### dev_tools ```(bool)```
 Activate developers tools for your own benefit. Options below only triggered by request (GET/POST) sent to application.
 
