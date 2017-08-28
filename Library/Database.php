@@ -2,6 +2,8 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
@@ -10,7 +12,7 @@ use \Lollipop\Log;
  * Database Driver for MySQLi
  *
  * @package     Candy
- * @version     2.8.2
+ * @version     2.8.3
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com

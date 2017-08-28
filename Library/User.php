@@ -2,6 +2,8 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 use \Lollipop\Config;
 use \Lollipop\Cookie;
 use \Lollipop\Log;
@@ -12,7 +14,7 @@ use \Lollipop\Url;
 /**
  * User Class
  *
- * @version     2.1
+ * @version     2.1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 

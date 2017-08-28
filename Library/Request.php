@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 /**
  * Request Class 
  *
- * @version     1.2
+ * @version     1.2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 

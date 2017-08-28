@@ -2,6 +2,8 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 use \Lollipop\Benchmark;
 use \Lollipop\Config;
 use \Lollipop\Log;
@@ -9,7 +11,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Application Class
  *
- * @version     6.1
+ * @version     6.1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop

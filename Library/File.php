@@ -2,12 +2,14 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 use \Lollipop\FileSystem;
 
 /**
  * File Class
  *
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 

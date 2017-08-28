@@ -2,6 +2,8 @@
 
 namespace Lollipop;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
 use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
@@ -10,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Route Class
  *
- * @version     1.8.0
+ * @version     1.8.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
