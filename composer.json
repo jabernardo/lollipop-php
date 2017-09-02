@@ -1,16 +1,16 @@
 {
-    "name": "4ldrich/lollipop-php",
+    "name": "jabernardo/lollipop-php",
     "type": "library",
     "description": "A slim and very flexible framework for PHP",
     "keywords": ["framework","library"],
-    "homepage": "https://github.com/4ldrich/lollipop-php",
+    "homepage": "https://github.com/jabernardo/lollipop-php",
     "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
         {
             "name": "John Aldrich Bernardo",
             "email": "4ldrich@protonmail.com",
-            "homepage": "https://github.com/4ldrich",
+            "homepage": "https://github.com/jabernardo",
             "role": "Developer"
         }
     ],
