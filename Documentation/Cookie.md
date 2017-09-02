@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Cookie
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Cookie
 
 These page will show you on how-to use ```\Lollipop\Cookie``` 
 

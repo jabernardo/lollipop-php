@@ -1,8 +1,8 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\App
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\App
 
 These page will show you on how-to use ```\Lollipop\App``` 
 
-## Configure [Lollipop](http://github.com/4ldrich/lollipop-php)
+## Configure [Lollipop](https://github.com/jabernardo/lollipop-php)
 
 To configure your ```Lollipop``` application you just need to send an array to 
 ```\Lollipop\App::init``` function

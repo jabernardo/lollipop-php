@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Url
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Url
 
 These page will show you on how-to use ```\Lollipop\Url``` 
 

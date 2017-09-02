@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Tag
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Tag
 
 These page will show you on how-to use ```\Lollipop\Tag``` 
 

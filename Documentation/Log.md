@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Log
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Log
 
 These page will show you on how-to use ```\Lollipop\Log``` 
 

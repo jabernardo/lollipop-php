@@ -1,11 +1,11 @@
-# Starting [Lollipop](http://github.com/4ldrich/lollipop-php)
+# Starting [Lollipop](https://github.com/jabernardo/lollipop-php)
 This will guide you on using Lollipop-PHP framework.
 
 ## Downloading
 First make sure you have a Lollipop
 
 ```bash
-git clone https://github.com/4ldrich/lollipop-php.git lollipop-php
+git clone https://github.com/jabernardo/lollipop-php.git lollipop-php
 ```
 
 ## Configure [.htaccess](http://www.htaccess-guide.com/)

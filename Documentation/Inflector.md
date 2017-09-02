@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Inflector
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Inflector
 
 These page will show you on how-to use ```\Lollipop\Inflector``` 
 

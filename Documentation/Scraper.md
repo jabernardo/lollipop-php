@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Scraper
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Scraper
 
 These page will show you on how-to use ```\Lollipop\Scraper``` 
 

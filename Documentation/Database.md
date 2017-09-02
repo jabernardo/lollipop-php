@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Database
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Database
 
 These page will show you on how-to use ```\Lollipop\Database``` 
 

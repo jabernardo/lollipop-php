@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\Request
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Request
 
 These page will show you on how-to use ```\Lollipop\Request``` 
 

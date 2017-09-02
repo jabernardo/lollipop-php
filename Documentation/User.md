@@ -1,4 +1,4 @@
-# \\[Lollipop](http://github.com/4ldrich/lollipop-php)\User
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\User
 
 These page will show you on how-to use ```\Lollipop\User``` 
 
