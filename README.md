@@ -1,4 +1,4 @@
-# [Lollipop](http://github.com/4ldrich/lollipop-php) ![Travis: Build Status](https://api.travis-ci.org/4ldrich/lollipop-php.svg?branch=master "Travis: Build Status")
+# [Lollipop](http://github.com/jabernardo/lollipop-php) ![Travis: Build Status](https://travis-ci.org/jabernardo/lollipop-php.svg?branch=master "Travis: Build Status")
 
 A slim and very flexible framework for PHP
 
@@ -19,11 +19,11 @@ Route::get('/', function() {
 ###### DOWNLOAD
 Get the latest version of Lollipop-PHP framework from our Git repository hosted on GitHub
 ```bash
-git clone https://github.com/4ldrich/lollipop-php.git lollipop-php
+git clone https://github.com/jabernardo/lollipop-php.git lollipop-php
 ```
 or get it via ```composer```
 ```bash
-composer require "4ldrich/lollipop-php"
+composer require "jabernardo/lollipop-php"
 ```
 start the development of your projects.
 
