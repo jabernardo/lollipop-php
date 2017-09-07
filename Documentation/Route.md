@@ -52,6 +52,7 @@ Serve a method for a specific request.
 Also you could use our pre-defined methods.
 
 ```php
+<?php
 
 use \Lollipop\Route;
 
@@ -75,6 +76,7 @@ Route::all('/', function() {
 `get`, `post`, `put`, `delete` or define a new one using `Route::serve`
 
 ```php
+<?php
 
 // get, post, put or delete
 Route::get('/get', function() {
@@ -96,6 +98,7 @@ Route::serve(['GET', 'POST'], '/getorpost', function() {
 ## Setting the headers
 
 ```php
+<?php
 
 use \Lollipop\Route;
 
@@ -113,6 +116,7 @@ Prepare and Clean callbacks will enable you to set custom function to run before
 or after a route executed.
 
 ```php
+<?php
 
 use \Lollipop\Route;
 
@@ -127,6 +131,7 @@ Let's you'll be removing to new routing keyword and don't want to lose your
 visitors you can forward the action to another route. It'll run like a 301 header.
 
 ```php
+<?php
 
 use \Lollipop\Route;
 
