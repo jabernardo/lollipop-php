@@ -6,6 +6,8 @@ These page will show you on how-to use ```\Lollipop\CsrfToken```
 Get a random token
 
 ```php
+<?php
+
 use \Lollipop\CsrfToken;
 
 $token = CsrfToken::get();
@@ -16,6 +18,8 @@ $token = CsrfToken::get();
 Get a token name
 
 ```php
+<?php
+
 use \Lollipop\CsrfToken;
 
 $token_name = CsrfToken::getName();
@@ -37,6 +41,8 @@ Check if token is valid
 Returns ```bool``` if ```$die``` is ```true``` then kill the entire application
 
 ```php
+<?php
+
 use \Lollipop\CsrfToken;
 
 CsrfToken::hook();

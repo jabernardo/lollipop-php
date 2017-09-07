@@ -8,6 +8,7 @@ Add or set configuration
 > Use `.` (dot) as separator to declare levels for configuration
 
 ```php
+<?php
 
 use \Lollipop\Config;
 
@@ -20,6 +21,7 @@ Config::set('pages.about.title', 'About Us');
 Get configuration value
 
 ```php
+<?php
 
 use \Lollipop\Config;
 
@@ -31,6 +33,7 @@ Config::get('pages')->home->title;
 Remove configuration key
 
 ```php
+<?php
 
 Config::remove('pages.about');
 

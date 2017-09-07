@@ -5,6 +5,7 @@ These page will show you on how-to use ```\Lollipop\Scraper```
 ### Scraping ...
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 
@@ -15,6 +16,7 @@ $scraper = new \Lollipop\Scraper('http://domain.com');
 Get contents of an element by using attributes
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 
@@ -26,6 +28,7 @@ $thumbnails = $scraper->getContentsByAttr('class', 'thumbnail');
 Get contents of an element by using element name
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 
@@ -37,6 +40,7 @@ $divs = $scraper->getContentsByElem('div');
 Get attribute value using other attributes
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 
@@ -48,6 +52,7 @@ $thumb_hrefs = getAttrByAttr('class', 'thumbnail', 'href');
 Get attributes of elements
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 
@@ -70,6 +75,7 @@ $attrs = $scraper->getAttrByElemWithAttr('a');
 Get attributes by element using another attributes
 
 ```php
+<?php
 
 $scraper = new \Lollipop\Scraper('http://domain.com');
 

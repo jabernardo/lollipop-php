@@ -5,6 +5,7 @@ These page will show you on how-to use ```\Lollipop\FileSystem```
 ### fileWrite($filename, $contents, $overwriteExisting = true) ```(void)```
 
 ```php
+<?php
 
 use \Lollipop\FileSystem;
 

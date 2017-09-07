@@ -6,6 +6,7 @@ These page will show you on how-to use ```\Lollipop\Url```
 Get base url.
 
 ```php
+<?php
 
 use \Lollipop\Url;
 

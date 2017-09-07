@@ -6,6 +6,7 @@ These page will show you on how-to use ```\Lollipop\File```
 ## Opening or creating a new file
 
 ```php
+<?php
 
 use \Lollipop\File;
 
@@ -18,6 +19,7 @@ $f = new File('sample.txt');
 Get or set file contents
 
 ```php
+<?php
 
 use \Lollipop\File;
 

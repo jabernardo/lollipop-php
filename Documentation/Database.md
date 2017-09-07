@@ -7,6 +7,7 @@ These page will show you on how-to use ```\Lollipop\Database```
 In order to use the ```Database``` library make sure you have set the configuration ```db```
 
 ```php
+<?php
 
 use \Lollipop\App;
 use \Lollipop\Config;
@@ -35,6 +36,7 @@ it will return the ```mysqli_result``` object.
 ### Basic Select
 
 ```php
+<?php
 
 use \Lollipop\Database;
 
@@ -53,9 +55,9 @@ var_dump($sql->execute());
 ### Selective Select
 
 ```php
+<?php
 
 use \Lollipop\Database;
-
 
 $sql = Database::table('users')
         ->select(['username', 'password']);
@@ -64,9 +66,9 @@ $sql = Database::table('users')
 ### Filtering results
 
 ```php
+<?php
 
 use \Lollipop\Database;
-
 
 $sql = Database::table('users')
         ->where('username', '4ldrich')
@@ -78,9 +80,9 @@ $sql = Database::table('users')
 ### Joins
 
 ```php
+<?php
 
 use \Lollipop\Database;
-
 
 $sql = Database::table('users')
         ->join('location', 'location.id', '=', 'users.location_id')
@@ -94,6 +96,7 @@ $sql = Database::table('users')
 ```Database::insert``` requires ```array(key=>value)``` as parameter
 
 ```php
+<?php
 
 use \Lollipop\Database;
 
@@ -109,6 +112,7 @@ $sql = Database::table('products')
 ## Updating Data 
 
 ```php
+<?php
 
 use \Lollipop\Database;
 
@@ -124,6 +128,7 @@ $sql = Database::table('products')
 ## Increment and Decrement
 
 ```php
+<?php
 
 use \Lollipop\Database;
 
@@ -137,9 +142,9 @@ $sql = Database::table('cart')
 ## Remove
 
 ```php
+<?php
 
 use \Lollipop\Database;
-
 
 $sql = Database::table('users')
         ->where('username', '4ldrich')
@@ -150,6 +155,7 @@ $sql = Database::table('users')
 ## Raw SQL
 
 ```php
+<?php
 
 use \Lollipop\Database;
 

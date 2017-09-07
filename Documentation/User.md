@@ -10,6 +10,7 @@ Log in user or check if user is logged
 > -1 Not connected to database, 1 if users are too many, and 0 if logged in.
 
 ```php
+<?php
 
 use \Lollipop\User;
 

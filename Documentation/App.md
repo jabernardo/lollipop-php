@@ -8,6 +8,7 @@ To configure your ```Lollipop``` application you just need to send an array to
 ```\Lollipop\App::init``` function
 
 ```php
+<?php
 
 $config = [
     'app' => [

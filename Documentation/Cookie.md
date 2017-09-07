@@ -6,6 +6,7 @@ These page will show you on how-to use ```\Lollipop\Cookie```
 Create or update a cookie
 
 ```php
+<?php
 
 use \Lollipop\Cookie;
 
@@ -17,6 +18,7 @@ Cookie::set('session_id', rand());
 Get value of cookie
 
 ```php
+<?php
 
 use \Lollipop\Cookie;
 

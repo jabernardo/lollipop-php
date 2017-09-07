@@ -6,6 +6,7 @@ These page will show you on how-to use ```\Lollipop\Tag```
 ### Creating a tag
 
 ```php
+<?php
 
 use \Lollipop\Tag;
 
@@ -20,6 +21,7 @@ $tag = Tag::create('p')
 ### Create an empty tag
 
 ```php
+<?php
 
 use \Lollipop\Tag;
 

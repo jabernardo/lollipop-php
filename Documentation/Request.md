@@ -6,9 +6,9 @@ These page will show you on how-to use ```\Lollipop\Request```
 Check if expected request are fulfilled
 
 ```php
+<?php
 
 use \Lollipop\Request;
-
 
 if (Request::is(['username', 'password'])) {
     // Then login
@@ -21,6 +21,7 @@ if (Request::is(['username', 'password'])) {
 Get request received
 
 ```php
+<?php
 
 use \Lollipop\Request;
 
