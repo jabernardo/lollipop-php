@@ -6,8 +6,40 @@ A slim and very flexible framework for PHP
 You can use Lollipop when you're creating a simple and powerful web application. Lollipop removed the weight of large frameworks. Also Lollipop was created to offer cool functionalities and speed.
 
 ###### IT's EASY!
-It's very easy to start with!
+
+> Configure [.htaccess](http://www.htaccess-guide.com/)
+Please use below code as the default for your ```.htaccess```
+Or see [LMVC](http://github.com/jabernardo/lmvc) for routing using 
+[Lollipop](https://github.com/jabernardo/lollipop-php)
+
+```apache
+# Enable running of scripts
+AddHandler cgi-script .pl .cgi
+Options +ExecCGI +FollowSymLinks
+
+# Disable Indexing of Directories
+Options -Indexes
+
+# Enable RewriteEngine
+RewriteEngine on
+
+# Enable page access 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirect all pages to index
+RewriteRule ^(.*)$/? index.php [L]
+```
+
+A simple `Hello World` Page
+
 ```php
+<?php
+
+require('/path/to/lollipop-php/autoload.php');
+// or if using composer
+// require('./vendor/autoload.php');
+
 use \Lollipop\Route;
 
 // Your index page
@@ -26,6 +58,7 @@ or get it via ```composer```
 composer require "jabernardo/lollipop-php"
 ```
 start the development of your projects.
+
 
 ## License
 
