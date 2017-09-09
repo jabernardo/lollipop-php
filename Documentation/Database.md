@@ -6,6 +6,13 @@ These page will show you on how-to use ```\Lollipop\Database```
 ## Configurations
 In order to use the ```Database``` library make sure you have set the configuration ```db```
 
+- ```host``` Hostname for database
+- ```username``` UID for connection
+- ```password``` Password for authentication
+- ```database``` Database name
+- ```cache``` Enable or disable results caching
+- ```cache_time``` Cache expiration in minutes
+
 ```php
 <?php
 
