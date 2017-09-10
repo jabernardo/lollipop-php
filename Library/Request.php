@@ -4,10 +4,14 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+use \Lollipop\Benchmark;
+use \Lollipop\Config;
+use \Lollipop\Log;
+
 /**
  * Request Class 
  *
- * @version     1.2.1
+ * @version     1.3.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -78,6 +82,132 @@ class Request
         }
         
         return $var;
+    }
+    
+    /**
+     * Simple cURL Wrapper
+     * 
+     * @access  public
+     * @param   array   $options    Options for request
+     * @todo    Add docs
+     *          Add cache
+     * @example
+     * 
+     *  [
+     *      'url' => 'https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty',
+     *      'auth' => [
+     *              'user' => 'username',
+     *              'pwd' => 'youpassword'
+     *          ],
+     *      'headers' => [],
+     *      'timeout' => 0,
+     *      'follow' => true, // Follow redirections
+     *      'max-redirections' => 5, // Allowed number of redirections
+     *      'cookie-jar' => 'Path to cookie jar',
+     *      'cookie-file' => 'Path to cookie file',
+     *      'return-headers' => true/false, // Return headers
+     *      'no-body' => true/false, // Return no-body
+     *      'user-agent' => '', // Custom user agent
+     *      'referrer' => '', // HTTP REFERRER
+     *      'method' => 'PUT', // Custom method
+     *      'parameters' => [ // Parameters
+     *              'key' => 'value'
+     *          ]
+     *  ]
+     * 
+     * @return  mixed
+     * 
+     */
+    static function send(array $options) {
+        // Get localdb location in config
+        $localdb = Config::get('localdb') && isset(Config::get('localdb')->folder) && Config::get('localdb')->folder
+                    ? Config::get('localdb') : LOLLIPOP_STORAGE_LOCALDB;
+        
+        // URl is required: CURLOPT_URL
+        $url = isset($options['url']) ? $options['url'] : false;
+        
+        if (!$url) {
+            Log::error('URL missing on Request', true);
+        }
+        
+        // Auth: CURLOPT_USERPWD
+        $auth_username = isset($options['auth']) && is_array($options['auth']) && isset($options['auth']['user'])
+                            ? $options['auth']['user'] : '';
+        $auth_passwd = isset($options['auth']) && is_array($options['auth']) && isset($options['auth']['pwd'])
+                            ? $options['auth']['pwd'] : '';
+        
+        $c = curl_init();
+        
+        if ($auth_username && $auth_passwd) {
+            curl_setopt($c, CURLOPT_USERPWD, $auth_username . ':' . $auth_passwd);
+        }
+        
+        curl_setopt($c, CURLOPT_URL, $url);
+        // Set empty headers as default: CURLOPT_HTTPHEADER
+        curl_setopt($c, CURLOPT_HTTPHEADER, fuse($options['headers'], array()));
+        // Allow returning of headers
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+        // Set timeout 0 as default: CURLOPT_TIMEOUT
+        curl_setopt($c, CURLOPT_TIMEOUT, fuse($options['timeout'], 0));
+        // Follow URL `true` as default: CURLOPT_FOLLOWLOCATION
+        curl_setopt($c, CURLOPT_FOLLOWLOCATION, fuse($options['follow'], true));
+        // Set max redirections: CURLOPT_MAXREDIRS
+        curl_setopt($c, CURLOPT_MAXREDIRS, fuse($options['max-redirections'], 5));
+        // Set cookie jar: CURLOPT_COOKIEJAR
+        curl_setopt($c, CURLOPT_COOKIEJAR, fuse($options['cookie-jar'], $localdb . 'cookies'));
+        // Set cookie file: CURLOPT_COOKIEFILE
+        curl_setopt($c, CURLOPT_COOKIEFILE, fuse($options['cookie-file'], $localdb . 'cookies'));
+        // Allow returning of headers
+        curl_setopt($c, CURLOPT_HEADER, fuse($options['return-headers'], false));
+        // Allow no-body
+        curl_setopt($c, CURLOPT_NOBODY, fuse($options['no-body'], false));
+        
+        if (isset($options['user-agent'])) {
+            // User agent
+            curl_setopt($c, CURLOPT_USERAGENT, $options['user-agent']);
+        }
+        
+        if (isset($options['referrer'])) {
+            // HTTP REFERRER
+            curl_setopt($c, CURLOPT_REFERER, $options['referrer']);
+        }
+        
+        if (isset($options['method'])) {
+            // Custom Method Request: CURLOPT_CUSTOMREQUEST
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, $options['method']);
+        }
+        
+        if (isset($options['parameters'])) {
+            // POST parameters
+            curl_setopt($c, CURLOPT_POST, true);
+            curl_setopt($c, CURLOPT_POSTFIELDS, fuse($options['parameters'], array()));
+        }
+        
+        // Get response time
+        Benchmark::mark('curl_start');
+        // from 
+        $response = curl_exec($c);
+        $response_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+        
+        Benchmark::mark('curl_stop');
+        
+        // Close connections
+        curl_close($c);
+        
+        $return = $response;
+        
+        if (isset($options['profile'])) {
+            // Profiled response
+            $return = array(
+                    'url' => $url,
+                    'headers' => fuse($options['headers'], array()),
+                    'time' => Benchmark::elapsedTime('curl_start', 'curl_stop'),
+                    'status' => $response_status,
+                    'payload' => $response,
+                );
+        }
+        
+        return $return;
     }
 }
 
