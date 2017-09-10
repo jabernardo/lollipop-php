@@ -5,6 +5,7 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Benchmark;
+use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
 
@@ -120,8 +121,11 @@ class Request
      */
     static function send(array $options) {
         // Get localdb location in config
-        $localdb = Config::get('localdb') && isset(Config::get('localdb')->folder) && Config::get('localdb')->folder
-                    ? Config::get('localdb') : LOLLIPOP_STORAGE_LOCALDB;
+        $localdb = Config::get('localdb.folder') ? Config::get('localdb.folder') : LOLLIPOP_STORAGE_LOCALDB;
+        
+        // Request cache
+        $request_cache = !is_null(Config::get('request.cache.enable')) ? Config::get('request.cache.enable') : true;
+        $request_cache_time = Config::get('request.cache.time') ? Config::get('request.cache.time') : 1440;
         
         // URl is required: CURLOPT_URL
         $url = isset($options['url']) ? $options['url'] : false;
@@ -186,8 +190,17 @@ class Request
         // Get response time
         Benchmark::mark('curl_start');
         // from 
-        $response = curl_exec($c);
-        $response_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+        $response = '';
+        $response_status = '';
+        $cache_key = md5(json_encode($options));
+        
+        if ($request_cache && Cache::exists($cache_key)) {
+            $response = Cache::recover($cache_key);
+            $response_status = 200;
+        } else {
+            $response = curl_exec($c);
+            $response_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+        }
         
         Benchmark::mark('curl_stop');
         
@@ -195,6 +208,11 @@ class Request
         curl_close($c);
         
         $return = $response;
+        
+        if ($request_cache) {
+            // Request cache
+            Cache::save($cache_key, $return, false, $request_cache_time);
+        }
         
         if (isset($options['profile'])) {
             // Profiled response
@@ -205,6 +223,10 @@ class Request
                     'status' => $response_status,
                     'payload' => $response,
                 );
+            
+            if ($request_cache) {
+                $return['cache'] = true;
+            }
         }
         
         return $return;
