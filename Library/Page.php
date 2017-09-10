@@ -4,12 +4,14 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+use \Lollipop\Config;
 use \Lollipop\Log;
+use \Lollipop\Text;
 
 /**
  * Page Class 
  *
- * @version     1.3.1
+ * @version     1.3.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -54,6 +56,10 @@ class Page
         if (file_exists($view)) {
             if (is_array($data)) {
                 foreach ($data as $_data => $_value) {
+                    if (Config::get('anti_xss')) {
+                        $_value = Text::entities($_value);
+                    }
+                    
                     $$_data = $_value;
                 }
             } else {

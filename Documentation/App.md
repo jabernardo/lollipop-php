@@ -90,6 +90,10 @@ Change 404 page
 
 - ```folder``` Path for logs
 
+#### anti_xss ```(bool)```
+
+Enable or Disable XSS injection in ```Page::render```
+
 
 ### getResponseTime ```(double)```
 Returns applications response time
