@@ -43,6 +43,7 @@ class Log
 
         $log_path = (isset($config->folder) && $config->folder) ? $config->folder : LOLLIPOP_STORAGE_LOG;
         $log_enable = (isset($config->enable)) ? $config->enable : true;
+        $log_hourly = (isset($config->hourly)) ? $config->hourly : false;
         
         if (!is_dir($log_path)) {
            die('Lollipop Application has been terminated due to unhandled error: Log folder doesn\'t exists.'); 
@@ -52,7 +53,7 @@ class Log
            die('Lollipop Application has been terminated due to unhandled error: Log folder is not writeable.'); 
         }
         
-        $filename = $log_path . DIRECTORY_SEPARATOR . date('Y-m-d') . '.log';
+        $filename = $log_path . DIRECTORY_SEPARATOR . ($log_hourly ? date('Y-m-d-H') : date('Y-m-d')) . '.log';
         
         if ($log_enable)
             file_put_contents($filename, $message . "\n", FILE_APPEND);

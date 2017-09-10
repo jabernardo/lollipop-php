@@ -88,7 +88,9 @@ Change 404 page
 
 #### log ```(array)```
 
+- ```enable``` True/False
 - ```folder``` Path for logs
+- ```hourly``` Enable hourly format in log files
 
 #### anti_xss ```(bool)```
 
