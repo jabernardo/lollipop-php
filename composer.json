@@ -2,7 +2,7 @@
     "name": "jabernardo/lollipop-php",
     "type": "library",
     "description": "A slim and very flexible framework for PHP",
-    "keywords": ["framework","library"],
+    "keywords": ["framework","library","web-framework","php-framework"],
     "homepage": "https://github.com/jabernardo/lollipop-php",
     "license": "MIT",
     "minimum-stability": "dev",
