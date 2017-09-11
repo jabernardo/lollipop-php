@@ -12,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Request Class 
  *
- * @version     1.3.2
+ * @version     1.3.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -22,9 +22,16 @@ use \Lollipop\Log;
 class Request
 {
     /**
+     * @access  private
+     * @vars    array   Centralized session requests
+     * 
+     */
+    static private $_all_requests = array();
+    
+    /**
      * Check for request(s)
      *
-     * @param   array   $requests   Request names
+     * @param   mixed   $requests   Request names
      *
      * @return bool
      * 
@@ -35,13 +42,13 @@ class Request
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        $_all_requests = array_merge($_REQUEST, $_php_request);
+        self::$_all_requests = array_merge(self::$_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             $returns = array();
             
             foreach ($requests as $request) {
-                array_push($returns, isset($_all_requests[$request]));
+                array_push($returns, isset(self::$_all_requests[$request]));
             }
             
             foreach ($returns as $return) {
@@ -50,7 +57,7 @@ class Request
                 }
             }
         } else {
-            $is = isset($_all_requests[$requests]);
+            $is = isset(self::$_all_requests[$requests]);
         }
         
         return $is;
@@ -70,16 +77,16 @@ class Request
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        $_all_requests = array_merge($_REQUEST, $_php_request);
+        self::$_all_requests = array_merge(self::$_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             foreach ($requests as $request) {
-                $var[$request] = isset($_all_requests[$request]) ? $_all_requests[$request] : null;
+                $var[$request] = isset(self::$_all_requests[$request]) ? self::$_all_requests[$request] : null;
             }
         } else if (is_null($requests)) {
-            $var = $_all_requests;
+            $var = self::$_all_requests;
         } else {
-            $var = (isset($_all_requests[$requests])) ? $_all_requests[$requests] : null;
+            $var = (isset(self::$_all_requests[$requests])) ? self::$_all_requests[$requests] : null;
         }
         
         return $var;
@@ -90,7 +97,6 @@ class Request
      * 
      * @access  public
      * @param   array   $options    Options for request
-     * @todo    Add docs
      * @example
      * 
      *  [
@@ -180,13 +186,13 @@ class Request
         
         if (isset($options['method'])) {
             // Custom Method Request: CURLOPT_CUSTOMREQUEST
-            curl_setopt($c, CURLOPT_CUSTOMREQUEST, $options['method']);
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, strtoupper($options['method']));
         }
         
         if (isset($options['parameters'])) {
             // POST parameters
             curl_setopt($c, CURLOPT_POST, true);
-            curl_setopt($c, CURLOPT_POSTFIELDS, fuse($options['parameters'], array()));
+            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query(fuse($options['parameters'], array())));
         }
         
         // Get response time
