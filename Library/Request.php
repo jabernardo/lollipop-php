@@ -12,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Request Class 
  *
- * @version     1.3.1
+ * @version     1.3.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
