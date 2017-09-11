@@ -126,6 +126,9 @@ class Request
         $request_cache = !is_null(Config::get('request.cache.enable')) ? Config::get('request.cache.enable') : true;
         $request_cache_time = Config::get('request.cache.time') ? Config::get('request.cache.time') : 1440;
         
+        // Auto JSON
+        $auto_json = !is_null(Config::get('request.json')) ? Config::get('request.json') : true;
+        
         // URl is required: CURLOPT_URL
         $url = isset($options['url']) ? $options['url'] : false;
         
@@ -199,6 +202,11 @@ class Request
         } else {
             $response = curl_exec($c);
             $response_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+            
+            if ($auto_json && is_string($response) && json_decode($response)) {
+                // If Request JSON is on, will force return to an object
+                $response = json_decode($response);
+            }
         }
         
         Benchmark::mark('curl_stop');
@@ -213,14 +221,14 @@ class Request
             Cache::save($cache_key, $return, false, $request_cache_time);
         }
         
-        if (isset($options['profile'])) {
+        if (isset($options['profile']) && $options['profile']) {
             // Profiled response
             $return = array(
                     'url' => $url,
                     'headers' => fuse($options['headers'], array()),
                     'time' => Benchmark::elapsedTime('curl_start', 'curl_stop'),
                     'status' => $response_status,
-                    'payload' => $response,
+                    'payload' => $return,
                 );
             
             if ($request_cache) {
