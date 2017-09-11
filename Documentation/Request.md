@@ -83,12 +83,12 @@ These will return
 ```json
 
 {
-    url: "https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty",
-    headers: [ ],
-    time: 0.6267831326,
-    status: 200,
-    payload: ...,
-    cache: true
+    "url": "https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty",
+    "headers": [ ],
+    "time": 0.6267831326,
+    "status": 200,
+    "payload": "...",
+    "cache": true
 }
 
 ```
