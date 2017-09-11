@@ -12,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Request Class 
  *
- * @version     1.3.3
+ * @version     1.3.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -23,7 +23,7 @@ class Request
 {
     /**
      * @access  private
-     * @vars    array   Centralized session requests
+     * @var     array   Centralized session requests
      * 
      */
     static private $_all_requests = array();
@@ -129,7 +129,9 @@ class Request
         $localdb = Config::get('localdb.folder') ? Config::get('localdb.folder') : LOLLIPOP_STORAGE_LOCALDB;
         
         // Request cache
-        $request_cache = !is_null(Config::get('request.cache.enable')) ? Config::get('request.cache.enable') : true;
+        $request_cache = !is_null(Config::get('request.cache.enable'))
+                            ? Config::get('request.cache.enable') || (isset($options['cache']) && $options['cache']) 
+                            : true;
         $request_cache_time = Config::get('request.cache.time') ? Config::get('request.cache.time') : 1440;
         
         // Auto JSON

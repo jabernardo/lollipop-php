@@ -33,16 +33,17 @@ $user_info = Request::get(['username', 'fullname', 'age']);
 Simple cURL wrapper with Caching feature
 
 #### Configurations:
-```json
+```php
+<?php
 
-[
+$config = [
     // Request configurations
     "request": [
             // Auto convert JSON to Object (enabled by default)
-            "json": true, // or false
-            "cache": [
-                "enable": true, // or false
-                "time": 1440 // 24 hours (in minutes)
+            "json" => true, // or false
+            "cache" => [
+                "enable" => true, // or false
+                "time" => 1440 // 24 hours (in minutes)
             ]
         ]
 ]
@@ -102,6 +103,7 @@ use \Lollipop\Request;
 $response = Request::send([
         'profile' => true, // Profiling results (disabled by default)
         'url' => 'https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty',
+        'cache' => true, // Cache toggle override
         'auth' => [ // Auth
             'user' => 'username',
             'pwd' => 'your_password'
