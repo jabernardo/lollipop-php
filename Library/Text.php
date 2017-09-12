@@ -38,7 +38,7 @@ class Text
      * 
      */
     private static function _geteSecKey() {
-        return md5(spare(spare($key, Config::get('text.security.key')), App::SUGAR));
+        return md5(spare(Config::get('text.security.key'), App::SUGAR));
     }
     
     /**
@@ -73,7 +73,7 @@ class Text
      * @return  string
      */
     static function lock($string, $key = null) {
-        return openssl_encrypt($string, self::_getSecMethod(), self::_geteSecKey(), false, self::_getSecIv());
+        return openssl_encrypt($string, self::_getSecMethod(), spare($key, self::_geteSecKey()), false, self::_getSecIv());
     }
 
     /**
@@ -85,7 +85,7 @@ class Text
      * @return  string
      */
     static function unlock($cipher, $key = null) {
-        return openssl_decrypt($cipher, self::_getSecMethod(), self::_geteSecKey(), false, self::_getSecIv());
+        return openssl_decrypt($cipher, self::_getSecMethod(), spare($key, self::_geteSecKey()), false, self::_getSecIv());
     }
 
     /**
