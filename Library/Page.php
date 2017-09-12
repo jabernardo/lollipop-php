@@ -11,7 +11,7 @@ use \Lollipop\Text;
 /**
  * Page Class 
  *
- * @version     1.3.2
+ * @version     1.3.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -56,7 +56,7 @@ class Page
         if (file_exists($view)) {
             if (is_array($data)) {
                 foreach ($data as $_data => $_value) {
-                    if (Config::get('anti_xss')) {
+                    if (Config::get('anti_xss') && is_string($_value)) {
                         $_value = Text::entities($_value);
                     }
                     
