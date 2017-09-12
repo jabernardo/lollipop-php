@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Log Class
  * 
- * @version     2.1.1
+ * @version     2.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -39,11 +39,9 @@ class Log
      * 
      */
     private static function __writeOutLog($message) {
-        $config = Config::get('log');
-
-        $log_path = spare($config->folder, LOLLIPOP_STORAGE_LOG);
-        $log_enable = spare($config->enable, true);
-        $log_hourly = spare($config->hourly, false);
+        $log_path = spare(Config::get('log.folder'), LOLLIPOP_STORAGE_LOG);
+        $log_enable = spare(Config::get('log.enable'), true);
+        $log_hourly = spare(Config::get('log.hourly'), false);
         
         if (!is_dir($log_path)) {
            die('Lollipop Application has been terminated due to unhandled error: Log folder doesn\'t exists.'); 
