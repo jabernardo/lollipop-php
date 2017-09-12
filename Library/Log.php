@@ -41,9 +41,9 @@ class Log
     private static function __writeOutLog($message) {
         $config = Config::get('log');
 
-        $log_path = (isset($config->folder) && $config->folder) ? $config->folder : LOLLIPOP_STORAGE_LOG;
-        $log_enable = (isset($config->enable)) ? $config->enable : true;
-        $log_hourly = (isset($config->hourly)) ? $config->hourly : false;
+        $log_path = spare($config->folder, LOLLIPOP_STORAGE_LOG);
+        $log_enable = spare($config->enable, true);
+        $log_hourly = spare($config->hourly, false);
         
         if (!is_dir($log_path)) {
            die('Lollipop Application has been terminated due to unhandled error: Log folder doesn\'t exists.'); 

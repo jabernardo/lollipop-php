@@ -551,8 +551,8 @@ class Route
         
         foreach(getallheaders() as $k => $v) {
             // `lollipop-gzip` is the key, and allowed value is `true`
-            if (strtolower($k) == 'lollipop-gzip' &&
-                strtolower($v) == 'true') {
+            if (!strcasecmp($k, 'lollipop-gzip') &&
+                !strcasecmp($v, 'true')) {
                     $force_gzip = true;
                 }
         }

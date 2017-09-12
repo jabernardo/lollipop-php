@@ -14,7 +14,7 @@ use \Lollipop\Text;
 /**
  * Csrf Token Class
  *
- * @version     1.2.1
+ * @version     1.2.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -31,9 +31,18 @@ class CsrfToken
      * 
      */
     public static function get() {
-        $key = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->key) && Config::get('anti_csrf')->key ? Config::get('anti_csrf')->key : App::SUGAR;
-        
-        return Text::lock(microtime(true), $key);
+        return Text::lock(microtime(true), self::getKey());
+    }
+    
+    /**
+     * Get token key
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public static function getKey() {
+        return spare(Config::get('anti_csrf.key'), App::SUGAR);
     }
     
     /**
@@ -44,7 +53,7 @@ class CsrfToken
      * 
      */
     public static function getName() {
-        return Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) && Config::get('anti_csrf')->name ? Config::get('anti_csrf')->name : 'sugar';
+        return spare(Config::get('anti_csrf.name'), 'sugar');
     }
     
     /**
@@ -55,7 +64,7 @@ class CsrfToken
      * 
      */
     public static function getFormInput() {
-        $name = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) && Config::get('anti_csrf')->name ? Config::get('anti_csrf')->name : 'sugar';
+        $name = self::getName();
         $value = self::get();
         
         return "<input type=\"hidden\" name=\"$name\" value=\"$value\">";
@@ -70,10 +79,9 @@ class CsrfToken
      */
     public static function isValid($token) {
         // Get configuration
-        $key = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->key) && Config::get('anti_csrf')->key ? Config::get('anti_csrf')->key : App::SUGAR;
-        $expiration = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->expiration) && Config::get('anti_csrf')->expiration ? Config::get('anti_csrf')->expiration : 1800;
+        $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
         // Compute for token availablity
-        $computed = microtime(true) - (double)Text::unlock($token, $key);
+        $computed = microtime(true) - (double)Text::unlock($token, self::getKey());
         
         return $computed <= $expiration;
     }
@@ -87,9 +95,9 @@ class CsrfToken
      * 
      */
     public static function hook($die = true) {
-        $acsrf_enable = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->enable) ? Config::get('anti_csrf')->enable : false;
-        $acsrf_name = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->name) ? Config::get('anti_csrf')->name : 'sugar';
-        $expiration = Config::get('anti_csrf') && isset(Config::get('anti_csrf')->expiration) && Config::get('anti_csrf')->expiration ? Config::get('anti_csrf')->expiration : 1800;
+        $acsrf_enable = spare(Config::get('anti_csrf.enable'), false);
+        $acsrf_name = self::getName();
+        $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
         
         // Create a cookie for front end use
         Cookie::set($acsrf_name, self::get(), '/', $expiration);

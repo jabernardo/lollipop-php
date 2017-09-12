@@ -5,7 +5,7 @@
  * An extensive and flexible library for PHP
  *
  * @package    Lollipop
- * @version    6.1.4
+ * @version    6.1.5
  * @author     John Aldrich Bernardo <bjohnaldrich@gmail.com>
  * @copyright  Copyright (C) 2015-2017 John Aldrich Bernardo. All rights reserved.
  * @license
@@ -67,6 +67,18 @@ if (count($_lol_toks) >= 2) {
  */
 function fuse(&$opt1, $opt2) {
     return isset($opt1) ? $opt1 : (isset($opt2) ? $opt2 : null); 
+}
+
+/**
+ * Set spare value for empty values
+ * 
+ * @param   mixed   $value  Primary value
+ * @param   mixed   $spare  Spare value
+ * @return  mixed
+ * 
+ */
+function spare($value, $spare) {
+    return $value ? $value : $spare;
 }
 
 /**

@@ -692,7 +692,7 @@ class Database
                 array_push($this->_where, $field . ' ' . $operator . $value);
             } else {
                 $value = (string)$value;
-                array_push($this->_where, $field . ' ' . $operator . (strtolower($operator) == 'in' ? " ($value)" : ' \'' . $value . '\''));
+                array_push($this->_where, $field . ' ' . $operator . (!strcasecmp($operator, 'in') ? " ($value)" : ' \'' . $value . '\''));
             }
         }
         
@@ -733,7 +733,7 @@ class Database
                 array_push($this->_or, $field . ' ' . $operator . $value);
             } else {
                 $value = (string)$value;
-                array_push($this->_or, $field . ' ' . $operator . (strtolower($operator) == 'in' ? " ($value)" : ' \'' . $value . '\''));
+                array_push($this->_or, $field . ' ' . $operator . (!strcasecmp($operator, 'in') ? " ($value)" : ' \'' . $value . '\''));
             }
         }
         

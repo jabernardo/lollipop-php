@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * HTML Tags Class
  * 
- * @version     2.0.1
+ * @version     2.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -76,7 +76,7 @@ class Tag
             $this->_attrs[$key] = array();
         }
         
-        if (strtolower($key) == 'id') {
+        if (!strcasecmp($key, 'id')) {
             // value for `id` should be one only
             $this->_attrs[$key] = $val;
         } else {

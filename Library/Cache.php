@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Caching Library
  *
- * @version     4.1.1
+ * @version     4.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -53,13 +53,13 @@ class Cache
     static private function _getStoragePath() {
         if (self::_isDriver('sqlite3')) {
             // Add cache file in path if driver is SQLite3
-            return (is_object(Config::get('localdb')) && isset(Config::get('localdb')->folder)) 
-                ? rtrim(Config::get('localdb')->folder, '/') . '/cache.db'
+            return Config::get('localdb.folder')
+                ? rtrim(Config::get('localdb.folder'), '/') . '/cache.db'
                 : LOLLIPOP_STORAGE_LOCALDB . 'cache.db';
         }
 
-        return (is_object(Config::get('cache')) && isset(Config::get('cache')->folder)) 
-            ? rtrim(Config::get('cache')->folder, '/') . '/' 
+        return Config::get('cache.folder')
+            ? rtrim(Config::get('cache.folder'), '/') . '/' 
             : LOLLIPOP_STORAGE_CACHE;
     }
 
@@ -71,11 +71,11 @@ class Cache
      *
      */
     static private function _isDriver($name) {
-        if (!isset(Config::get('cache')->driver)) {
+        if (!Config::get('cache.driver')) {
             Config::set('cache.driver', 'filesystem');
         }
 
-        switch (strtolower(Config::get('cache')->driver)) {
+        switch (strtolower(Config::get('cache.driver'))) {
             case 'sqlite3':
             case 'filesystem':
                 // Do nothing
@@ -84,8 +84,8 @@ class Cache
                 Log::error('Invalid cache driver', true);
                 break;
         }
-
-        return isset(Config::get('cache')->driver) && Config::get('cache')->driver == $name;
+        
+        return !strcasecmp(Config::get('cache.driver'), $name);
     }
 
     /**

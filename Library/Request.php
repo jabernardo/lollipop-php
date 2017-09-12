@@ -12,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Request Class 
  *
- * @version     1.3.4
+ * @version     1.3.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -126,16 +126,16 @@ class Request
      */
     static function send(array $options) {
         // Get localdb location in config
-        $localdb = Config::get('localdb.folder') ? Config::get('localdb.folder') : LOLLIPOP_STORAGE_LOCALDB;
+        $localdb = spare(Config::get('localdb.folder'), LOLLIPOP_STORAGE_LOCALDB);
         
         // Request cache
         $request_cache = !is_null(Config::get('request.cache.enable'))
                             ? Config::get('request.cache.enable') || (isset($options['cache']) && $options['cache']) 
                             : true;
-        $request_cache_time = Config::get('request.cache.time') ? Config::get('request.cache.time') : 1440;
+        $request_cache_time = spare(Config::get('request.cache.time'), 1440);
         
         // Auto JSON
-        $auto_json = !is_null(Config::get('request.json')) ? Config::get('request.json') : true;
+        $auto_json = spare(Config::get('request.json'), true);
         
         // URl is required: CURLOPT_URL
         $url = isset($options['url']) ? $options['url'] : false;

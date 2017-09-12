@@ -11,7 +11,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Application Class
  *
- * @version     6.1.1
+ * @version     6.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -109,7 +109,7 @@ class App
      *
      */
     static private function _setEnvironment() {
-        switch(strtolower(Config::get('environment') ? Config::get('environment') : 'dev')) {
+        switch(strtolower(spare(Config::get('environment'), 'dev'))) {
             case 'dev':
             case 'development':
                 // Report all errors

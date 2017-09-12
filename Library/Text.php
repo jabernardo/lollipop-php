@@ -10,7 +10,7 @@ use \Lollipop\Config;
 /**
  * Text Class 
  *
- * @version     2.0
+ * @version     2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -19,6 +19,39 @@ use \Lollipop\Config;
  */
 class Text
 {
+    /**
+     * Get encryption method
+     * 
+     * @access  private
+     * @return  string
+     * 
+     */
+    private static function _getSecMethod() {
+        return spare(Config::get('text.security.method'), 'AES256');
+    }
+    
+    /**
+     * Get encryption key
+     * 
+     * @access  private
+     * @return  string
+     * 
+     */
+    private static function _geteSecKey() {
+        return md5(spare(spare($key, Config::get('text.security.key')), App::SUGAR));
+    }
+    
+    /**
+     * Get encryption iv
+     * 
+     * @access  private
+     * @return  string
+     * 
+     */
+    private static function _getSecIv() {
+        return spare(Config::get('text.security.iv'), substr(md5(App::SUGAR), 0, 16));
+    }
+    
     /**
      * Checks if a string contains another string
      * 
@@ -40,14 +73,7 @@ class Text
      * @return  string
      */
     static function lock($string, $key = null) {
-        $text_sec_method = Config::get('text') && Config::get('text')->security && Config::get('text')->security->method
-                            ? Config::get('text')->security->method : 'AES256';
-        $text_sec_key = is_null($key) && Config::get('text') && Config::get('text')->security && Config::get('text')->security->key
-                            ? md5(Config::get('text')->security->key) : md5($key);
-        $text_sec_iv =  Config::get('text') && Config::get('text')->security && Config::get('text')->security->iv
-                            ? Config::get('text')->security->iv : substr(md5(App::SUGAR), 0, 16);
-
-        return openssl_encrypt($string, $text_sec_method, $text_sec_key, false, $text_sec_iv);
+        return openssl_encrypt($string, self::_getSecMethod(), self::_geteSecKey(), false, self::_getSecIv());
     }
 
     /**
@@ -59,14 +85,7 @@ class Text
      * @return  string
      */
     static function unlock($cipher, $key = null) {
-        $text_sec_method = Config::get('text') && Config::get('text')->security && Config::get('text')->security->method
-                            ? Config::get('text')->security->method : 'AES256';
-        $text_sec_key = is_null($key) && Config::get('text') && Config::get('text')->security && Config::get('text')->security->key
-                            ? md5(Config::get('text')->security->key) : md5($key);
-        $text_sec_iv =  Config::get('text') && Config::get('text')->security && Config::get('text')->security->iv
-                            ? Config::get('text')->security->iv : substr(md5(App::SUGAR), 0, 16);
-        
-        return openssl_decrypt($cipher, $text_sec_method, $text_sec_key, false, $text_sec_iv);
+        return openssl_decrypt($cipher, self::_getSecMethod(), self::_geteSecKey(), false, self::_getSecIv());
     }
 
     /**
