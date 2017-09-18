@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Lollipop Config Class
  *
- * @version     2.1
+ * @version     2.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -20,6 +20,18 @@ class Config
      *
      */
     static private $_config = array();
+
+    /**
+     * Load configuration
+     * 
+     * @access  public
+     * @param   array   $config     Configuration variable
+     * @return  void
+     * 
+     */
+    static public function load(array $config) {
+        self::$_config = $config;
+    }
 
     /**
      * Add configuration
