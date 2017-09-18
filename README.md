@@ -59,6 +59,9 @@ composer require "jabernardo/lollipop-php"
 ```
 start the development of your projects.
 
+###### RESOURCES
+
+See libraries documentation [here](https://github.com/jabernardo/lollipop-php/tree/master/Documentation)
 
 ## License
 
