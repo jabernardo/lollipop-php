@@ -57,7 +57,7 @@ class Session
      * @return string
      */
     static function key() {
-        return md5(Text::lock(App::SUGAR));
+        return md5(Text::lock(SUGAR));
     }
 
     /**

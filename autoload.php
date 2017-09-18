@@ -11,6 +11,12 @@
  * @email   4ldrich@protonmail.com
  * 
  */
+
+/**
+ * Application Sugar
+ * 
+ */
+define('SUGAR', 'MTAwMDA1ODA3MTMyMjEy');
  
 /**
  * Document root

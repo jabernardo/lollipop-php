@@ -38,7 +38,7 @@ class Text
      * 
      */
     private static function _geteSecKey() {
-        return md5(spare(Config::get('text.security.key'), App::SUGAR));
+        return md5(spare(Config::get('text.security.key'), SUGAR));
     }
     
     /**
@@ -49,7 +49,7 @@ class Text
      * 
      */
     private static function _getSecIv() {
-        return spare(Config::get('text.security.iv'), substr(md5(App::SUGAR), 0, 16));
+        return spare(Config::get('text.security.iv'), substr(md5(SUGAR), 0, 16));
     }
     
     /**

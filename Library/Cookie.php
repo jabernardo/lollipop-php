@@ -76,7 +76,7 @@ class Cookie
      * @return string
      */
     static function key() {
-        return md5(Text::lock($_SERVER['REMOTE_ADDR'], App::SUGAR));
+        return md5(Text::lock($_SERVER['REMOTE_ADDR'], SUGAR));
     }
 }
 

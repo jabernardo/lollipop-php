@@ -42,7 +42,7 @@ class CsrfToken
      * 
      */
     public static function getKey() {
-        return spare(Config::get('anti_csrf.key'), App::SUGAR);
+        return spare(Config::get('anti_csrf.key'), SUGAR);
     }
     
     /**
