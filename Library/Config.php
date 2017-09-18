@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Lollipop Config Class
  *
- * @version     2.2
+ * @version     2.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -31,6 +31,9 @@ class Config
      */
     static public function load(array $config) {
         self::$_config = $config;
+        
+        if (isset($config['environment']))
+            self::_setEnvironment();
     }
 
     /**
@@ -64,6 +67,9 @@ class Config
         }
         
         $addr = $value;
+        
+        if (!strcasecmp($key, 'environment'))
+            self::_setEnvironment();
     }
     
     /**
@@ -110,6 +116,60 @@ class Config
         }
 
         if ($last) unset($addr[$last]);
+        
+        if (!strcasecmp($key, 'environment'))
+            self::_setEnvironment();
+    }
+    
+    /**
+     * Set environment for application
+     *
+     * @example
+     *          'environment'   =>  'dev' or 'development'
+     *          'environment'   =>  'stg' or 'staging'
+     *          'environment'   =>  'prd' or 'production'
+     *
+     * @return  void
+     *
+     */
+    static private function _setEnvironment() {
+        switch(strtolower(spare(self::get('environment'), 'dev'))) {
+            case 'dev':
+            case 'development':
+                // Report all errors
+                error_reporting(E_ALL);
+                break;
+            case 'stg':
+            case 'staging':
+                // Report all errors except E_NOTICE
+                error_reporting(E_ALL & ~E_NOTICE);
+                break;
+            case 'prd':
+            case 'production':
+                // Turn off error reporting
+                error_reporting(0);
+                break;
+            default:
+                Log::error('Invalid application environment: ' . self::get('environment'), true);
+                break;
+        }
+        
+        /**
+         * Modify configuration based on environment
+         * 
+         * overrides (array)
+         * 
+         *      dev (array)
+         *      stg (array)
+         *      prd (array)
+         * 
+         */
+        if (isset(self::$_config['environment']) && 
+            isset(self::$_config['overrides']) && 
+            isset(self::$_config['overrides'][strtolower(self::$_config['environment'])])) {
+            // Merge data
+            self::$_config = array_merge(self::$_config, self::$_config['overrides'][strtolower(self::$_config['environment'])]);
+        }
     }
 }
 
