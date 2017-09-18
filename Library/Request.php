@@ -12,7 +12,7 @@ use \Lollipop\Log;
 /**
  * Request Class 
  *
- * @version     1.3.5
+ * @version     1.3.6
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -130,8 +130,12 @@ class Request
         
         // Request cache
         $request_cache = !is_null(Config::get('request.cache.enable'))
-                            ? Config::get('request.cache.enable') || (isset($options['cache']) && $options['cache']) 
+                            ? Config::get('request.cache.enable') 
                             : true;
+        
+        // Override cache
+        $request_cache = isset($options['cache']) ? $options['cache'] : $request_cache;
+        
         $request_cache_time = spare(Config::get('request.cache.time'), 1440);
         
         // Auto JSON
