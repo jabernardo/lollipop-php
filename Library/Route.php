@@ -11,7 +11,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Route Class
  *
- * @version     1.8.2
+ * @version     1.8.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -255,6 +255,16 @@ class Route
             self::$_is_listening = false;
             self::_checkNotFound();
         }
+    }
+    
+    /**
+     * Get routes 
+     * 
+     * @return  array
+     * 
+     */
+    static public function getRoutes() {
+        return self::$_stored_routes;
     }
     
     /**
@@ -580,16 +590,16 @@ class Route
             if (Config::get('not_found_page')) {
                 echo self::_returnData(self::forward(Config::get('not_found_page')));
             } else {
-                $pagenotfound = '<!DOCTYPE html>';
-                $pagenotfound .= '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
-                $pagenotfound .= '<html>';
-                $pagenotfound .= '<head><title>404 Not Found</title></head>';
-                $pagenotfound .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
-                $pagenotfound .= '<body>';
-                $pagenotfound .= '<h1>404 Not Found</h1>';
-                $pagenotfound .= '<p>The page that you have requested could not be found.</p>';
-                $pagenotfound .= '</body>';
-                $pagenotfound .= '</html>';
+                $pagenotfound = '<!DOCTYPE html>'
+                        . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
+                        . '<html>'
+                        . '<head><title>404 Not Found</title></head>'
+                        . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                        . '<body>'
+                        . '<h1>404 Not Found</h1>'
+                        . '<p>The page that you have requested could not be found.</p>'
+                        . '</body>'
+                        . '</html>';
 
                 echo self::_returnData($pagenotfound);
             }
