@@ -3,13 +3,19 @@
 /**
  * Lollipop Autoload 
  * 
+ * Set application constant variables for directory structure
+ * and register autoload for loading libraries.
+ * 
  * @version 4.1.1
  * @author  John Aldrich Bernardo
+ * @email   4ldrich@protonmail.com
  * 
  */
  
 /**
  * Document root
+ * 
+ * Path: /var/www/{application}
  * 
  */
 define('DOCUMENT_ROOT', str_replace(DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT']));
@@ -17,6 +23,7 @@ define('DOCUMENT_ROOT', str_replace(DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT
 /**
  * Lollipop directory
  * 
+ * Path: {vendor/lollipoop-php}
  * 
  */
 define('LOLLIPOP_BASE', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__) . '/'));
@@ -24,6 +31,7 @@ define('LOLLIPOP_BASE', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__) 
 /**
  * Lollipop classes directory
  * 
+ * Path: {vendor/lollipop-php/Library}
  * 
  */
 define('LOLLIPOP_LIBRARY', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Library/'));
@@ -31,6 +39,7 @@ define('LOLLIPOP_LIBRARY', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE 
 /**
  * Lollipop Storage directory
  * 
+ * Path: {vendor/lollipop-php/Storage}
  * 
  */
 define('LOLLIPOP_STORAGE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE . 'Storage/'));
@@ -38,6 +47,7 @@ define('LOLLIPOP_STORAGE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_BASE 
 /**
  * Lollipop cache directory
  * 
+ * Path: {vendor/lollipop-php/Storage/cache}
  * 
  */
 define('LOLLIPOP_STORAGE_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'cache/'));
@@ -45,6 +55,7 @@ define('LOLLIPOP_STORAGE_CACHE', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP
 /**
  * Lollipop local database directory
  * 
+ * Path: {vendor/lollipop-php/Storage/db}
  * 
  */
 define('LOLLIPOP_STORAGE_LOCALDB', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'db/'));
@@ -52,15 +63,19 @@ define('LOLLIPOP_STORAGE_LOCALDB', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIP
 /**
  * Lollipop cache directory
  * 
+ * Path: {vendor/lollipop-php/Storage/logs}
  * 
  */
 define('LOLLIPOP_STORAGE_LOG', str_replace(DIRECTORY_SEPARATOR, '/',  LOLLIPOP_STORAGE . 'logs/'));
 
+
 /**
- * __autoload function
- *
+ * Register Autoload for Lollipop Libraries
+ * 
+ * \Lollipop\{Name}
+ * 
  */
-function autoLoader($class) {
+spl_autoload_register(function ($class) {
     $tokens = explode('\\', $class);
 
     if (count($tokens) == 2) {
@@ -70,12 +85,13 @@ function autoLoader($class) {
             require_once($file);
         }
     }
-}
+});
 
-// Register autoloader
-spl_autoload_register('autoLoader');
 
-// Include namespace
-require_once(LOLLIPOP_BASE . 'lollipop.php');
+/**
+ * Execute bootstrap file for Application
+ * 
+ */
+require_once(LOLLIPOP_BASE . 'bootstrap.php');
 
 ?>
