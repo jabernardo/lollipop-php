@@ -4,7 +4,6 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
@@ -12,7 +11,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Route Class
  *
- * @version     1.8.1
+ * @version     1.8.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -295,9 +294,6 @@ class Route
      */
     static private function _dispatch() {
         if (is_array(self::$_stored_routes)) {
-            // Lollipop Application Start
-            Benchmark::mark('_l_app_start');
-
             // Check if page is not found
             register_shutdown_function(function() {
                 self::_checkNotFound();
