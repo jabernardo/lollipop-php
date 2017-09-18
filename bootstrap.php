@@ -14,7 +14,7 @@
  * 
  */
 if (!function_exists('phpversion')) {
-    exit('You PHP is too old! Try upgrading.');
+    exit('You PHP is too old! Try upgrading.' . PHP_EOL);
 }
 
 $_lol_toks = explode('.', phpversion());
@@ -23,10 +23,20 @@ if (count($_lol_toks) >= 2) {
     $_lol_major_minor = (double)($_lol_toks[0] . '.' . $_lol_toks[1]);
     
     if ($_lol_major_minor < (5.4)) {
-        exit('You PHP is too old! Try upgrading.');
+        exit('You PHP is too old! Try upgrading.' . PHP_EOL);
     }
 } else {
-    exit('The version of your PHP can\'t be verified');
+    exit('The version of your PHP can\'t be verified' . PHP_EOL);
+}
+
+
+/**
+ * Check application if running on web server
+ * else just terminate
+ * 
+ */
+if (!isset($_SERVER['REQUEST_URI'])) {
+    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
 }
 
 /**
