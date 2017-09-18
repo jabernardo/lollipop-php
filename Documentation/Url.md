@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Url``` 
 
-### base($url = '', $cacheBuster = false) ```(string)```
+### base($url = '', $cacheBuster = false) ```:string```
 Get base url.
 
 ```php
@@ -16,8 +16,8 @@ echo Url::base('static/css/style.css', true); // http://www.domain.com/static/cs
 
 ```
 
-### here() ```(string)```
+### here() ```:string```
 Alias request URI
 
-### alive($url) ```(bool)```
+### alive($url) ```:bool```
 Is URL alive?

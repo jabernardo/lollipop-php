@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\FileSystem``` 
 
-### fileWrite($filename, $contents, $overwriteExisting = true) ```(void)```
+### fileWrite($filename, $contents, $overwriteExisting = true) ```:void```
 
 ```php
 <?php
@@ -13,22 +13,22 @@ FileSystem::fileWrite('sample.txt', 'Hello World!');
 
 ```
 
-### fileRead($filename) ```(mixed)```
+### fileRead($filename) ```:mixed```
 Get file contents
 
-### fileSize($filename, $returnFormatted = false) ```(double)```
+### fileSize($filename, $returnFormatted = false) ```:double```
 Get file size() ```float```
 
-### fileDelete($filename) ```(void)```
+### fileDelete($filename) ```:void```
 Delete or unlink file
 
-### fileExists($filename) ```(bool)```
+### fileExists($filename) ```:bool```
 Check if file exists
 
-### directoryExists($directory) ```(bool)```
+### directoryExists($directory) ```:bool```
 Check if directory exists
 
-### directoryContents($directory) ```(array)```
+### directoryContents($directory) ```:array```
 Get directory contents using iteration
 
-### directoryDelete($directory, $force = false) ```(mixed)```
+### directoryDelete($directory, $force = false) ```:mixed```

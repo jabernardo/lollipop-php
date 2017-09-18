@@ -12,7 +12,7 @@ $scraper = new \Lollipop\Scraper('http://domain.com');
 
 ```
 
-### getContentsByAttr($attr, $attr_value) ```(array)```
+### getContentsByAttr($attr, $attr_value) ```:array```
 Get contents of an element by using attributes
 
 ```php
@@ -24,7 +24,7 @@ $thumbnails = $scraper->getContentsByAttr('class', 'thumbnail');
 
 ```
 
-### getContentsByElem('div') ```(array)```
+### getContentsByElem('div') ```:array```
 Get contents of an element by using element name
 
 ```php
@@ -36,7 +36,7 @@ $divs = $scraper->getContentsByElem('div');
 
 ```
 
-### getAttrByAttr($attr, $attr_value, $attr_to_get) ```(array)```
+### getAttrByAttr($attr, $attr_value, $attr_to_get) ```:array```
 Get attribute value using other attributes
 
 ```php
@@ -48,7 +48,7 @@ $thumb_hrefs = getAttrByAttr('class', 'thumbnail', 'href');
 
 ```
 
-### getAttrByElem($element) ```(array)```
+### getAttrByElem($element) ```:array```
 Get attributes of elements
 
 ```php
@@ -71,7 +71,7 @@ $attrs = $scraper->getAttrByElemWithAttr('a');
 
 ```
 
-### getAttrByElemWithAttr($element, $attr, $attr_value) ```(array)```
+### getAttrByElemWithAttr($element, $attr, $attr_value) ```:array```
 Get attributes by element using another attributes
 
 ```php

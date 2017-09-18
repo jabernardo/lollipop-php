@@ -3,23 +3,23 @@
 These page will show you on how-to use ```\Lollipop\Text``` 
 
 
-### contains($haystack, $needle) ```(bool)```
+### contains($haystack, $needle) ```:bool```
 Checks if a string contains another string
 
-### lock($string, $key = null) ```(string)```
+### lock($string, $key = null) ```:string```
 Encrypt string
 
-### unlock($cipher, $key = null) ```(string)```
+### unlock($cipher, $key = null) ```:string```
 Decrypt string
 
-### escape($string) ```(string)```
+### escape($string) ```:string```
 Alias addslashes
 
-### entities($string) ```(string)```
+### entities($string) ```:string```
 Returns HTML displayable string
 
-### random($length) ```(string)```
+### random($length) ```:string```
 Generate a random string
 
-### split($string, $token) ```(string)```
+### split($string, $token) ```:string```
 Splits string

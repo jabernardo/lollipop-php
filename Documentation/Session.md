@@ -2,13 +2,13 @@
 
 These page will show you on how-to use ```\Lollipop\Session``` 
 
-### start() ```(void)```
+### start() ```:void```
 Start session
 
-### stop() ```(void)```
+### stop() ```:void```
 Stop session
 
-### exists($key) ```(void)```
+### exists($key) ```:void```
 Checks if a session variable exists
 
 ```php
@@ -23,7 +23,7 @@ if (Session::exists('userid')) {
 
 ```
 
-### key() ```(string)```
+### key() ```:string```
 Returns the key used in encrypting session variables
 
 ```php
@@ -39,7 +39,7 @@ echo Session::key();
 ```
 
 
-### set($key, $value) ```(void)```
+### set($key, $value) ```:void```
 Creates a new session or sets an existing sesssion
 
 ```php
@@ -54,7 +54,7 @@ Session::set('userid', $userid);
 ```
 
 
-### get($key) ```(string)```
+### get($key) ```:string```
 Gets session variable's value
 
 ```php
@@ -68,7 +68,7 @@ Session::get('userid');
 
 ```
 
-### drop($key) ```(void)```
+### drop($key) ```:void```
 Removes a session variable
 
 

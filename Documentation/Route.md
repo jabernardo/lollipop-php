@@ -46,7 +46,7 @@ Route::all('/', function() {
 ## Routing
 Lollipop's Routing system is very simple
 
-### serve($method, $path, $callback, $cachable = false, $cache_time = 24) ```(void)```
+### serve($method, $path, $callback, $cachable = false, $cache_time = 24) ```:void```
 
 Serve a method for a specific request.
 Also you could use our pre-defined methods.

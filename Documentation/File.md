@@ -15,7 +15,7 @@ $f = new File('sample.txt');
 
 ```
 
-### contents($contents = null) ```(bool)```
+### contents($contents = null) ```:bool```
 Get or set file contents
 
 ```php
@@ -30,5 +30,5 @@ echo $f->contents();
 
 ```
 
-### size() ```(float)```
+### size() ```:float```
 Return file size

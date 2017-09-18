@@ -2,7 +2,7 @@
 
 These page will show you on how-to use ```\Lollipop\Request``` 
 
-### is($requests) ```(bool)```
+### is($requests) ```:bool```
 Check if expected request are fulfilled
 
 ```php
@@ -17,7 +17,7 @@ if (Request::is(['username', 'password'])) {
 
 ```
 
-### get($requests = null) ```(array)```
+### get($requests = null) ```:array```
 Get request received
 
 ```php
@@ -29,7 +29,7 @@ $user_info = Request::get(['username', 'fullname', 'age']);
 
 ```
 
-### send(array $options) ```mixed```
+### send(array $options) ```:mixed```
 Simple cURL wrapper with Caching feature
 
 #### Configurations:

@@ -2,13 +2,13 @@
 
 These page will show you on how-to use ```\Lollipop\Page``` 
 
-### reload() ```(void)```
+### reload() ```:void```
 Page reload
 
-### redirect($uri) ```(void)```
+### redirect($uri) ```:void```
 Redirect page to a specific URI
 
-### render($view, array $data = array()) ```(mixed)```
+### render($view, array $data = array()) ```:mixed```
 Render a view file
 
 ```php

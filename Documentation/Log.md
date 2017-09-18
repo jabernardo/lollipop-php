@@ -2,17 +2,17 @@
 
 These page will show you on how-to use ```\Lollipop\Log``` 
 
-### info($message) ```(void)```
+### info($message) ```:void```
 Log information message
 
-### warn($message) ```(void)```
+### warn($message) ```:void```
 Log warning message
 
-### error($message, $exception = true) ```(void)```
+### error($message, $exception = true) ```:void```
 Log an error message, if ```$exception``` was set to ```true``` will throw an exception
 
-### notice($message) ```(void)```
+### notice($message) ```:void```
 Log a notification message
 
-### get($type = null) ```array```
+### get($type = null) ```:array```
 Get messages

@@ -32,16 +32,16 @@ $config = [
 
 ### Configurations for your application
 
-#### app ```(array)```
+#### app ```:array```
 - ```version``` (Application version)
 
-#### autoload ```(array)```
+#### autoload ```:array```
 Folder(s) to include in autoload
 
-#### output ```(array)```
+#### output ```:array```
 - ```compression``` Enable output compression (gzip)
 
-#### db ```(array)```
+#### db ```:array```
 - ```host``` Hostname for database
 - ```username``` UID for connection
 - ```password``` Password for authentication
@@ -49,52 +49,52 @@ Folder(s) to include in autoload
 - ```cache``` Enable or disable results caching
 - ```cache_time``` Cache expiration in minutes
 
-#### text ```(array)```
+#### text ```:array```
 * ```security```
 + ```key``` The key.
 + ```method``` See [openssl methods](https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)
 + ```iv``` Initialization Vector
 
-#### dev_tools ```(bool)```
+#### dev_tools ```:bool```
 Activate developers tools for your own benefit. Options below only triggered by request (GET/POST) sent to application.
 
 - ```purge_all_cache``` Purges all stored cache
 
-#### environment ```(string)```
+#### environment ```:string```
 Set current environment used
 
 - ```dev``` or ```development```
 - ```stg``` or ```staging```
 - ```prd``` or ```production```
 
-#### show_not_found ```(bool)```
+#### show_not_found ```:bool```
 Show or hide 404 page
 
-#### not_found_page ```(string)```
+#### not_found_page ```:string```
 Change 404 page
 
-#### cache ```(array)```
+#### cache ```:array```
 
 - ```folder``` Path for cache
 - ```driver``` Cache driver (sqlite/filesystem)
 
 > When using `sqlite` please do define `localdb` in config
 
-#### localdb ```(array)```
+#### localdb ```:array```
 
 - ```folder``` Path to localdb storage
 
-#### log ```(array)```
+#### log ```:array```
 
 - ```enable``` True/False
 - ```folder``` Path for logs
 - ```hourly``` Enable hourly format in log files
 
-#### anti_xss ```(bool)```
+#### anti_xss ```:bool```
 
 Enable or Disable XSS injection in ```Page::render```
 
-#### overrides ```(array)```
+#### overrides ```:array```
 These allows you to override configuration based from environment set.
 
 ```php
@@ -125,7 +125,7 @@ $config = [
 
 ```
 
-### add($key, $value) ```(void)```
+### add($key, $value) ```:void```
 Add or set configuration
 
 > Use `.` (dot) as separator to declare levels for configuration
@@ -140,7 +140,7 @@ Config::set('pages.about.title', 'About Us');
 
 ```
 
-### get($key = '') ```(mixed)```
+### get($key = '') ```:mixed```
 Get configuration value
 
 ```php
@@ -152,7 +152,7 @@ Config::get('pages')->home->title;
 
 ```
 
-### remove($key)``` (void)```
+### remove($key) ```:void```
 Remove configuration key
 
 ```php
