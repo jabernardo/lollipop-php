@@ -11,7 +11,7 @@ use \Lollipop\Text;
 /**
  * Page Class 
  *
- * @version     1.3.3
+ * @version     1.3.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -20,30 +20,6 @@ use \Lollipop\Text;
  */
 class Page
 {
-    /**
-     * Reloads current page
-     * 
-     */
-    static function reload() {
-        header('location: ' . $_SERVER['REQUEST_URI']);
-        exit();
-    }
-    
-    /**
-     * Redirect page to another urldecode
-     *
-     * @paramstring     $uri    Web address 
-     */
-    static function redirect($uri) {
-        // Check first if given string is a valid URL 
-        if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-            Log::error('URL is invalid', true);
-        }
-        
-        header('location: ' . $uri);
-        exit();
-    }
-    
     /**
      * Alias read file
      * 

@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Url Class
  *
- * @version     1.5.2
+ * @version     1.5.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -21,9 +21,9 @@ class Url
     /**
      * Get base url
      *
+     * @access  public
      * @param   string  File or url to access
      * @param   bool    Enable cache buster
-     * 
      * @return  string  Base url
      * 
      */
@@ -41,6 +41,7 @@ class Url
     /**
      * Alias request uri
      *
+     * @access  public
      * @return  string  Request URI
      *
      */
@@ -51,12 +52,43 @@ class Url
     /**
      * Is URL alive?
      * 
+     * @access  public
      * @param   string  $url    URL
      * @return  boolean
      * 
      */
     static function alive($url) {
         return @get_headers($url);
+    }
+    
+    /**
+     * Reloads current page
+     * 
+     * @access  public
+     * @return  void
+     * 
+     */
+    static function reload() {
+        header('location: ' . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+    
+    /**
+     * Redirect page to another urldecode
+     *
+     * @access  public
+     * @param   string     $uri    Web address 
+     * @return  void
+     * 
+     */
+    static function redirect($uri) {
+        // Check first if given string is a valid URL 
+        if (!filter_var($uri, FILTER_VALIDATE_URL)) {
+            Log::error('URL is invalid', true);
+        }
+        
+        header('location: ' . $uri);
+        exit();
     }
 }
 

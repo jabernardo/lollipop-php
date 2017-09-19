@@ -21,3 +21,9 @@ Alias request URI
 
 ### alive($url) ```:bool```
 Is URL alive?
+
+### reload() ```:void```
+Page reload
+
+### redirect($uri) ```:void```
+Redirect page to a specific URI
