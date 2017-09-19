@@ -7,11 +7,12 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
+use \Lollipop\Response;
 
 /**
  * Lollipop Route Class
  *
- * @version     1.8.3
+ * @version     2.0.0-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -28,59 +29,62 @@ use \Lollipop\Log;
  *      lollipop-cache: true/false
  *          - If page is from cache
  * 
- *      lollipop-cache-saved: true/false
- *          - If cache is saved
- * 
  */
 class Route
 {
     /**
-     * @type    bool    Do we find a route?
+     * @var     bool    Do we find a route?
      *
      */
     static private $_is_listening = false;
 
     /**
-     * @type    bool    Is Dispatch function already registered on shutdown?
+     * @var     bool    Is Dispatch function already registered on shutdown?
      *
      */
     static private $_dispatch_registered = false;
 
     /**
-     * @type    array   Stored callbacks
+     * @var     array   Stored callbacks
      *
      */
     static private $_stored_routes = array();
 
     /**
-     * @type    bool    Is dispatcher running
+     * @var     bool    Is dispatcher running
      *
      */
     static private $_is_running = false;
     
     /**
-     * @type    mixed   Prepare function (no-cache)
+     * @var     mixed   Prepare function (no-cache)
      * 
      */
     static private $_prepare_function = null;
     
     /**
-     * @type    array   Prepare function parameters
+     * @var     array   Prepare function parameters
      * 
      */
     static private $_prepare_function_params = array();
     
     /**
-     * @type    mixed   Clean function (no-cache)
+     * @var     mixed   Clean function (no-cache)
      * 
      */
     static private $_clean_function = null;
     
     /**
-     * @type    array   Clean function parameters
+     * @var     array   Clean function parameters
      * 
      */
     static private $_clean_function_params = array();
+
+    /**
+     * @var    bool     Is route forwarded?
+     * 
+     */
+    static private $_is_forwarded = false;
 
     /**
      * GET route
@@ -217,24 +221,6 @@ class Route
     }
 
     /**
-     * Set header
-     *
-     * @param   mixed    $headers    HTTP header
-     * @return  void
-     *
-     */
-    static public function setHeader($headers) {
-        // Record HTTP header
-        if (is_array($headers)) {
-            foreach ($headers as $header) {
-                header($header);
-            }
-        } else if (is_string($headers)) {
-            header($headers);
-        }
-    }
-
-    /**
      * Route forwarding
      *
      * @param string $path Route
@@ -242,19 +228,18 @@ class Route
      *
      */
     static public function forward($path, array $params = array()) {
+        self::$_is_forwarded = true;
+        
         if (isset(self::$_stored_routes[$path])) {
-            // Set custom header for forwarded
-            // lollipop-forwarded: true/false
-            self::setHeader('lollipop-forwarded: true');
-            
             $callback = self::$_stored_routes[$path];
             $callback = $callback['callback'];
 
             return self::_callback($callback, $params);
-        } else {
-            self::$_is_listening = false;
-            self::_checkNotFound();
         }
+        
+        // Throw 404 Page
+        self::$_is_listening = false;
+        self::_checkNotFound();
     }
     
     /**
@@ -303,140 +288,103 @@ class Route
      *
      */
     static private function _dispatch() {
-        if (is_array(self::$_stored_routes)) {
-            // Check if page is not found
-            register_shutdown_function(function() {
-                self::_checkNotFound();
-            });
+        foreach (self::$_stored_routes as $path => $route) {
+            // Callback for route
+            $callback = fuse($route['callback'], function(){});
+            // Check if route or url is cachable (defaults to false)
+            $cachable = fuse($route['cachable'], false);
+            // Cache time
+            $cache_time = fuse($route['cache_time'], 1440);
+            // Translate regular expressions
+            $path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
+            // Request URL
+            $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+            // Active script or running script (this is when no redirection is being done in .htaccess)
+            $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($path ? '/' : ''));
 
-            foreach (self::$_stored_routes as $path => $route) {
-                // Callback for route
-                $callback = isset($route['callback']) ? $route['callback'] : function(){};
-                // Check if route or url is cachable (defaults to false)
-                $cachable = isset($route['cachable']) ? $route['cachable'] : false;
-                // Cache time
-                $cache_time = isset($route['cache_time']) ? $route['cache_time'] : 1440;
-                // Translate regular expressions
-                $path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
-                // Request URL
-                $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-                // Active script or running script (this is when no redirection is being done in .htaccess)
-                $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($path ? '/' : ''));
+            $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
+                        preg_match('/^' . $as . $path . '$/i', $url, $matches);
 
-                $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
-                            preg_match('/^' . $as . $path . '$/i', $url, $matches);
+            // Check if request method matches                    
+            if (isset($route['request_method'])) {
+                $_rm = $route['request_method'];
+                
+                if ((is_array($_rm) && !in_array($_SERVER['REQUEST_METHOD'], $_rm)) ||
+                    (is_string($_rm) && $_rm !== $_SERVER['REQUEST_METHOD'] && $_rm !== '')) {
+                    $is_match = false;
+                }
+            }
 
-                // Check if request method matches                    
-                if (isset($route['request_method'])) {
-                    $_rm = $route['request_method'];
-                    
-                    if ((is_array($_rm) && !in_array($_SERVER['REQUEST_METHOD'], $_rm)) ||
-                        (is_string($_rm) && $_rm !== $_SERVER['REQUEST_METHOD'] && $_rm !== '')) {
-                        $is_match = false;
+            if ($is_match && !self::$_is_running && !self::$_is_listening) {
+                // Mark that the router already found a match
+                self::$_is_listening = true;
+                
+                // Remove unneeded data
+                array_shift($matches);
+
+                // Cache key
+                $cache_key = $path;
+
+                if ($matches) {
+                    $cache_key .= '|' . implode(',', $matches);
+                }
+
+                // Mark dispatcher is currently running
+                self::$_is_running = true;
+
+                // Enable dev cache options
+                if (Config::get('dev_tools')) {
+                    // ?purge_all_cache
+                    if (isset($_REQUEST['purge_all_cache'])) {
+                        Cache::purge();
                     }
                 }
 
-                if ($is_match) {
-                    if (!self::$_is_running && !self::$_is_listening) {
-                        // Call prepare function used by programmer
-                        self::_prepare();
+                // If page is not cacheable make sure to remove existing keys
+                if (!$cachable) {
+                    Cache::remove($cache_key);
+                }
+
+                // Check if page cache is enabled and recover cache if available
+                // Also we could use ?nocache as parameter
+                // to force caching to be disabled
+                if ($cachable && !isset($_REQUEST['nocache']) && Cache::exists($cache_key)) {
+                    $page_cache = Cache::recover($cache_key);
                     
-                        // Mark that the router already found a match
-                        self::$_is_listening = true;
+                    if (is_object($page_cache) && $page_cache instanceof Response) {
+                        $page_cache->header('lollipop-cache: true');
+                        $page_cache->render();
+                    }
+                } else {
+                    // Create a new response
+                    $response = new Response();
 
-                        // Remove unneeded data
-                        array_shift($matches);
+                    // If not from Controller, then just call function
+                    $data = self::_callback($callback, $matches);
+                    
+                    $response->set($data);
 
-                        // Cache key
-                        $cache_key = $path;
+                    // Forwarded header
+                    if (self::$_is_forwarded) {
+                        $response->header('lollipop-forwarded: true');
+                    }
 
-                        if ($matches) {
-                            $cache_key .= '|' . implode(',', $matches);
-                        }
+                    // Mark as dispatched
+                    self::$_dispatch_registered = true;
 
-                        // Mark dispatcher is currently running
-                        self::$_is_running = true;
-
-                        // Enable dev cache options
-                        if (Config::get('dev_tools')) {
-                            // ?purge_all_cache
-                            if (isset($_REQUEST['purge_all_cache'])) {
-                                Cache::purge();
-                            }
-                        }
-
-                        // If page is not cacheable make sure to remove existing keys
-                        if (!$cachable) {
-                            Cache::remove($cache_key);
-                        }
-
-                        // Check if page cache is enabled and recover cache if available
-                        // Also we could use ?nocache as parameter
-                        // to force caching to be disabled
-                        if ($cachable && !isset($_REQUEST['nocache']) && Cache::exists($cache_key)) {
-                            $page_cache = Cache::recover($cache_key);
-
-                            // Recover HTTP headers from cache
-                            if (isset($page_cache['HTTP_HEADER'])) {
-                                foreach($page_cache['HTTP_HEADER'] as $header) {
-                                    self::setHeader($header);
-                                }
-                            }
-                            
-                            // Set lollipop-cache in headers
-                            // lollipop-cache: true/false
-                            self::setHeader('lollipop-cache: true');
-
-                            // Output from cache
-                            echo isset($page_cache['HTTP_CONTENT']) ? $page_cache['HTTP_CONTENT'] : '';
-
-                            // Call clean function
-                            self::_clean();
-
-                            exit; // Just recover this page
-                        }
-
-                        // Start ob
-                        ob_start();
-
-                        // If not from Controller, then just call function
-                        $data = self::_callback($callback, $matches);
-                        
-                        // Show output
-                        echo self::_returnData($data);
-
-                        // Mark as dispatched
-                        self::$_dispatch_registered = true;
-
-                        // Save cache
-                        if ($cachable && !isset($_REQUEST['nocache'])) {
-                            $page_cache = array(
-                                    'HTTP_HEADER' => headers_list(),
-                                    'HTTP_CONTENT' => ob_get_contents(),
-                                    'DATE_CREATE' => date('Y-m-d H:i:s')
-                                );
-                            
-                            // Set identifier if cache was saved
-                            // lollipop-cache-saved: true/false
-                            self::setHeader('lollipop-cache-saved: true');
-
-                            Cache::save($cache_key, $page_cache, false, $cache_time);
-                        }
-                        
-                        // Flush ob contents
-                        ob_flush();
-
-                        // Off
-                        self::$_is_running = false;
-                    } else {
-                        Log::error('Dispatcher is already running. Can\'t run multiple routes.');
+                    // Save cache
+                    if ($cachable && !isset($_REQUEST['nocache'])) {
+                        Cache::save($cache_key, $response, false, $cache_time);
                     }
                     
-                    // Call clean function
-                    self::_clean();
-
-                    exit; // Just stop it
+                    // Show output
+                    $response->render();
                 }
+                
+                // Off
+                self::$_is_running = false;
+            } else {
+                Log::error('Dispatcher is already running. Can\'t run multiple routes.');
             }
         }
     }
@@ -500,7 +448,6 @@ class Route
             ob_get_clean();
         }
         
-        // Automatically return null from everything that is not an string or callable
         return $output;
     }
 
@@ -514,65 +461,18 @@ class Route
         // Register dispatch function
         if (!self::$_dispatch_registered) {
             register_shutdown_function(function() {
+                // Call prepare function used by programmer
+                self::_prepare();
                 // Dispatch the page
                 self::_dispatch();
+                // Call clean function
+                self::_clean();
+                // Check for 404 Page
+                self::_checkNotFound();
+                // Terminate application
+                exit;
             });
         }
-    }
-
-    /**
-     * Return string value for data
-     *
-     * @param   object  $data   Data to convert
-     *
-     * @return  string
-     *
-     */
-    static private function _returnData($data) {
-        if (!$data) {
-            // Throw 404 not found if $data is empty
-            self::_checkNotFound();
-        }
-        
-        $output = '';
-        $output_config = Config::get('output');
-        $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
-        $output_callback_function = '';
-        
-        // If data is in array format then set content-type
-        // to application/json
-        if (is_array($data) || is_object($data)) {
-            self::setHeader('Content-type: application/json');
-            // Convert to json
-            $output_callback_function = json_encode($data);
-        } else {
-            // Default
-            $output_callback_function = $data;
-        }
-        
-        $output = $output_callback_function;
-        
-        // Request header to force gzip
-        $force_gzip = false;
-        
-        foreach(getallheaders() as $k => $v) {
-            // `lollipop-gzip` is the key, and allowed value is `true`
-            if (!strcasecmp($k, 'lollipop-gzip') &&
-                !strcasecmp($v, 'true')) {
-                    $force_gzip = true;
-                }
-        }
-        
-        if ($output_compression || $force_gzip) {
-            // Set Content coding a gzip
-            self::setHeader('Content-Encoding: gzip');
-            
-            // Set headers for gzip
-            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
-            $output .= gzcompress($output_callback_function);
-        }
-        
-        return $output;
     }
 
     /**
@@ -583,10 +483,6 @@ class Route
      */
     static private function _checkNotFound() {
         if (!self::$_is_listening && (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
-            Log::notice('404 Not Found: ' . $_SERVER['REQUEST_URI']);
-
-            header('HTTP/1.0 404 Not Found');
-
             if (Config::get('not_found_page')) {
                 echo self::_returnData(self::forward(Config::get('not_found_page')));
             } else {
@@ -601,13 +497,13 @@ class Route
                         . '</body>'
                         . '</html>';
 
-                echo self::_returnData($pagenotfound);
+                // Create a new 404 Page Not Found Response
+                $response = new Response($pagenotfound);
+                // Set header for 404
+                $response->header('HTTP/1.0 404 Not Found');
+                // Execute
+                $response->render();
             }
-            
-            // Call clean function
-            self::_clean();
-
-            exit;
         }
     }
 }
