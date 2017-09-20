@@ -359,10 +359,14 @@ class Route
                     // Create a new response
                     $response = new Response();
 
-                    // If not from Controller, then just call function
+                    // Execute callback
                     $data = self::_callback($callback, $matches);
                     
-                    $response->set($data);
+                    if ($data instanceof Response) {
+                        $response = $data;
+                    } else {
+                        $response->set($data);
+                    }
 
                     // Forwarded header
                     if (self::$_is_forwarded) {

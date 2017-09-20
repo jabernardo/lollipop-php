@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     0.1.0-RC1
+ * @version     0.1.1-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -35,11 +35,13 @@ class Response
      * Class construct
      * 
      * @access  public
-     * @return  void
+     * @return  object
      * 
      */
     function __construct($data = '') {
         $this->_data = $data;
+        
+        return $this;
     }
 
     /**
@@ -84,11 +86,13 @@ class Response
      * 
      * @access  public
      * @param   mixed   $data   New response data
-     * @return  void
+     * @return  object
      * 
      */
     public function set($data) {
         $this->_data = $data;
+        
+        return $this;
     }
     
     /**
@@ -96,11 +100,13 @@ class Response
      * 
      * @access  public
      * @param   bool    $enabled    Enable gzip (default true)
-     * @return  void
+     * @return  object
      * 
      */
     public function compress($enabled = true) {
         $this->_compress = $enabled;
+        
+        return $this;
     }
     
     /**
@@ -118,7 +124,7 @@ class Response
      * Set header
      *
      * @param   mixed    $headers    HTTP header
-     * @return  void
+     * @return  object
      *
      */
     public function header($headers) {
@@ -130,6 +136,8 @@ class Response
         } else if (is_string($headers)) {
             array_push($this->_headers, $headers);
         }
+        
+        return $this;
     }
     
     /**
@@ -147,7 +155,7 @@ class Response
      * Set response headers and print response text
      * 
      * @access  public
-     * @return  void
+     * @return  object
      * 
      */
     public function render() {
