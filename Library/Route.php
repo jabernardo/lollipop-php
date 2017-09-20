@@ -12,7 +12,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.0-RC1
+ * @version     2.0.1-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -369,6 +369,22 @@ class Route
                         $response->header('lollipop-forwarded: true');
                     }
 
+                    // Is gzip compression enabled in config
+                    if (Config::get('output.compression')) {
+                        $response->compress();
+                    }
+
+                    // Is gzip compression requested: `lollipop-gzip`, this will override config
+                    $gzip_header = self::_getHeader('lollipop-gzip');
+                    
+                    if ($gzip_header !== false) {
+                        if (!strcasecmp($gzip_header, 'true')) {
+                            $response->compress();
+                        } else {
+                            $response->compress(false);
+                        }
+                    }
+
                     // Mark as dispatched
                     self::$_dispatch_registered = true;
 
@@ -383,8 +399,6 @@ class Route
                 
                 // Off
                 self::$_is_running = false;
-            } else {
-                Log::error('Dispatcher is already running. Can\'t run multiple routes.');
             }
         }
     }
@@ -449,6 +463,25 @@ class Route
         }
         
         return $output;
+    }
+    
+    /**
+     * Check if request header is set
+     * and enabled (true)
+     * 
+     * @access  public
+     * @param   string  $header     Request header
+     * @return  mixed
+     * 
+     */
+    static private function _getHeader($header) {
+        foreach(getallheaders() as $k => $v) {
+            if (!strcasecmp($k, $header)) {
+                return $v;
+            }
+        }
+        
+        return false;
     }
 
     /**

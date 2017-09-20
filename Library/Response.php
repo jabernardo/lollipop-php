@@ -2,15 +2,116 @@
 
 namespace Lollipop;
 
-// @todo clean this up
-
+/**
+ * Lollipop Route Class
+ *
+ * @version     0.1.0-RC1
+ * @author      John Aldrich Bernardo
+ * @email       4ldrich@protonmail.com
+ * @package     Lollipop
+ * 
+ */
 class Response
 {
+    /**
+     * @var     array   HTTP Headers
+     * 
+     */
     private $_headers = array();
+    
+    /**
+     * @var     string  Response data
+     * 
+     */
     private $_data = '';
     
+    /**
+     * @var     bool    Compress output using gzip
+     * 
+     */
+    private $_compress = false;
+    
+    /**
+     * Class construct
+     * 
+     * @access  public
+     * @return  void
+     * 
+     */
     function __construct($data = '') {
         $this->_data = $data;
+    }
+
+    /**
+     * Return string value for data
+     *
+     * @access  private
+     * @param   object  $data   Data to convert
+     * @return  string
+     *
+     */
+    private function _format($data) {
+        $output_callback_function = '';
+        
+        // If data is in array format then set content-type
+        // to application/json
+        if (is_array($data) || is_object($data)) {
+            $this->header('Content-type: application/json');
+            // Convert to json
+            $output_callback_function = json_encode($data);
+        } else {
+            // Default
+            $output_callback_function = $data;
+        }
+        
+        $output = $output_callback_function;
+        
+        // GZIP output compression
+        if ($this->_compress) {
+            // Set Content coding a gzip
+            $this->header('Content-Encoding: gzip');
+            
+            // Set headers for gzip
+            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
+            $output .= gzcompress($output_callback_function);
+        }
+        
+        return $output;
+    }
+    
+    /**
+     * Set Response data
+     * 
+     * @access  public
+     * @param   mixed   $data   New response data
+     * @return  void
+     * 
+     */
+    public function set($data) {
+        $this->_data = $data;
+    }
+    
+    /**
+     * Compress output
+     * 
+     * @access  public
+     * @param   bool    $enabled    Enable gzip (default true)
+     * @return  void
+     * 
+     */
+    public function compress($enabled = true) {
+        $this->_compress = $enabled;
+    }
+    
+    /**
+     * Get formatted responsed data
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public function get() {
+        return $this->_format($this->_data);
     }
     
     /**
@@ -31,65 +132,24 @@ class Response
         }
     }
     
-
     /**
-     * Return string value for data
-     *
-     * @param   object  $data   Data to convert
-     *
-     * @return  string
-     *
+     * Get headers for response
+     * 
+     * @access  public
+     * @return  array
+     * 
      */
-    private function _format($data) {
-        $output = '';
-        $output_config = Config::get('output');
-        $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
-        $output_callback_function = '';
-        
-        // If data is in array format then set content-type
-        // to application/json
-        if (is_array($data) || is_object($data)) {
-            $this->header('Content-type: application/json');
-            // Convert to json
-            $output_callback_function = json_encode($data);
-        } else {
-            // Default
-            $output_callback_function = $data;
-        }
-        
-        $output = $output_callback_function;
-        
-        // Request header to force gzip
-        $force_gzip = false;
-        
-        foreach(getallheaders() as $k => $v) {
-            // `lollipop-gzip` is the key, and allowed value is `true`
-            if (!strcasecmp($k, 'lollipop-gzip') &&
-                !strcasecmp($v, 'true')) {
-                    $force_gzip = true;
-                }
-        }
-        
-        if ($output_compression || $force_gzip) {
-            // Set Content coding a gzip
-            $this->header('Content-Encoding: gzip');
-            
-            // Set headers for gzip
-            $output = "\x1f\x8b\x08\x00\x00\x00\x00\x00";
-            $output .= gzcompress($output_callback_function);
-        }
-        
-        return $output;
+    public function getHeaders() {
+        return $this->_headers;
     }
     
-    public function set($data) {
-        $this->_data = $data;
-    }
-    
-    public function get() {
-        return $this->_format($this->_data);
-    }
-    
+    /**
+     * Set response headers and print response text
+     * 
+     * @access  public
+     * @return  void
+     * 
+     */
     public function render() {
         foreach ($this->_headers as $header) {
             header($header);
