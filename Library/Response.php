@@ -5,7 +5,7 @@ namespace Lollipop;
 /**
  * Lollipop Route Class
  *
- * @version     0.1.1-RC1
+ * @version     0.1.2-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -159,10 +159,12 @@ class Response
      * 
      */
     public function render() {
+        $res = $this->get();
+        
         foreach ($this->_headers as $header) {
             header($header);
         }
         
-        print($this->get());
+        print($res);
     }
 }
