@@ -178,6 +178,3 @@ Route::all('/oldpage', function() {
 
 `lollipop-cache` (true/false)
 - Is page from cache?
-
-`lollipop-cache-saved` (true/false)
-- If new cache is saved
