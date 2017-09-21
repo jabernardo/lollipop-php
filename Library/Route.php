@@ -12,7 +12,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.1-RC1
+ * @version     2.0.2-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -331,14 +331,6 @@ class Route
 
                 // Mark dispatcher is currently running
                 self::$_is_running = true;
-
-                // Enable dev cache options
-                if (Config::get('dev_tools')) {
-                    // ?purge_all_cache
-                    if (isset($_REQUEST['purge_all_cache'])) {
-                        Cache::purge();
-                    }
-                }
 
                 // If page is not cacheable make sure to remove existing keys
                 if (!$cachable) {
