@@ -4,13 +4,12 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-use \Lollipop\App;
 use \Lollipop\Text;
 
 /**
  * Cookie Class
  * 
- * @version     1.1.2
+ * @version     1.1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
