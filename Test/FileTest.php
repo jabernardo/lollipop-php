@@ -35,4 +35,16 @@ class FileTest extends TestCase
         
         if (file_exists('sample.txt')) unlink('sample.txt');
     }
+    
+    public function testFileTemp() {
+        $f = new File('sample.txt', true);
+        $f->contents('test');
+        $f->temp();
+        unset($f);
+        
+        $this->assertEquals(
+                false,
+                file_exists('sample.txt')
+            );
+    }
 }
