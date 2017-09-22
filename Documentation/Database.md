@@ -16,7 +16,6 @@ In order to use the ```Database``` library make sure you have set the configurat
 ```php
 <?php
 
-use \Lollipop\App;
 use \Lollipop\Config;
 
 $config = array(
@@ -28,7 +27,7 @@ $config = array(
         )
     );
 
-App::init($config);
+Config::load($config);
 
 ```
 
