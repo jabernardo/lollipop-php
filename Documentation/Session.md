@@ -39,8 +39,10 @@ echo Session::key();
 ```
 
 
-### set($key, $value) ```:void```
+### set($key, $value) ```:string```
 Creates a new session or sets an existing sesssion
+
+> Returns encrypted session key
 
 ```php
 <?php
@@ -71,6 +73,7 @@ Session::get('userid');
 ### drop($key) ```:void```
 Removes a session variable
 
+> Returns encrypted session key
 
 ```php
 <?php

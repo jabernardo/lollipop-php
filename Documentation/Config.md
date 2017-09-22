@@ -41,6 +41,10 @@ Folder(s) to include in autoload
 #### output ```:array```
 - ```compression``` Enable output compression (gzip)
 
+
+#### sugar ```:string```
+Override encryption key
+
 #### db ```:array```
 - ```host``` Hostname for database
 - ```username``` UID for connection

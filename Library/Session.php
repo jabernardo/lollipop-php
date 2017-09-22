@@ -4,12 +4,13 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+use \Lollipop\Config;
 use \Lollipop\Text;
 
 /**
  * Session Class 
  *
- * @version     1.2.0
+ * @version     1.2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -20,6 +21,9 @@ class Session
     /**
      * Starts session
      *
+     * @access  public
+     * @return  void
+     * 
      */
     static function start() {
         if (!isset($_SESSION)) session_start();
@@ -28,6 +32,9 @@ class Session
     /**
      * Stops current session
      *
+     * @access  public
+     * @return  void
+     * 
      */
     static function stop() {
         if (isset($_SESSION)) session_destroy();
@@ -36,9 +43,10 @@ class Session
     /**
      * Checks if a session variable exists
      *
+     * @access  public
      * @param   string  $key    Session variable name
-     * 
      * @return  bool
+     * 
      */
     static function exists($key) {
         self::start();
@@ -53,17 +61,22 @@ class Session
     /**
      * Returns the key used in encrypting session variables
      *
-     * @return string
+     * @access  public
+     * @return  string
+     * 
      */
     static function key() {
-        return md5(Text::lock(SUGAR));
+        return md5(spare(Config::get('sugar'), Text::lock(SUGAR)));
     }
 
     /**
      * Creates a new session or sets an existing sesssion
      *
+     * @access  public
      * @param   string  $key    Session variable name
      * @param   string  $value  Session variable value
+     * @return  string  Session encrypted key
+     * 
      */
     static function set($key, $value) {
         self::start();
@@ -71,14 +84,17 @@ class Session
         $key = substr(sha1($key), 0, 10);
         
         $_SESSION[$key] = Text::lock($value, self::key());
+        
+        return $key;
     }
 
     /**
      * Gets session variable's value
      *
+     * @access  public
      * @param   string  $key    Session variable name
-     * 
      * @return  string
+     * 
      */
     static function get($key) {
         self::start();
@@ -95,7 +111,10 @@ class Session
     /**
      * Removes a session variable
      *
+     * @access  public
      * @param   string  $key    Session variable name
+     * @return  string  Deleted encrypted key
+     * 
      */
     static function drop($key) {
         self::start();
@@ -103,6 +122,8 @@ class Session
         $key = substr(sha1($key), 0, 10);
         
         if (isset($_SESSION[$key])) unset($_SESSION[$key]);
+        
+        return $key;
     }
 }
 
