@@ -2,10 +2,12 @@
 
 namespace Lollipop;
 
+use \Lollipop\Cookie;
+
 /**
  * Lollipop Route Class
  *
- * @version     0.1.2-RC1
+ * @version     0.1.3-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -18,6 +20,12 @@ class Response
      * 
      */
     private $_headers = array();
+    
+    /**
+     * @var     array   Response cookies
+     * 
+     */
+    private $_cookies = array();
     
     /**
      * @var     string  Response data
@@ -110,6 +118,20 @@ class Response
     }
     
     /**
+     * Set response cookies
+     * 
+     * @access  public
+     * @param   array   $data   Cookie key value
+     * @return  object
+     * 
+     */
+    public function cookies(array $data) {
+        $this->_cookies = array_merge($this->_cookies, $data);
+        
+        return  $this;
+    }
+    
+    /**
      * Get formatted responsed data
      * 
      * @access  public
@@ -159,10 +181,17 @@ class Response
      * 
      */
     public function render() {
+        // Parse contents
         $res = $this->get();
         
+        // Set HTTP Headers
         foreach ($this->_headers as $header) {
             header($header);
+        }
+        
+        // Set cookies
+        foreach($this->_cookies as $k => $v) {
+            Cookie::set($k, $v);
         }
         
         print($res);
