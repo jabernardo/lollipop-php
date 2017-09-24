@@ -7,8 +7,8 @@ You can use Lollipop when you're creating a simple and powerful web application.
 
 ###### IT's EASY!
 
-> Configure [.htaccess](http://www.htaccess-guide.com/)
-Please use below code as the default for your ```.htaccess```
+> Configure [.htaccess](http://www.htaccess-guide.com/).
+Use below code as the default for your ```.htaccess```
 Or see [LMVC](http://github.com/jabernardo/lmvc) for routing using 
 [Lollipop](https://github.com/jabernardo/lollipop-php)
 
@@ -57,11 +57,11 @@ or get it via ```composer```
 ```bash
 composer require "jabernardo/lollipop-php"
 ```
-start the development of your projects.
+and start the development of your projects.
 
 ###### RESOURCES
 
-See libraries documentation [here](https://github.com/jabernardo/lollipop-php/tree/master/Documentation)
+See libraries documentation [here](https://github.com/jabernardo/lollipop-php/tree/master/Documentation).
 
 ## License
 
