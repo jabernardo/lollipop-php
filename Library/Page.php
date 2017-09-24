@@ -11,7 +11,7 @@ use \Lollipop\Text;
 /**
  * Page Class 
  *
- * @version     1.3.5
+ * @version     1.3.6
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -55,8 +55,6 @@ class Page
             }
             
             $output = ob_get_clean();
-            
-            ob_end_flush();
             
             return $output;
         }
