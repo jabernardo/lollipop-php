@@ -23,11 +23,9 @@ Options -Indexes
 # Enable RewriteEngine
 RewriteEngine on
 
-# Enable page access 
+# Redirect request to index
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Redirect all pages to index
 RewriteRule ^(.*)$/? index.php [L]
 ```
 
