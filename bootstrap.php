@@ -29,16 +29,6 @@ if (count($_lol_toks) >= 2) {
     exit('The version of your PHP can\'t be verified' . PHP_EOL);
 }
 
-
-/**
- * Check application if running on web server
- * else just terminate
- * 
- */
-if (!isset($_SERVER['REQUEST_URI'])) {
-    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
-}
-
 /**
  * Alternate a value to undefined variable
  * 

@@ -4,6 +4,15 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+/**
+ * Check application if running on web server
+ * else just terminate
+ * 
+ */
+if (!isset($_SERVER['REQUEST_URI'])) {
+    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
+}
+
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
@@ -12,7 +21,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.0
+ * @version     2.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
