@@ -7,7 +7,7 @@ use \Lollipop\Cookie;
 /**
  * Lollipop Route Class
  *
- * @version     0.1.3-RC1
+ * @version     1.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop

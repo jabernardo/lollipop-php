@@ -12,7 +12,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.2-RC1
+ * @version     2.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
