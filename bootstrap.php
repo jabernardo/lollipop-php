@@ -3,7 +3,7 @@
 /**
  * Lollipop-PHP Bootstrap File
  * 
- * @version 6.2.0
+ * @version 6.2.1
  * @author  John Aldrich Bernardo
  * @email   4ldrich@protonmail.com
  * 
@@ -13,20 +13,8 @@
  * Check if PHP version is >= 5.4
  * 
  */
-if (!function_exists('phpversion')) {
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
     exit('You PHP is too old! Try upgrading.' . PHP_EOL);
-}
-
-$_lol_toks = explode('.', phpversion());
-
-if (count($_lol_toks) >= 2) {
-    $_lol_major_minor = (double)($_lol_toks[0] . '.' . $_lol_toks[1]);
-    
-    if ($_lol_major_minor < (5.4)) {
-        exit('You PHP is too old! Try upgrading.' . PHP_EOL);
-    }
-} else {
-    exit('The version of your PHP can\'t be verified' . PHP_EOL);
 }
 
 /**
