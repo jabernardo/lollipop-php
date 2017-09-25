@@ -73,12 +73,12 @@ class AssertTest extends TestCase
     }
     
     public function testNotException() {
-        function except() {
+        function except2() {
             return 0;
         }
         
         $this->assertTrue(
-                Assert::noException('except')
+                Assert::noException('except2')
             );
     }
     
