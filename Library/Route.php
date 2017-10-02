@@ -21,7 +21,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.1
+ * @version     2.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -390,9 +390,6 @@ class Route
                         }
                     }
 
-                    // Mark as dispatched
-                    self::$_dispatch_registered = true;
-
                     // Save cache
                     if ($cachable && !isset($_REQUEST['nocache'])) {
                         Cache::save($cache_key, $response, false, $cache_time);
@@ -503,13 +500,14 @@ class Route
                 self::_prepare();
                 // Dispatch the page
                 self::_dispatch();
-                // Call clean function
-                self::_clean();
                 // Check for 404 Page
                 self::_checkNotFound();
-                // Terminate application
-                exit;
+                // Call clean function
+                self::_clean();
             });
+            
+            // Mark as dispatched
+            self::$_dispatch_registered = true;
         }
     }
 
