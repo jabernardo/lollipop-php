@@ -21,7 +21,7 @@ use \Lollipop\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.2
+ * @version     2.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -246,9 +246,7 @@ class Route
             return self::_callback($callback, $params);
         }
         
-        // Throw 404 Page
-        self::$_is_listening = false;
-        self::_checkNotFound();
+        return null;
     }
     
     /**
@@ -520,7 +518,17 @@ class Route
     static private function _checkNotFound() {
         if (!self::$_is_listening && (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
             if (Config::get('not_found_page')) {
-                echo self::_returnData(self::forward(Config::get('not_found_page')));
+                // Forwarding 404 Pages
+                $data = self::forward(Config::get('not_found_page'));
+                $response = new Response();
+                
+                if ($data instanceof Response) {
+                    $response = $data;
+                } else {
+                    $response->set($data);
+                }
+                
+                $response->render();
             } else {
                 $pagenotfound = '<!DOCTYPE html>'
                         . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
