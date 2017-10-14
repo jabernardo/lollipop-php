@@ -8,6 +8,7 @@ use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
+use \Lollipop\HTTP\Response;
 
 /**
  * Request Class 
@@ -248,7 +249,7 @@ class Request
             }
         }
         
-        return $return;
+        return new Response($return);
     }
 }
 
