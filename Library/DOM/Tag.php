@@ -1,6 +1,6 @@
 <?php
 
-namespace Lollipop;
+namespace Lollipop\DOM;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
