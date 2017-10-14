@@ -1,6 +1,6 @@
 <?php
 
-namespace Lollipop;
+namespace Lollipop\HTTP;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
@@ -16,7 +16,7 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
-use \Lollipop\Response;
+use \Lollipop\HTTP\Response;
 
 /**
  * Lollipop Route Class

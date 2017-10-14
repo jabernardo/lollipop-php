@@ -1,6 +1,6 @@
 <?php
 
-namespace Lollipop;
+namespace Lollipop\HTTP;
 
 use \Lollipop\Cookie;
 
