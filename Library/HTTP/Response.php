@@ -7,7 +7,7 @@ use \Lollipop\Cookie;
 /**
  * Lollipop Route Class
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -138,8 +138,10 @@ class Response
      * @return  string
      * 
      */
-    public function get() {
-        return $this->_format($this->_data);
+    public function get($raw = false) {
+        return $raw 
+                ? $this->_data
+                : $this->_format($this->_data);
     }
     
     /**
