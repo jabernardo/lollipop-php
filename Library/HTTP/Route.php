@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.4
+ * @version     2.0.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -123,6 +123,21 @@ class Route
      */
     static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve('DELETE', $path, $callback, $cachable, $cache_time);
+    }
+
+    /**
+     * PATCH route
+     *
+     * @param   string      $path       Route
+     * @param   function    $callback   Callback function
+     * @param   bool        $cachable   Is page cache enable? (default is false)
+     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+     *
+     * @return  void
+     *
+     */
+    static public function patch($path, $callback, $cachable = false, $cache_time = 1440) {
+        self::serve('PATCH', $path, $callback, $cachable, $cache_time);
     }
 
     /**
