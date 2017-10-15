@@ -13,7 +13,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Request Class 
  *
- * @version     1.3.6
+ * @version     1.3.7
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -27,7 +27,7 @@ class Request
      * @var     array   Centralized session requests
      * 
      */
-    static private $_all_requests = array();
+    private $_all_requests = array();
     
     /**
      * Check for request(s)
@@ -37,19 +37,19 @@ class Request
      * @return bool
      * 
      */
-    static function is($requests) {
+    function is($requests) {
         $is = true;
         
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        self::$_all_requests = array_merge(self::$_all_requests, array_merge($_REQUEST, $_php_request));
+        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             $returns = array();
             
             foreach ($requests as $request) {
-                array_push($returns, isset(self::$_all_requests[$request]));
+                array_push($returns, isset($this->_all_requests[$request]));
             }
             
             foreach ($returns as $return) {
@@ -58,7 +58,7 @@ class Request
                 }
             }
         } else {
-            $is = isset(self::$_all_requests[$requests]);
+            $is = isset($this->_all_requests[$requests]);
         }
         
         return $is;
@@ -72,22 +72,22 @@ class Request
      * @return  array
      * 
      */
-    static function get($requests = null) {
+    function get($requests = null) {
         $var = array();
         
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        self::$_all_requests = array_merge(self::$_all_requests, array_merge($_REQUEST, $_php_request));
+        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             foreach ($requests as $request) {
-                $var[$request] = isset(self::$_all_requests[$request]) ? self::$_all_requests[$request] : null;
+                $var[$request] = isset($this->_all_requests[$request]) ? $this->_all_requests[$request] : null;
             }
         } else if (is_null($requests)) {
-            $var = self::$_all_requests;
+            $var = $this->_all_requests;
         } else {
-            $var = (isset(self::$_all_requests[$requests])) ? self::$_all_requests[$requests] : null;
+            $var = (isset($this->_all_requests[$requests])) ? $this->_all_requests[$requests] : null;
         }
         
         return $var;
@@ -125,7 +125,7 @@ class Request
      * @return  mixed
      * 
      */
-    static function send(array $options) {
+    function send(array $options) {
         // Get localdb location in config
         $localdb = spare(Config::get('localdb.folder'), LOLLIPOP_STORAGE_LOCALDB);
         
