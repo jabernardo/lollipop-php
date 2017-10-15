@@ -42,12 +42,6 @@ use \Lollipop\HTTP\Response;
 class Route
 {
     /**
-     * @var     bool    Do we find a route?
-     *
-     */
-    static private $_is_listening = false;
-
-    /**
      * @var     bool    Is Dispatch function already registered on shutdown?
      *
      */
@@ -58,36 +52,6 @@ class Route
      *
      */
     static private $_stored_routes = array();
-
-    /**
-     * @var     bool    Is dispatcher running
-     *
-     */
-    static private $_is_running = false;
-    
-    /**
-     * @var     mixed   Prepare function (no-cache)
-     * 
-     */
-    static private $_prepare_function = null;
-    
-    /**
-     * @var     array   Prepare function parameters
-     * 
-     */
-    static private $_prepare_function_params = array();
-    
-    /**
-     * @var     mixed   Clean function (no-cache)
-     * 
-     */
-    static private $_clean_function = null;
-    
-    /**
-     * @var     array   Clean function parameters
-     * 
-     */
-    static private $_clean_function_params = array();
 
     /**
      * @var    bool     Is route forwarded?
@@ -193,41 +157,6 @@ class Route
 
         self::_registerDispatch();
     }
-    
-    /**
-     * Prepare function
-     * 
-     * @param   function    $callback   Set prepare callback
-     * @param   array       $params     Parameters to be sent
-     * @return  void
-     * 
-     */
-    static public function prepare($callback, array $params = array()) {
-        if (!is_callable($callback)) {
-            Log::error('Invalid prepare callback', true);
-        }
-        
-        self::$_prepare_function = $callback;
-        self::$_prepare_function_params = $params;
-    }
-    
-    /**
-     * Clean function
-     * 
-     * @param   function    $callback   Set clean callback
-     * @param   array       $params     Parameters to be sent
-     * 
-     * @return  void
-     * 
-     */
-    static public function clean($callback, array $params = array()) {
-        if (!is_callable($callback)) {
-            Log::error('Invalid clean callback', true);
-        }
-        
-        self::$_clean_function = $callback;
-        self::$_clean_function_params = $params;
-    }
 
     /**
      * Route forwarding
@@ -246,7 +175,7 @@ class Route
             return self::_callback($callback, $params);
         }
         
-        return null;
+        return new Response();
     }
     
     /**
@@ -257,34 +186,6 @@ class Route
      */
     static public function getRoutes() {
         return self::$_stored_routes;
-    }
-    
-    /**
-     * Prepare function
-     * 
-     * @return  mixed
-     * 
-     */
-    static private function _prepare() {
-        ob_start();
-        $o = self::$_prepare_function && is_callable(self::$_prepare_function) ? call_user_func_array(self::$_prepare_function, self::$_prepare_function_params) : null;
-        ob_get_clean();
-        
-        return $o;
-    }
-    
-    /**
-     * Clean function
-     * 
-     * @return  mixed
-     * 
-     */
-    static private function _clean() {
-        ob_start();
-        $o = self::$_clean_function && is_callable(self::$_clean_function) ? call_user_func_array(self::$_clean_function, self::$_clean_function_params) : null;
-        ob_get_clean();
-        
-        return $o;
     }
 
     /**
@@ -322,10 +223,7 @@ class Route
                 }
             }
 
-            if ($is_match && !self::$_is_running && !self::$_is_listening) {
-                // Mark that the router already found a match
-                self::$_is_listening = true;
-                
+            if ($is_match) {
                 // Remove unneeded data
                 array_shift($matches);
 
@@ -335,10 +233,7 @@ class Route
                 if ($matches) {
                     $cache_key .= '|' . implode(',', $matches);
                 }
-
-                // Mark dispatcher is currently running
-                self::$_is_running = true;
-
+                
                 // If page is not cacheable make sure to remove existing keys
                 if (!$cachable) {
                     Cache::remove($cache_key);
@@ -394,13 +289,12 @@ class Route
                     }
                     
                     // Show output
-                    $response->render();
+                    return $response;
                 }
-                
-                // Off
-                self::$_is_running = false;
             }
         }
+        
+        return new Response();
     }
     
     /**
@@ -494,14 +388,14 @@ class Route
         // Register dispatch function
         if (!self::$_dispatch_registered) {
             register_shutdown_function(function() {
-                // Call prepare function used by programmer
-                self::_prepare();
-                // Dispatch the page
-                self::_dispatch();
-                // Check for 404 Page
-                self::_checkNotFound();
-                // Call clean function
-                self::_clean();
+                $response = self::_dispatch();
+                
+                if (!$response->get(true) &&
+                    (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
+                    $response = self::_checkNotFound();
+                }
+                
+                $response->render();
             });
             
             // Mark as dispatched
@@ -516,39 +410,39 @@ class Route
      *
      */
     static private function _checkNotFound() {
-        if (!self::$_is_listening && (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
-            if (Config::get('not_found_page')) {
-                // Forwarding 404 Pages
-                $data = self::forward(Config::get('not_found_page'));
-                $response = new Response();
-                
-                if ($data instanceof Response) {
-                    $response = $data;
-                } else {
-                    $response->set($data);
-                }
-                
-                $response->render();
+        if (Config::get('not_found_page')) {
+            // Forwarding 404 Pages
+            $data = self::forward(Config::get('not_found_page'));
+            $response = new Response();
+            
+            if ($data instanceof Response) {
+                $response = $data;
             } else {
-                $pagenotfound = '<!DOCTYPE html>'
-                        . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
-                        . '<html>'
-                        . '<head><title>404 Not Found</title></head>'
-                        . '<meta name="viewport" content="width=device-width, initial-scale=1">'
-                        . '<body>'
-                        . '<h1>404 Not Found</h1>'
-                        . '<p>The page that you have requested could not be found.</p>'
-                        . '</body>'
-                        . '</html>';
-
-                // Create a new 404 Page Not Found Response
-                $response = new Response($pagenotfound);
-                // Set header for 404
-                $response->header('HTTP/1.0 404 Not Found');
-                // Execute
-                $response->render();
+                $response->set($data);
             }
+            
+            return $response;
+        } else {
+            $pagenotfound = '<!DOCTYPE html>'
+                    . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
+                    . '<html>'
+                    . '<head><title>404 Not Found</title></head>'
+                    . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                    . '<body>'
+                    . '<h1>404 Not Found</h1>'
+                    . '<p>The page that you have requested could not be found.</p>'
+                    . '</body>'
+                    . '</html>';
+
+            // Create a new 404 Page Not Found Response
+            $response = new Response($pagenotfound);
+            // Set header for 404
+            $response->header('HTTP/1.0 404 Not Found');
+            // Execute
+            return $response;
         }
+        
+        return new Response();
     }
 }
 
