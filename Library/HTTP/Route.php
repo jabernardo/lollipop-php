@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.3
+ * @version     2.0.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -37,6 +37,12 @@ use \Lollipop\HTTP\Response;
  * 
  *      lollipop-cache: true/false
  *          - If page is from cache
+ * 
+ * @configurations
+ * 
+ *      page_not_found
+ *          route: '/'
+ *          show: true/false
  * 
  */
 class Route
@@ -391,7 +397,7 @@ class Route
                 $response = self::_dispatch();
                 
                 if (!$response->get(true) &&
-                    (Config::get('show_not_found') === null || Config::get('show_not_found') !== false)) {
+                    spareNan(Config::get('page_not_found.show'), true)) {
                     $response = self::_checkNotFound();
                 }
                 
@@ -410,9 +416,9 @@ class Route
      *
      */
     static private function _checkNotFound() {
-        if (Config::get('not_found_page')) {
+        if (Config::get('page_not_found.route')) {
             // Forwarding 404 Pages
-            $data = self::forward(Config::get('not_found_page'));
+            $data = self::forward(Config::get('page_not_found.route'));
             $response = new Response();
             
             if ($data instanceof Response) {

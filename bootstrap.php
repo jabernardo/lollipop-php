@@ -3,7 +3,7 @@
 /**
  * Lollipop-PHP Bootstrap File
  * 
- * @version 6.2.1
+ * @version 6.2.2
  * @author  John Aldrich Bernardo
  * @email   4ldrich@protonmail.com
  * 
@@ -45,6 +45,18 @@ function fuse(&$opt1, $opt2) {
  */
 function spare($value, $spare) {
     return $value ? $value : $spare;
+}
+
+/**
+ * Set spare value for null values
+ * 
+ * @param   mixed   $value  Primary value
+ * @param   mixed   $spare  Spare value
+ * @return  mixed
+ * 
+ */
+function spareNan($value, $spare) {
+    return !is_null($value) ? $value : $spare;
 }
 
 /**
