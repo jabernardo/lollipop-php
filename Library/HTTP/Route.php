@@ -219,11 +219,7 @@ class Route
     /**
      * Serve route
      *
-     * @param   string      $method     Request method
-     * @param   string      $path       Route
-     * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
+     * @param   array   $route  Route settings
      * @example
      * 
      *      [
