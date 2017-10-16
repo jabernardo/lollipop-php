@@ -3,6 +3,8 @@
 These page will show you on how-to use ```\Lollipop\DOM``` 
 
 
+## Tag
+
 ### Creating a tag
 
 ```php
@@ -30,7 +32,7 @@ $empty_tag = Tag::create('meta', true)
 
 ```
 
-### Scraper
+## Scraper
 
 ```php
 <?php
