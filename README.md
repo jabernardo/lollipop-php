@@ -38,10 +38,8 @@ require('/path/to/lollipop-php/autoload.php');
 // or if using composer
 // require('./vendor/autoload.php');
 
-use \Lollipop\Route;
-
 // Your index page
-Route::get('/', function() {
+\Lollipop\HTTP\Route::get('/', function() {
     return 'Hello World!';
 }, true);
            
