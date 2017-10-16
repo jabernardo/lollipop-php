@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Route Class
  *
- * @version     2.0.8
+ * @version     3.0.0-RC1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -372,14 +372,11 @@ class Route
                     }
 
                     // Is gzip compression requested: `lollipop-gzip`, this will override config
-                    $gzip_header = self::_getHeader('lollipop-gzip');
+                    $req = new Request();
+                    $gzip_header = $req->header('lollipop-gzip');
                     
-                    if ($gzip_header !== false) {
-                        if (!strcasecmp($gzip_header, 'true')) {
-                            $response->compress();
-                        } else {
-                            $response->compress(false);
-                        }
+                    if (!is_null($gzip_header)) {
+                        $response->compress(!strcmp($gzip_header, 'true'));
                     }
 
                     if (isset($route['after']) && is_array($route['after']) && count($route['after'])) {
@@ -487,25 +484,6 @@ class Route
         }
         
         return $output;
-    }
-    
-    /**
-     * Check if request header is set
-     * and enabled (true)
-     * 
-     * @access  public
-     * @param   string  $header     Request header
-     * @return  mixed
-     * 
-     */
-    static private function _getHeader($header) {
-        foreach(getallheaders() as $k => $v) {
-            if (!strcasecmp($k, $header)) {
-                return $v;
-            }
-        }
-        
-        return false;
     }
 
     /**

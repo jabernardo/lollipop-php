@@ -4,6 +4,15 @@ namespace Lollipop\HTTP;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+/**
+ * Check application if running on web server
+ * else just terminate
+ * 
+ */
+if (!isset($_SERVER['REQUEST_URI'])) {
+    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
+}
+
 use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
@@ -13,7 +22,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Request Class 
  *
- * @version     1.3.7
+ * @version     1.4.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -65,6 +74,18 @@ class Request
     }
     
     /**
+     * Check if request method is in use
+     * 
+     * @access  public
+     * @param   string  $method     Request method
+     * @return  bool
+     * 
+     */
+    function isMethod($method) {
+        return !strcasecmp($method, $_SERVER['REQUEST_METHOD']);
+    }
+    
+    /**
      * Gets values of request(s)
      *
      * @param   array   $requests   Request names
@@ -91,6 +112,35 @@ class Request
         }
         
         return $var;
+    }
+    
+    /**
+     * Get request method
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public function getMethod() {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+    
+    /**
+     * Get request header value
+     * 
+     * @access  public
+     * @param   string  $header     Request header
+     * @return  mixed   `null` if header is not set
+     * 
+     */
+    public function header($header) {
+        foreach(getallheaders() as $k => $v) {
+            if (!strcasecmp($k, $header)) {
+                return $v;
+            }
+        }
+        
+        return null;
     }
     
     /**

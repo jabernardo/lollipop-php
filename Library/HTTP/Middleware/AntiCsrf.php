@@ -2,16 +2,43 @@
 
 namespace Lollipop\HTTP\Middleware;
 
+defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
+
+/**
+ * Check application if running on web server
+ * else just terminate
+ * 
+ */
+if (!isset($_SERVER['REQUEST_URI'])) {
+    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
+}
+
 use \Lollipop\Config;
 use \Lollipop\Cookie;
 use \Lollipop\CsrfToken;
 use \Lollipop\HTTP\Response;
-use \Lollipop\HTTP\Request;
-use \Lollipop\HTTP\Route;
 
+/**
+ * Lollipop AntiCsrf Middleware
+ *
+ * @version     1.0.0
+ * @author      John Aldrich Bernardo
+ * @email       4ldrich@protonmail.com
+ * @package     Lollipop
+ * 
+ */
 class AntiCsrf
 {
-    public function handle(Request $req, Response $res, $args) {
+    /**
+     * Middleware Handler
+     * 
+     * @access  public
+     * @param   \Lollipop\HTTP\Request  $req    Request object
+     * @param   \Lollipop\HTTP\Response $res    Response object
+     * @return  \Lollipop\HTTP\Response
+     * 
+     */
+    public function handle(Request $req, Response $resd) {
         $acsrf_enable = spare(Config::get('anti_csrf.enable'), true);
         $acsrf_name = CsrfToken::getName();
         $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
@@ -19,46 +46,34 @@ class AntiCsrf
         // Create a cookie for front end use
         Cookie::set($acsrf_name, CsrfToken::get(), '/', $expiration);
         
-        if (isset($_POST) && count($_POST) && $acsrf_enable) {
-            //var_dump(!Request::get($acsrf_name) || !CsrfToken::isValid(Request::get($acsrf_name)));exit;
-            if (!Request::get($acsrf_name) || !CsrfToken::isValid(Request::get($acsrf_name))) {
-                //if ($die) {
+        if (!$req->isMethod('get') && $acsrf_enable) {
+            if (!$req->get($acsrf_name) || !CsrfToken::isValid($req->get($acsrf_name))) {
+                $output = '<!DOCTYPE html>'
+                        . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
+                        . '<html>'
+                        . '<head><title>Not Enough Tokens</title></head>'
+                        . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                        . '<body>'
+                        . '<h1>Not Enough Tokens</h1>'
+                        . '<p>Oops! Make sure you have enough tokens before you can play.</p>'
+                        . '</body>'
+                        . '</html>';
                 
-                    self::_kill()->render();exit;
-                //}
+                $output_config = Config::get('output');
+                $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
                 
-                //return false;
+                if (!is_null($req->header('lollipop-gzip'))) {
+                    $output_compression = !strcmp($req->header('lollipop-gzip'), 'true');
+                }
+                
+                $res = new Response($output);
+                $res->compress($output_compression);
+                $res->render();
+                exit();
             }
         }
 
-       return new \Lollipop\HTTP\Response('Hello');
-    }
-    
-    
-    /**
-     * Self killed
-     * 
-     * 
-     */
-    private static function _kill() {
-        $net = '<!DOCTYPE html>';
-        $net .= '<!-- Lollipop for PHP by John Aldrich Bernardo -->';
-        $net .= '<html>';
-        $net .= '<head><title>Not Enough Tokens</title></head>';
-        $net .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
-        $net .= '<body>';
-        $net .= '<h1>Not Enough Tokens</h1>';
-        $net .= '<p>Oops! Make sure you have enough tokens before you can play.</p>';
-        $net .= '</body>';
-        $net .= '</html>';
-        
-        $output = $net;
-        $output_config = Config::get('output');
-        $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
-        
-        return new \Lollipop\HTTP\Response($output);
-        
-        //exit;
+       return new Response();
     }
 }
 
