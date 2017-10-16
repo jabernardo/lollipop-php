@@ -67,6 +67,18 @@ class Route
     static private $_is_forwarded = false;
 
     /**
+     * @var mixed   Prepare callback
+     * 
+     */
+    static private $_prepare = array();
+
+    /**
+     * @var mixed   Clean callback
+     * 
+     */
+    static private $_clean = array();
+
+    /**
      * GET route
      *
      * @param   string      $path       Route
@@ -79,14 +91,14 @@ class Route
      */
     static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => 'GET',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => 'GET',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -102,14 +114,14 @@ class Route
      */
     static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => 'POST',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => 'POST',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -125,14 +137,14 @@ class Route
      */
     static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => 'PUT',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => 'PUT',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -148,14 +160,14 @@ class Route
      */
     static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => 'DELETE',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => 'DELETE',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -171,14 +183,14 @@ class Route
      */
     static public function patch($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => 'PATCH',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => 'PATCH',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -194,14 +206,14 @@ class Route
      */
     static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve(
-                array(
-                    'path' => $path,
-                    'method' => '',
-                    'callback' => $callback,
-                    'cachable' => $cachable,
-                    'cache_time' => $cache_time
-                )
-            );
+            array(
+                'path' => $path,
+                'method' => '',
+                'callback' => $callback,
+                'cachable' => $cachable,
+                'cache_time' => $cache_time
+            )
+        );
     }
 
     /**
@@ -230,54 +242,106 @@ class Route
                     '\\Lollipop\\HTTP\\Middleware\\AntiCsrf'
                 );
         
+        // Default path to '/'
+        $path = fuse($route['path'], '');
+        
         // Store route
-        self::$_stored_routes[fuse($route['path'], '')] = array(
-                                            'method' => fuse($route['method'], ''),
-                                            'callback' => fuse($route['callback'], function() {}),
-                                            'cachable' => fuse($route['cachable'], false),
-                                            'cache_time' => fuse($route['cache_time'], 1440),
-                                            'before' => fuse($route['before'], $middlewares_before),
-                                            'after' => fuse($route['after'], array())
-                                        );
+        self::$_stored_routes[$path] = array(
+            'method' => fuse($route['method'], ''),
+            'callback' => fuse($route['callback'], function() {}),
+            'cachable' => fuse($route['cachable'], false),
+            'cache_time' => fuse($route['cache_time'], 1440),
+            'before' => fuse($route['before'], $middlewares_before),
+            'after' => fuse($route['after'], array())
+        );
 
+        // Register dispatcher once this function was called
         self::_registerDispatch();
     }
     
     /**
      * Route forwarding
      *
-     * @param string $path Route
-     * @param array  $params Arguments
+     * @access  public
+     * @param   string                  $path   Route
+     * @param   \Lollipop\HTTP\Request  $req    Request object
+     * @param   \Lollipop\HTTP\Response $res    Response object
+     * @param   array                   $params Arguments
      *
      */
-    static public function forward($path, array $params = array()) {
+    static public function forward($path, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $params = array()) {
         self::$_is_forwarded = true;
         
+        // Check if landing route is declared
+        // we don't want to go in a road without signs
         if (isset(self::$_stored_routes[$path])) {
             $callback = self::$_stored_routes[$path];
             $callback = $callback['callback'];
 
-            return self::_callback($callback, $params);
+            // Call back requires
+            return self::_callback($callback, $req, $res, $params);
         }
         
+        // Create an empty response once 
+        // route wasn't found
         return new Response();
+    }
+    
+    /**
+     * Prepare callback. Only one callback is allowed
+     * This will lessen unnecessary calls 
+     * 
+     * @access  public
+     * @param   function    $callback   Callback
+     * @return  bool        `true` if callback is registered as prepare, else
+     *                      `false`
+     * 
+     */
+    static public function prepare($callback) {
+        if (is_callable($callback)) {
+            // Middle wares only accepts array
+            // so we'll set prepare function to be in array format
+            self::$_prepare = array($callback); 
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Clean callback. Just like prepare function
+     * this clean middleware will only contain one callback
+     * 
+     * @access  public
+     * @param   function    $callback   Callback
+     * @return  bool        `true` if callback is registered as prepare, else
+     *                      `false`
+     * 
+     */
+    static public function clean($callback) {
+        if (is_callable($callback)) {
+            self::$_clean = array($callback); 
+        }
     }
     
     /**
      * Get routes 
      * 
+     * @access  public
      * @return  array
      * 
      */
     static public function getRoutes() {
+        // Return all routes stored
         return self::$_stored_routes;
     }
 
     /**
      * Dispath function
      *
-     *
-     * @return void
+     * @access  private
+     * @return  void
      *
      */
     static private function _dispatch() {
@@ -295,6 +359,7 @@ class Route
             // Active script or running script (this is when no redirection is being done in .htaccess)
             $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($path ? '/' : ''));
 
+            // Check regex if matching our current path
             $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
                         preg_match('/^' . $as . $path . '$/i', $url, $matches);
 
@@ -303,9 +368,12 @@ class Route
                 $_rm = $route['method'];
                 
                 if (is_array($_rm)) {
+                    // Make sure all request methods are in uppercase
                     $_rm = array_map('strtoupper', $_rm);
                 }
                 
+                // Check if current request method matches our applications
+                // preferred request method
                 if ((is_array($_rm) && !in_array($_SERVER['REQUEST_METHOD'], $_rm)) ||
                     (is_string($_rm) && $_rm !== $_SERVER['REQUEST_METHOD'] && $_rm !== '')) {
                     $is_match = false;
@@ -320,6 +388,8 @@ class Route
                 $cache_key = $path;
 
                 if ($matches) {
+                    // Make sure cache keys are unique by using parameters
+                    // sent to it
                     $cache_key .= '|' . implode(',', $matches);
                 }
                 
@@ -341,25 +411,21 @@ class Route
                 } else {
                     // Create a new response
                     $response = new Response();
+                    // New request object
                     $request = new Request();
                     
-                    // Execute callback
-                    $callback_matches = $matches;
+                    // Prepare middleware
+                    if (count(self::$_prepare)) {
+                        $response = self::_middleware(self::$_prepare, $request, $response, $matches);
+                    }
                     
-                    array_unshift($callback_matches, $response);
-                    array_unshift($callback_matches, $request);
-                    
+                    // Before middlewares
                     if (isset($route['before']) && is_array($route['before']) && count($route['before'])) {
-                        $response = self::_middleware($route['before'], $callback_matches);
+                        $response = self::_middleware($route['before'], $request, $response, $matches);
                     }
                     
-                    $data = self::_callback($callback, $callback_matches);
-                    
-                    if ($data instanceof Response) {
-                        $response = $data;
-                    } else {
-                        $response->set($data);
-                    }
+                    // Now call the main callback
+                    $response = self::_callback($callback, $request, $response, $matches);
 
                     // Forwarded header
                     if (self::$_is_forwarded) {
@@ -379,8 +445,14 @@ class Route
                         $response->compress(!strcmp($gzip_header, 'true'));
                     }
 
+                    // After middlewares
                     if (isset($route['after']) && is_array($route['after']) && count($route['after'])) {
-                        $response = self::_middleware($route['after'], $callback_matches);
+                        $response = self::_middleware($route['after'], $request, $response, $matches);
+                    }
+
+                    // Clean middleware
+                    if (count(self::$_clean)) {
+                        $response = self::_middleware(self::$_clean, $request, $response, $matches);
                     }
 
                     // Save cache
@@ -401,25 +473,48 @@ class Route
      * Middleware
      * 
      * @access  private
-     * @param   array   $middlewares    Middle wares
-     * @param   array   $args           Arguments
+     * @param   array                   $middlewares    Middle wares
+     * @param   \Lollipop\HTTP\Request  $req            Request object
+     * @param   \Lollipop\HTTP\Response $res            Response object
+     * @param   array                   $args           Arguments
      * @return  \Lollipop\HTTP\Response
      * 
      */
-    static private function _middleware(array $middlewares, array $args = array()) {
+    static private function _middleware(array $middlewares, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = array()) {
         ob_start();
-        
+
+        // Create a new response onject
         $response = new Response();
+
+        // Add request and response object
+        // to parameters the callback will take
+        // first parameter should be Request followed by Response
+        array_unshift($args, $res);
+        array_unshift($args, $req);
         
         foreach ($middlewares as $middleware) {
             if (is_callable($middleware)) {
-                $response->set(call_user_func_array($middleware, $args));
+                // For middlewares declared using anonymous functions
+                $output = call_user_func_array($middleware, $args);
             } else if (is_callable(array($middler = new $middleware(), 'handle'))) {
-                $response->set(call_user_func_array(array($middler, 'handle'), $args));
+                // Middlewares that uses class
+                // make sure middleware class has `handle` function
+                // this is the entry point for all middlewares
+                $output = call_user_func_array(array($middler, 'handle'), $args);
             }
         }
         
+        // Make sure it was a clean return
+        // We don't want dumps on the ways
         ob_get_clean();
+        
+        if ($output instanceof Response) {
+            // Middleware returns Response object
+            $response = $output;
+        } else {
+            // Else set Response data from the data middleware sent back
+            $response->set($output);
+        }
         
         return $response;
     }
@@ -433,7 +528,13 @@ class Route
      * @return  mixed
      *
      */
-    static private function _callback($callback, array $args = array()) {
+    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = array()) {
+        // Add request and response object
+        // to parameters the callback will take
+        // first parameter should be Request followed by Response
+        array_unshift($args, $res);
+        array_unshift($args, $req);
+        
         if (is_string($callback)) {
             // If callback was string then
             // Explode it by (dot) to determine the Controller and Action
@@ -483,27 +584,46 @@ class Route
             ob_get_clean();
         }
         
-        return $output;
+        // Set response object
+        if ($output instanceof Response) {
+            $res = $output;
+        } else {
+            $res->set($output);
+        }
+        
+        return $res;
     }
 
     /**
      * Register dispatch function on shutdown
      *
+     * @access  private
      * @return  void
      *
      */
     static private function _registerDispatch() {
         // Register dispatch function
         if (!self::$_dispatch_registered) {
+            // Make sure things ends here...
             register_shutdown_function(function() {
+                // Get response data from Dispatcher
                 $response = self::_dispatch();
                 
+                // Request object for 404 pages
+                $request = new Request();
+                
+                // Check if Response object was carrying empty value
+                // and `page_not_found.show` configuration was `true`
+                if (!$response->get(true) &&
+                    spareNan(Config::get('page_not_found.show'), true)) {
+                        // Get 404 page from _checkNotFound function
+                    $response = self::_checkNotFound($request, $response);
+                }
+                
+                // Render output from our application
                 if ($response instanceof Response) {
-                    if (!$response->get(true) &&
-                        spareNan(Config::get('page_not_found.show'), true)) {
-                        $response = self::_checkNotFound();
-                    }
-                    
+                    // `->render()` will set cookies, header and document
+                    // content
                     $response->render();
                 }
             });
@@ -516,13 +636,19 @@ class Route
     /**
      * Check if any of routes doesn't match
      *
-     * @return  void
+     * @param   \Lollipop\HTTP\Request  $req    Request object
+     * @param   \Lollipop\HTTP\Response $res    Response object
+     * @return  \Lollipop\HTTP\Response
      *
      */
-    static private function _checkNotFound() {
+    static private function _checkNotFound(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
+        // Check if 404 pages are re-routed
+        // via configuration
         if (Config::get('page_not_found.route')) {
             // Forwarding 404 Pages
-            $data = self::forward(Config::get('page_not_found.route'));
+            $data = self::forward(Config::get('page_not_found.route'), $req, $res);
+            
+            // Create a new response based from the output of landing 404 page
             $response = new Response();
             
             if ($data instanceof Response) {
@@ -532,27 +658,26 @@ class Route
             }
             
             return $response;
-        } else {
-            $pagenotfound = '<!DOCTYPE html>'
-                    . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
-                    . '<html>'
-                    . '<head><title>404 Not Found</title></head>'
-                    . '<meta name="viewport" content="width=device-width, initial-scale=1">'
-                    . '<body>'
-                    . '<h1>404 Not Found</h1>'
-                    . '<p>The page that you have requested could not be found.</p>'
-                    . '</body>'
-                    . '</html>';
-
-            // Create a new 404 Page Not Found Response
-            $response = new Response($pagenotfound);
-            // Set header for 404
-            $response->header('HTTP/1.0 404 Not Found');
-            // Execute
-            return $response;
         }
         
-        return new Response();
+        // Create a default 404 page
+        $pagenotfound = '<!DOCTYPE html>'
+                . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
+                . '<html>'
+                . '<head><title>404 Not Found</title></head>'
+                . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                . '<body>'
+                . '<h1>404 Not Found</h1>'
+                . '<p>The page that you have requested could not be found.</p>'
+                . '</body>'
+                . '</html>';
+
+        // Create a new 404 Page Not Found Response
+        $response = new Response($pagenotfound);
+        // Set header for 404
+        $response->header('HTTP/1.0 404 Not Found');
+        // Execute
+        return $response;
     }
 }
 

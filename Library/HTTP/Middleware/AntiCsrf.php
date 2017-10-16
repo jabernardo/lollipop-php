@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -38,7 +38,7 @@ class AntiCsrf
      * @return  \Lollipop\HTTP\Response
      * 
      */
-    public function handle(Request $req, Response $resd) {
+    public function handle(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
         $acsrf_enable = spare(Config::get('anti_csrf.enable'), true);
         $acsrf_name = CsrfToken::getName();
         $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
@@ -73,7 +73,7 @@ class AntiCsrf
             }
         }
 
-       return new Response();
+       return $res;
     }
 }
 
