@@ -224,6 +224,7 @@ class Route
      * 
      *      [
      *          'path' => '/',
+     *          'callback' => 'MyController.index',
      *          'method' => ['GET', 'POST'],
      *          'before' => ['MiddleWare1', 'MiddleWare2'],
      *          'after' => ['MiddleWare3', function(Response $res, $args)]
