@@ -36,15 +36,3 @@ Get hidden input for anti_csrf
 
 ### isValid($token) ```:bool```
 Check if token is valid
-
-### hook($die = true)```(mixed)```
-Returns ```bool``` if ```$die``` is ```true``` then kill the entire application
-
-```php
-<?php
-
-use \Lollipop\CsrfToken;
-
-CsrfToken::hook();
-
-```

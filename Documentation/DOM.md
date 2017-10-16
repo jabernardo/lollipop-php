@@ -1,13 +1,41 @@
-# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\Scraper
+# \\[Lollipop](https://github.com/jabernardo/lollipop-php)\DOM
 
-These page will show you on how-to use ```\Lollipop\Scraper``` 
+These page will show you on how-to use ```\Lollipop\DOM``` 
 
-### Scraping ...
+
+### Creating a tag
 
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+use \Lollipop\DOM\Tag;
+
+$tag = Tag::create('p')
+        ->add('class', 'error')
+        ->add('class', 'log')
+        ->add('id', 'message')
+        ->contains('Hello');
+
+```
+
+### Create an empty tag
+
+```php
+<?php
+
+use \Lollipop\DOM\Tag;
+
+$empty_tag = Tag::create('meta', true)
+                ->add('charset', 'utf-8');
+
+```
+
+### Scraper
+
+```php
+<?php
+
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 
 ```
@@ -18,7 +46,7 @@ Get contents of an element by using attributes
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 $thumbnails = $scraper->getContentsByAttr('class', 'thumbnail');
 
@@ -30,7 +58,7 @@ Get contents of an element by using element name
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 $divs = $scraper->getContentsByElem('div');
 
@@ -42,7 +70,7 @@ Get attribute value using other attributes
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 $thumb_hrefs = getAttrByAttr('class', 'thumbnail', 'href');
 
@@ -54,7 +82,7 @@ Get attributes of elements
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 $attrs = $scraper->getAttrByElemWithAttr('a');
 
@@ -77,7 +105,7 @@ Get attributes by element using another attributes
 ```php
 <?php
 
-$scraper = new \Lollipop\Scraper('http://domain.com');
+$scraper = new \Lollipop\DOM\Scraper('http://domain.com');
 
 $attrs = $scraper->getAttrByElemWithAttr('a');
 
@@ -93,3 +121,4 @@ $attrs = $scraper->getAttrByElemWithAttr('a');
  */
 
 ```
+

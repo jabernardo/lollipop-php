@@ -71,11 +71,11 @@ Set current environment used
 - ```stg``` or ```staging```
 - ```prd``` or ```production```
 
-#### show_not_found ```:bool```
-Show or hide 404 page
+#### page_not_found ```:array```
+Page not found properties
 
-#### not_found_page ```:string```
-Change 404 page
+- ```show``` Show or hide page not founds
+- ```route``` Route for custom 404 Page Not Found
 
 #### cache ```:array```
 
