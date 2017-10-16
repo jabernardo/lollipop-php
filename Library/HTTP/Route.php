@@ -406,7 +406,8 @@ class Route
                     
                     if (is_object($page_cache) && $page_cache instanceof Response) {
                         $page_cache->header('lollipop-cache: true');
-                        $page_cache->render();
+                        
+                        return $page_cache;
                     }
                 } else {
                     // Create a new response
