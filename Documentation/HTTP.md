@@ -256,9 +256,25 @@ Parameters:
 
 > Returns Response instance
 
+
+### cookie($cookies) ```:object```
+
+Add cookie for response.
+
+Parameters:
+
+- ```$cookies``` - ```array``` Cookie to be added
+
+
 ### getHeaders() ```:array```
 
 Get Response headers set in ```Response::header```
+
+
+### getCookies() ```:array```
+
+Get Response cookies set in ```Response::cookie```
+
 
 ### render() ```:void```
 

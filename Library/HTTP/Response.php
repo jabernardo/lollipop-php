@@ -187,6 +187,17 @@ class Response
     }
     
     /**
+     * Get cookies for response
+     * 
+     * @access  public
+     * @return  array
+     * 
+     */
+    public function getCookies() {
+        return $this->_cookies;
+    }
+    
+    /**
      * Set response headers and print response text
      * 
      * @access  public
