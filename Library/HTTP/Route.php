@@ -79,6 +79,12 @@ class Route
     static private $_clean = array();
 
     /**
+     * @var array   Active route
+     * 
+     */
+    static private $_active_route = array();
+
+    /**
      * GET route
      *
      * @param   string      $path       Route
@@ -333,6 +339,17 @@ class Route
         // Return all routes stored
         return self::$_stored_routes;
     }
+    
+    /**
+     * Get active route information
+     * 
+     * @access  public
+     * @return  array
+     * 
+     */
+    static public function getActiveRoute() {
+        return self::$_active_route;
+    }
 
     /**
      * Dispath function
@@ -350,15 +367,15 @@ class Route
             // Cache time
             $cache_time = fuse($route['cache_time'], 1440);
             // Translate regular expressions
-            $path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
+            $translated_path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
             // Request URL
             $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
             // Active script or running script (this is when no redirection is being done in .htaccess)
-            $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($path ? '/' : ''));
+            $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($translated_path ? '/' : ''));
 
             // Check regex if matching our current path
-            $is_match = preg_match('/^' . $path . '$/i', $url, $matches) ||
-                        preg_match('/^' . $as . $path . '$/i', $url, $matches);
+            $is_match = preg_match('/^' . $translated_path . '$/i', $url, $matches) ||
+                        preg_match('/^' . $as . $translated_path . '$/i', $url, $matches);
 
             // Check if request method matches
             if (isset($route['method'])) {
@@ -382,7 +399,7 @@ class Route
                 array_shift($matches);
 
                 // Cache key
-                $cache_key = $path;
+                $cache_key = $translated_path;
 
                 if ($matches) {
                     // Make sure cache keys are unique by using parameters
@@ -394,6 +411,9 @@ class Route
                 if (!$cachable) {
                     Cache::remove($cache_key);
                 }
+                
+                // Set route as active
+                self::$_active_route = array($path => $route);
 
                 // Check if page cache is enabled and recover cache if available
                 // Also we could use ?nocache as parameter
