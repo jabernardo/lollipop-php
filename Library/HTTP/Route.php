@@ -570,8 +570,6 @@ class Route
                     $output = call_user_func_array($action, $args); // Update callback
                     ob_get_clean();
                     
-                    return $output;
-                    
                     break;
                 case 2: // Controller and Action
                     if (class_exists($ctoks[0]) &&
@@ -580,11 +578,9 @@ class Route
                         ob_start();
                         $output = call_user_func_array(array($controller, $action), $args);
                         ob_get_clean();
-                        
-                        return $output;
+                    } else {
+                        Log::error('Can\'t find controller and action', true);
                     }
-                    
-                    Log::error('Can\'t find controller and action', true);
                 
                     break;
                 
