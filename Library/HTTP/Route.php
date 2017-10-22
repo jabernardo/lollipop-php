@@ -502,22 +502,24 @@ class Route
 
         // Create a new response onject
         $response = new Response();
-
-        // Add request and response object
-        // to parameters the callback will take
-        // first parameter should be Request followed by Response
-        array_unshift($args, $res);
-        array_unshift($args, $req);
         
         foreach ($middlewares as $middleware) {
+            // Modified args
+            $mod_args = $args;
+            // Add request and response object
+            // to parameters the callback will take
+            // first parameter should be Request followed by Response
+            array_unshift($mod_args, $res);
+            array_unshift($mod_args, $req);
+            
             if (is_callable($middleware)) {
                 // For middlewares declared using anonymous functions
-                $output = call_user_func_array($middleware, $args);
+                $res = call_user_func_array($middleware, $mod_args);
             } else if (is_callable(array($middler = new $middleware(), 'handle'))) {
                 // Middlewares that uses class
                 // make sure middleware class has `handle` function
                 // this is the entry point for all middlewares
-                $output = call_user_func_array(array($middler, 'handle'), $args);
+                $res = call_user_func_array(array($middler, 'handle'), $mod_args);
             }
         }
         
@@ -525,12 +527,12 @@ class Route
         // We don't want dumps on the ways
         ob_get_clean();
         
-        if ($output instanceof Response) {
+        if ($res instanceof Response) {
             // Middleware returns Response object
-            $response = $output;
+            $response = $res;
         } else {
             // Else set Response data from the data middleware sent back
-            $response->set($output);
+            $response->set($res);
         }
         
         return $response;
@@ -655,24 +657,6 @@ class Route
      *
      */
     static private function _checkNotFound(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
-        // Check if 404 pages are re-routed
-        // via configuration
-        if (Config::get('page_not_found.route')) {
-            // Forwarding 404 Pages
-            $data = self::forward(Config::get('page_not_found.route'), $req, $res);
-            
-            // Create a new response based from the output of landing 404 page
-            $response = new Response();
-            
-            if ($data instanceof Response) {
-                $response = $data;
-            } else {
-                $response->set($data);
-            }
-            
-            return $response;
-        }
-        
         // Create a default 404 page
         $pagenotfound = '<!DOCTYPE html>'
                 . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
@@ -689,6 +673,42 @@ class Route
         $response = new Response($pagenotfound);
         // Set header for 404
         $response->header('HTTP/1.0 404 Not Found');
+        
+        // Prepare middleware
+        if (count(self::$_prepare)) {
+            $response = self::_middleware(self::$_prepare, $req, $res);
+        }
+        
+        // Check if 404 pages are re-routed
+        // via configuration
+        if ($page_route = Config::get('page_not_found.route')) {
+            $route_info = fuse(self::$_stored_routes[$page_route], array());
+            
+            // Before middlewares
+            if (isset($route_info['before'])) {
+                $response = self::_middleware($route_info['before'], $req, $res);
+            }
+            
+            // Forwarding 404 Pages
+            $data = self::forward(Config::get('page_not_found.route'), $req, $res);
+            
+            if ($data instanceof Response) {
+                $response = $data;
+            } else {
+                $response->set($data);
+            }
+            
+            // After middlewares
+            if (isset($route_info['after'])) {
+                $response = self::_middleware($route_info['after'], $req, $res);
+            }
+        }
+        
+        // Clean middleware
+        if (count(self::$_clean)) {
+            $response = self::_middleware(self::$_clean, $req, $res);
+        }
+        
         // Execute
         return $response;
     }
