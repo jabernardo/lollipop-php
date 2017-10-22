@@ -415,6 +415,21 @@ class Route
                 // Set route as active
                 self::$_active_route = array($path => $route);
 
+                // Create a new response
+                $response = new Response();
+                // New request object
+                $request = new Request();
+
+                // Prepare middleware
+                if (count(self::$_prepare)) {
+                    $response = self::_middleware(self::$_prepare, $request, $response, $matches);
+                }
+                
+                // Before middlewares
+                if (isset($route['before']) && is_array($route['before']) && count($route['before'])) {
+                    $response = self::_middleware($route['before'], $request, $response, $matches);
+                }
+
                 // Check if page cache is enabled and recover cache if available
                 // Also we could use ?nocache as parameter
                 // to force caching to be disabled
@@ -424,24 +439,9 @@ class Route
                     if (is_object($page_cache) && $page_cache instanceof Response) {
                         $page_cache->header('lollipop-cache: true');
                         
-                        return $page_cache;
+                        $response = $page_cache;
                     }
                 } else {
-                    // Create a new response
-                    $response = new Response();
-                    // New request object
-                    $request = new Request();
-                    
-                    // Prepare middleware
-                    if (count(self::$_prepare)) {
-                        $response = self::_middleware(self::$_prepare, $request, $response, $matches);
-                    }
-                    
-                    // Before middlewares
-                    if (isset($route['before']) && is_array($route['before']) && count($route['before'])) {
-                        $response = self::_middleware($route['before'], $request, $response, $matches);
-                    }
-                    
                     // Now call the main callback
                     $response = self::_callback($callback, $request, $response, $matches);
 
@@ -462,25 +462,24 @@ class Route
                     if (!is_null($gzip_header)) {
                         $response->compress(!strcmp($gzip_header, 'true'));
                     }
-
-                    // After middlewares
-                    if (isset($route['after']) && is_array($route['after']) && count($route['after'])) {
-                        $response = self::_middleware($route['after'], $request, $response, $matches);
-                    }
-
-                    // Clean middleware
-                    if (count(self::$_clean)) {
-                        $response = self::_middleware(self::$_clean, $request, $response, $matches);
-                    }
-
+                    
                     // Save cache
-                    if ($cachable && !isset($_REQUEST['nocache'])) {
+                    if ($cachable && !isset($_REQUEST['nocache']) && !Cache::exists($cache_key)) {
                         Cache::save($cache_key, $response, false, $cache_time);
                     }
-                    
-                    // Show output
-                    return $response;
                 }
+                
+                // After middlewares
+                if (isset($route['after']) && is_array($route['after']) && count($route['after'])) {
+                    $response = self::_middleware($route['after'], $request, $response, $matches);
+                }
+
+                // Clean middleware
+                if (count(self::$_clean)) {
+                    $response = self::_middleware(self::$_clean, $request, $response, $matches);
+                }
+                
+                return $response;
             }
         }
         
