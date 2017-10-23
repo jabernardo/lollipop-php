@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Route Class
  *
- * @version     3.0.0-RC1
+ * @version     3.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -543,7 +543,7 @@ class Route
      *
      * @access  private
      * @param   mixed   $callback   (string or callable) string must be {abc}.{abc} format to use controller action
-     * @oaram   array   $args       Parameters to be passed to callback
+     * @param   array   $args       Parameters to be passed to callback
      * @return  mixed
      *
      */
@@ -559,7 +559,7 @@ class Route
             // Explode it by (dot) to determine the Controller and Action
             $ctoks = explode('.', $callback);
             
-            $output = null;
+            $output = '';
             
             switch (count($ctoks)) {
                 case 1: // Function only
@@ -627,11 +627,11 @@ class Route
                 // Request object for 404 pages
                 $request = new Request();
                 
-                // Check if Response object was carrying empty value
+                // Check if active route is not set
                 // and `page_not_found.show` configuration was `true`
-                if (!$response->get(true) &&
+                if (empty(self::getActiveRoute()) &&
                     spareNan(Config::get('page_not_found.show'), true)) {
-                        // Get 404 page from _checkNotFound function
+                    // Get 404 page from _checkNotFound function
                     $response = self::_checkNotFound($request, $response);
                 }
                 
@@ -682,6 +682,7 @@ class Route
         // Check if 404 pages are re-routed
         // via configuration
         if ($page_route = Config::get('page_not_found.route')) {
+            // Get route information in stored routes
             $route_info = fuse(self::$_stored_routes[$page_route], array());
             
             // Before middlewares
