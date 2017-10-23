@@ -18,7 +18,7 @@ use \Lollipop\Cookie;
 /**
  * Lollipop Route Class
  *
- * @version     1.0.1
+ * @version     1.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -137,7 +137,7 @@ class Response
      * 
      */
     public function cookies(array $data) {
-        $this->_cookies = array_merge($this->_cookies, $data);
+        $this->_cookies = array_merge_recursive($this->_cookies, $data);
         
         return  $this;
     }
