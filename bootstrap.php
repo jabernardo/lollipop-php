@@ -55,7 +55,7 @@ function spare($value, $spare) {
  * @return  mixed
  * 
  */
-function spareNan($value, $spare) {
+function spare_nan($value, $spare) {
     return !is_null($value) ? $value : $spare;
 }
 

@@ -630,7 +630,7 @@ class Route
                 // Check if active route is not set
                 // and `page_not_found.show` configuration was `true`
                 if (empty(self::getActiveRoute()) &&
-                    spareNan(Config::get('page_not_found.show'), true)) {
+                    spare_nan(Config::get('page_not_found.show'), true)) {
                     // Get 404 page from _checkNotFound function
                     $response = self::_checkNotFound($request, $response);
                 }
