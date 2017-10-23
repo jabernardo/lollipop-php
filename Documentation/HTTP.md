@@ -115,6 +115,38 @@ Route::serve([
     }
 ]);
 
+// Before and After Middlewares
+Route::serve([
+    'path' => 'sample',
+    'method' => ['GET', 'POST'],
+    'callback' => function($req, $res) {
+        $new_content = $res->get(true) . 'This is a sample';
+        return $res->set($new_content);
+    },
+    'before' => [
+        'TestMiddleware'
+    ],
+    'after' => [
+        function($req, $res) {
+            $new_content = $res->get(true) . ':AFTER';
+            
+            return $res->set($new_content);
+        }
+    ],
+]);
+
+class TestMiddleware
+{
+    function handle ($req, $res) {
+        $new_content = 'BEFORE:' . $res->get(true);
+        
+        return $res->set($new_content);
+    }
+}
+
+// outputs:
+// BEFORE:HelloThis is a sample:AFTER
+
 ```
 
 ### Parameters
