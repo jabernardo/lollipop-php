@@ -39,7 +39,7 @@ require('/path/to/lollipop-php/autoload.php');
 // require('./vendor/autoload.php');
 
 // Your index page
-\Lollipop\HTTP\Route::get('/', function($reqest, $response) {
+\Lollipop\HTTP\Route::get('/', function($request, $response) {
     return $response->set('Hello World!');
 }, true);
 

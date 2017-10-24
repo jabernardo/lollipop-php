@@ -624,15 +624,12 @@ class Route
                 // Get response data from Dispatcher
                 $response = self::_dispatch();
                 
-                // Request object for 404 pages
-                $request = new Request();
-                
                 // Check if active route is not set
                 // and `page_not_found.show` configuration was `true`
                 if (empty(self::getActiveRoute()) &&
                     spare_nan(Config::get('page_not_found.show'), true)) {
                     // Get 404 page from _checkNotFound function
-                    $response = self::_checkNotFound($request, $response);
+                    $response = self::_checkNotFound();
                 }
                 
                 // Render output from our application
@@ -651,12 +648,11 @@ class Route
     /**
      * Check if any of routes doesn't match
      *
-     * @param   \Lollipop\HTTP\Request  $req    Request object
-     * @param   \Lollipop\HTTP\Response $res    Response object
+     * @access  private
      * @return  \Lollipop\HTTP\Response
      *
      */
-    static private function _checkNotFound(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
+    static private function _checkNotFound() {
         // Create a default 404 page
         $pagenotfound = '<!DOCTYPE html>'
                 . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
@@ -673,10 +669,12 @@ class Route
         $response = new Response($pagenotfound);
         // Set header for 404
         $response->header('HTTP/1.0 404 Not Found');
+        // Request object
+        $request = new Request();
         
         // Prepare middleware
         if (count(self::$_prepare)) {
-            $response = self::_middleware(self::$_prepare, $req, $res);
+            $response = self::_middleware(self::$_prepare, $request, $response);
         }
         
         // Check if 404 pages are re-routed
@@ -687,11 +685,11 @@ class Route
             
             // Before middlewares
             if (isset($route_info['before'])) {
-                $response = self::_middleware($route_info['before'], $req, $res);
+                $response = self::_middleware($route_info['before'], $request, $response);
             }
             
             // Forwarding 404 Pages
-            $data = self::forward(Config::get('page_not_found.route'), $req, $res);
+            $data = self::forward(Config::get('page_not_found.route'), $request, $response);
             
             if ($data instanceof Response) {
                 $response = $data;
@@ -701,13 +699,13 @@ class Route
             
             // After middlewares
             if (isset($route_info['after'])) {
-                $response = self::_middleware($route_info['after'], $req, $res);
+                $response = self::_middleware($route_info['after'], $request, $response);
             }
         }
         
         // Clean middleware
         if (count(self::$_clean)) {
-            $response = self::_middleware(self::$_clean, $req, $res);
+            $response = self::_middleware(self::$_clean, $request, $response);
         }
         
         // Execute
