@@ -102,7 +102,7 @@ function lollipop_error_handler($errno, $errstr, $errfile, $errline) {
  * 
  */
 function lollipop_exception_handler($ex) {
-    \Lollipop\Log::error($ex->getMessage());
+    \Lollipop\Log::error('Exception received with message "' . $ex->getMessage() . '" on ' . $ex->getFile() . ':' . $ex->getLine());
 }
 
 /**
