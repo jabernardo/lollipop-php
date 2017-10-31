@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.0.1
+ * @version     1.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -47,7 +47,7 @@ class AntiCsrf
         Cookie::set($acsrf_name, CsrfToken::get(), '/', $expiration);
         
         if (!$req->isMethod('get') && $acsrf_enable) {
-            if (!$req->get($acsrf_name) || !CsrfToken::isValid($req->get($acsrf_name))) {
+            if (!CsrfToken::isValid($req->header($acsrf_name)) && !CsrfToken::isValid($req->get($acsrf_name))) {
                 $output = '<!DOCTYPE html>'
                         . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
                         . '<html>'
