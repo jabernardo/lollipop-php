@@ -36,6 +36,10 @@ class Cache
         $driver = spare(Config::get('cache.driver'), 'file');
         
         switch (strtolower($driver)) {
+            case 'memcached':
+                self::$_driver = new \Lollipop\Cache\Memcached();
+                break;
+                
             case 'file':
             default:
                 self::$_driver = new \Lollipop\Cache\File();
