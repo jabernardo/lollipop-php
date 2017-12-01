@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Cache File Library
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -54,7 +54,7 @@ class File
      * 
      */
     private function _encrypt($key) {
-        return sha1($key);
+        return sha1(sha1($key) . Config::get('sugar', SUGAR));
     }
     
     /**

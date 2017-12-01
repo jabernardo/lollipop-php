@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Cache Memcached Library
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -44,7 +44,7 @@ class Memcached
         $this->_memcached->addServers($servers);
         
         // Test connection
-        if (!$this->save('sugar_' . rand(), SUGAR)) {
+        if (!$this->save('sugar_' . rand(), Config::get('sugar', SUGAR))) {
             Log::error('Memcached connection failed.', true);
         }
     }
@@ -57,7 +57,7 @@ class Memcached
      * 
      */
     private function _encrypt($key) {
-        return sha1($key);
+        return sha1(sha1($key) . Config::get('sugar', SUGAR));
     }
     
     /**

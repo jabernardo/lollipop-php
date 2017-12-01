@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Caching Library
  *
- * @version     4.2.0
+ * @version     4.2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -33,7 +33,7 @@ class Cache
     static private function getDriver() {
         if (self::$_driver != null) return self::$_driver;
         
-        $driver = spare(Config::get('cache.driver'), 'file');
+        $driver = Config::get('cache.driver', 'file');
         
         switch (strtolower($driver)) {
             case 'memcached':
