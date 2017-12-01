@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Lollipop Config Class
  *
- * @version     2.3
+ * @version     2.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -76,11 +76,12 @@ class Config
      * Get configuration
      * 
      * @access  public
-     * @param   string  $key    Configuration key
+     * @param   mixed   $key    Configuration key
+     * @param   mixed   $key    Default value for key
      * @return  mixed
      * 
      */
-    static public function get($key = null) {
+    static public function get($key = null, $default = null) {
         if (is_null($key)) return json_decode(json_encode(self::$_config));
         
         $toks = explode('.', $key);
@@ -90,7 +91,9 @@ class Config
             $addr = &$addr[$toks[$i]];
         }
         
-        return is_array($addr) || is_object($addr) ? json_decode(json_encode($addr)) : $addr;
+        return is_array($addr) || is_object($addr)
+                    ? json_decode(json_encode($addr))
+                    : (is_null($addr) && !is_null($default) ? $default : $addr) ;
     }
 
     /**

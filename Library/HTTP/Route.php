@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Route Class
  *
- * @version     3.0.0
+ * @version     3.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -627,7 +627,7 @@ class Route
                 // Check if active route is not set
                 // and `page_not_found.show` configuration was `true`
                 if (empty(self::getActiveRoute()) &&
-                    spare_nan(Config::get('page_not_found.show'), true)) {
+                    Config::get('page_not_found.show', true)) {
                     // Get 404 page from _checkNotFound function
                     $response = self::_checkNotFound();
                 }

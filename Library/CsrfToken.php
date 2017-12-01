@@ -10,7 +10,7 @@ use \Lollipop\Text;
 /**
  * Csrf Token Class
  *
- * @version     1.2.4
+ * @version     1.2.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -38,7 +38,7 @@ class CsrfToken
      * 
      */
     public static function getKey() {
-        return spare(Config::get('anti_csrf.key'), SUGAR);
+        return Config::get('anti_csrf.key', SUGAR);
     }
     
     /**
@@ -49,7 +49,7 @@ class CsrfToken
      * 
      */
     public static function getName() {
-        return spare(Config::get('anti_csrf.name'), 'sugar');
+        return Config::get('anti_csrf.name', 'sugar');
     }
     
     /**
@@ -75,7 +75,7 @@ class CsrfToken
      */
     public static function isValid($token) {
         // Get configuration
-        $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
+        $expiration = Config::get('anti_csrf.expiration', 18000);
         // Compute for token availablity
         $computed = microtime(true) - (double)Text::unlock($token, self::getKey());
         

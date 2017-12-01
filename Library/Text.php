@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Text Class 
  *
- * @version     2.2
+ * @version     2.2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -26,7 +26,7 @@ class Text
      * 
      */
     private static function _getSecMethod() {
-        return spare(Config::get('text.security.method'), 'AES256');
+        return Config::get('text.security.method', 'AES256');
     }
     
     /**
@@ -37,7 +37,7 @@ class Text
      * 
      */
     private static function _geteSecKey() {
-        return md5(spare(Config::get('text.security.key'), SUGAR));
+        return md5(Config::get('text.security.key', SUGAR));
     }
     
     /**
@@ -48,7 +48,7 @@ class Text
      * 
      */
     private static function _getSecIv() {
-        return spare(Config::get('text.security.iv'), substr(md5(SUGAR), 0, 16));
+        return Config::get('text.security.iv', substr(md5(SUGAR), 0, 16));
     }
     
     /**

@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.0.2
+ * @version     1.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -39,9 +39,9 @@ class AntiCsrf
      * 
      */
     public function handle(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
-        $acsrf_enable = spare(Config::get('anti_csrf.enable'), true);
+        $acsrf_enable = Config::get('anti_csrf.enable', true);
         $acsrf_name = CsrfToken::getName();
-        $expiration = spare(Config::get('anti_csrf.expiration'), 18000);
+        $expiration = Config::get('anti_csrf.expiration', 18000);
         
         // Create a cookie for front end use
         Cookie::set($acsrf_name, CsrfToken::get(), '/', $expiration);

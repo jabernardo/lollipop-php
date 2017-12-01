@@ -10,7 +10,7 @@ use \Lollipop\Text;
 /**
  * Session Class 
  *
- * @version     1.2.1
+ * @version     1.2.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -66,7 +66,7 @@ class Session
      * 
      */
     static function key() {
-        return md5(spare(Config::get('sugar'), Text::lock(SUGAR)));
+        return md5(Config::get('sugar', Text::lock(SUGAR)));
     }
 
     /**

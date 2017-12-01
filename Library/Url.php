@@ -18,7 +18,7 @@ use \Lollipop\Config;
 /**
  * Url Class
  *
- * @version     1.5.4
+ * @version     1.5.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -37,7 +37,7 @@ class Url
      * 
      */
     static function base($url = '', $cacheBuster = false) {
-        $cacheb = $cacheBuster ? ('?' . (spare(Config::get('app.version'), '1.0.0'))) : ''; 
+        $cacheb = $cacheBuster ? ('?' . (Config::get('app.version', '1.0.0'))) : ''; 
         $servern = $_SERVER['SERVER_NAME']; 
         $serverp = $_SERVER['SERVER_PORT'];
         $server = $serverp == '8080' || $serverp == '80' || $serverp == '443' ? $servern : "$servern:$serverp";
