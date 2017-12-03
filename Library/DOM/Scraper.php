@@ -9,7 +9,7 @@ use \Lollipop\Log;
 /**
  * Web Scraper Class
  * 
- * @version     1.1.1
+ * @version     1.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -113,7 +113,7 @@ class Scraper
     public function getContentsByAttr($attr, $attr_value) {
         $nodes = $this->_dom_x_path->query("//*[contains(@{$attr}, '{$attr_value}')]");
         
-        $contents = array();
+        $contents = [];
         
         foreach ($nodes as $node) {
             array_push($contents, $node->nodeValue);
@@ -135,7 +135,7 @@ class Scraper
     public function getContentsByElem($elem) {
         $nodes = $this->_dom_x_path->query("//$elem");
         
-        $contents = array();
+        $contents = [];
         
         foreach ($nodes as $node) {
             array_push($contents, $node->nodeValue);
@@ -159,7 +159,7 @@ class Scraper
     public function getAttrByAttr($attr, $attr_value, $attr_to_get) {
         $nodes = $this->_dom_x_path->query("//*[contains(@{$attr}, '{$attr_value}')]");
         
-        $contents = array();
+        $contents = [];
         
         foreach ($nodes as $node) {
             array_push($contents, $node->getAttribute($attr_to_get));
@@ -194,12 +194,12 @@ class Scraper
     public function getAttrByElem($element) {
         $nodes = $this->_dom_x_path->query("//{$element}");
         
-        $contents = array();
-        $attrs = array();
+        $contents = [];
+        $attrs = [];
         
         foreach ($nodes as $node) {
             
-            $attrs = array();
+            $attrs = [];
             
             foreach ($node->attributes as $attr) {
                 $attrs["{$attr->nodeName}"] = $attr->nodeValue;
@@ -240,12 +240,12 @@ class Scraper
     public function getAttrByElemWithAttr($element, $attr, $attr_value) {
         $nodes = $this->_dom_x_path->query("//{$element}[contains(@{$attr}, '{$attr_value}')]");
         
-        $contents = array();
-        $attrs = array();
+        $contents = [];
+        $attrs = [];
         
         foreach ($nodes as $node) {
             
-            $attrs = array();
+            $attrs = [];
             
             foreach ($node->attributes as $attr) {
                 $attrs["{$attr->nodeName}"] = $attr->nodeValue;

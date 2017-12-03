@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * HTML Tags Class
  * 
- * @version     2.0.2
+ * @version     2.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -35,7 +35,7 @@ class Tag
      * @var array   Attributes to tag
      * 
      */
-    private $_attrs = array();
+    private $_attrs = [];
     
     /**
      * @var string  Tag contents
@@ -73,7 +73,7 @@ class Tag
      */
     public function add($key, $val) {
         if (!isset($this->_attrs[$key])) {
-            $this->_attrs[$key] = array();
+            $this->_attrs[$key] = [];
         }
         
         if (!strcasecmp($key, 'id')) {

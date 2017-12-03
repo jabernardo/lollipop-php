@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Log Class
  * 
- * @version     2.1.3
+ * @version     2.1.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -23,12 +23,12 @@ class Log
      * @type    array   Messages
      * 
      */
-    private static $_messages = array(
-                    'info' => array(),
-                    'warn' => array(),
-                    'error' => array(),
-                    'notice' => array()
-                );
+    private static $_messages = [
+            'info' => [],
+            'warn' => [],
+            'error' => [],
+            'notice' => []
+        ];
     
     /**
      * Append to log file
@@ -120,7 +120,7 @@ class Log
      * 
      */
     public static function get($type = null) {
-        return is_null($type) ? self::$_messages : (isset(self::$_messages[$type]) ? self::$_messages[$type] : array());
+        return is_null($type) ? self::$_messages : (isset(self::$_messages[$type]) ? self::$_messages[$type] : []);
     }
 }
 

@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Route Class
  *
- * @version     3.0.1
+ * @version     3.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -58,7 +58,7 @@ class Route
      * @var     array   Stored callbacks
      *
      */
-    static private $_stored_routes = array();
+    static private $_stored_routes = [];
 
     /**
      * @var    bool     Is route forwarded?
@@ -70,19 +70,19 @@ class Route
      * @var mixed   Prepare callback
      * 
      */
-    static private $_prepare = array();
+    static private $_prepare = [];
 
     /**
      * @var mixed   Clean callback
      * 
      */
-    static private $_clean = array();
+    static private $_clean = [];
 
     /**
      * @var array   Active route
      * 
      */
-    static private $_active_route = array();
+    static private $_active_route = [];
 
     /**
      * GET route
@@ -96,15 +96,13 @@ class Route
      *
      */
     static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => 'GET',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => 'GET',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -119,15 +117,13 @@ class Route
      *
      */
     static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => 'POST',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => 'POST',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -142,15 +138,13 @@ class Route
      *
      */
     static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => 'PUT',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => 'PUT',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -165,15 +159,13 @@ class Route
      *
      */
     static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => 'DELETE',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => 'DELETE',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -188,15 +180,13 @@ class Route
      *
      */
     static public function patch($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => 'PATCH',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => 'PATCH',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -211,15 +201,13 @@ class Route
      *
      */
     static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
-        self::serve(
-            array(
-                'path' => $path,
-                'method' => '',
-                'callback' => $callback,
-                'cachable' => $cachable,
-                'cache_time' => $cache_time
-            )
-        );
+        self::serve([
+            'path' => $path,
+            'method' => '',
+            'callback' => $callback,
+            'cachable' => $cachable,
+            'cache_time' => $cache_time
+        ]);
     }
 
     /**
@@ -241,22 +229,22 @@ class Route
      */
     static public function serve($route) {
         // Default middlewares before
-        $middlewares_before = array(
+        $middlewares_before = [
                     '\\Lollipop\\HTTP\\Middleware\\AntiCsrf'
-                );
+                ];
         
         // Default path to '/'
         $path = fuse($route['path'], '');
         
         // Store route
-        self::$_stored_routes[$path] = array(
+        self::$_stored_routes[$path] = [
             'method' => fuse($route['method'], ''),
             'callback' => fuse($route['callback'], function() {}),
             'cachable' => fuse($route['cachable'], false),
             'cache_time' => fuse($route['cache_time'], 1440),
             'before' => fuse($route['before'], $middlewares_before),
-            'after' => fuse($route['after'], array())
-        );
+            'after' => fuse($route['after'], [])
+        ];
 
         // Register dispatcher once this function was called
         self::_registerDispatch();
@@ -272,7 +260,7 @@ class Route
      * @param   array                   $params Arguments
      *
      */
-    static public function forward($path, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $params = array()) {
+    static public function forward($path, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $params = []) {
         self::$_is_forwarded = true;
         
         // Check if landing route is declared
@@ -304,7 +292,7 @@ class Route
         if (is_callable($callback)) {
             // Middle wares only accepts array
             // so we'll set prepare function to be in array format
-            self::$_prepare = array($callback); 
+            self::$_prepare = [ $callback ]; 
             
             return true;
         }
@@ -324,7 +312,7 @@ class Route
      */
     static public function clean($callback) {
         if (is_callable($callback)) {
-            self::$_clean = array($callback); 
+            self::$_clean = [ $callback ]; 
         }
     }
     
@@ -367,7 +355,7 @@ class Route
             // Cache time
             $cache_time = fuse($route['cache_time'], 1440);
             // Translate regular expressions
-            $translated_path = str_replace(array('(%s)', '(%d)', '(%%)', '/'), array('(\w+)', '(\d+)', '(.*)', '\/'), trim($path, '/'));
+            $translated_path = str_replace([ '(%s)', '(%d)', '(%%)', '/' ], [ '(\w+)', '(\d+)', '(.*)', '\/' ], trim($path, '/'));
             // Request URL
             $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
             // Active script or running script (this is when no redirection is being done in .htaccess)
@@ -413,7 +401,7 @@ class Route
                 }
                 
                 // Set route as active
-                self::$_active_route = array($path => $route);
+                self::$_active_route = [ $path => $route ];
 
                 // Create a new response
                 $response = new Response();
@@ -497,7 +485,7 @@ class Route
      * @return  \Lollipop\HTTP\Response
      * 
      */
-    static private function _middleware(array $middlewares, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = array()) {
+    static private function _middleware(array $middlewares, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {
         ob_start();
 
         // Create a new response onject
@@ -515,11 +503,11 @@ class Route
             if (is_callable($middleware)) {
                 // For middlewares declared using anonymous functions
                 $res = call_user_func_array($middleware, $mod_args);
-            } else if (is_callable(array($middler = new $middleware(), 'handle'))) {
+            } else if (is_callable([ $middler = new $middleware(), 'handle' ])) {
                 // Middlewares that uses class
                 // make sure middleware class has `handle` function
                 // this is the entry point for all middlewares
-                $res = call_user_func_array(array($middler, 'handle'), $mod_args);
+                $res = call_user_func_array([ $middler, 'handle' ], $mod_args);
             }
         }
         
@@ -547,7 +535,7 @@ class Route
      * @return  mixed
      *
      */
-    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = array()) {
+    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {
         // Add request and response object
         // to parameters the callback will take
         // first parameter should be Request followed by Response
@@ -574,10 +562,10 @@ class Route
                     break;
                 case 2: // Controller and Action
                     if (class_exists($ctoks[0]) &&
-                        is_callable(array($controller = new $ctoks[0], $action = $ctoks[1]))) {
+                        is_callable([ $controller = new $ctoks[0], $action = $ctoks[1] ])) {
                         
                         ob_start();
-                        $output = call_user_func_array(array($controller, $action), $args);
+                        $output = call_user_func_array([ $controller, $action ], $args);
                         ob_get_clean();
                     } else {
                         Log::error('Can\'t find controller and action', true);
@@ -681,7 +669,7 @@ class Route
         // via configuration
         if ($page_route = Config::get('page_not_found.route')) {
             // Get route information in stored routes
-            $route_info = fuse(self::$_stored_routes[$page_route], array());
+            $route_info = fuse(self::$_stored_routes[$page_route], []);
             
             // Before middlewares
             if (isset($route_info['before'])) {

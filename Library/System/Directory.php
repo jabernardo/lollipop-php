@@ -9,7 +9,7 @@ use \Lollipop\Number;
 /**
  * System\Directory Class
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -39,7 +39,7 @@ class Directory
     static function contents($directory) {
         if (!self::exists($directory)) return null;
 
-        $dircontents = array();
+        $dircontents = [];
 
         $contents = scandir($directory);
 

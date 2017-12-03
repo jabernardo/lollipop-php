@@ -11,7 +11,7 @@ use \Lollipop\Text;
 /**
  * Page Class 
  *
- * @version     1.3.6
+ * @version     1.3.7
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -28,7 +28,7 @@ class Page
      *
      * @return  string
      */
-    static function render($view, array $data = array()) {
+    static function render($view, array $data = []) {
         if (file_exists($view)) {
             if (is_array($data)) {
                 foreach ($data as $_data => $_value) {

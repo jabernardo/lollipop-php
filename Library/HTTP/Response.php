@@ -18,7 +18,7 @@ use \Lollipop\Cookie;
 /**
  * Lollipop Route Class
  *
- * @version     1.0.2
+ * @version     1.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -30,13 +30,13 @@ class Response
      * @var     array   HTTP Headers
      * 
      */
-    private $_headers = array();
+    private $_headers = [];
     
     /**
      * @var     array   Response cookies
      * 
      */
-    private $_cookies = array();
+    private $_cookies = [];
     
     /**
      * @var     string  Response data

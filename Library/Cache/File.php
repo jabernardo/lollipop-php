@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Cache File Library
  *
- * @version     1.0.1
+ * @version     1.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -111,11 +111,11 @@ class File
 
         if (!$cache_exists || $force) {
             // Build data into a array
-            $data = array(
+            $data = [
                 'date_created' => time(),
                 'ttl' => $ttl,
                 'data' => $data
-            );
+            ];
             
             file_put_contents($this->_storage_path . $this->_encrypt($key), base64_encode(serialize($data)));
             

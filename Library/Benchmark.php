@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Benchmark Class
  *
- * @version     1.1.1
+ * @version     1.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -19,7 +19,7 @@ class Benchmark
      * @var     array   $_marks     Recorded microtimes
      *
      */
-    static private $_marks = array();
+    static private $_marks = [];
 
     /**
      * Record benchmark
@@ -28,10 +28,10 @@ class Benchmark
      *
      */
     static public function mark($mark) {
-        self::$_marks[$mark] = array(
+        self::$_marks[$mark] = [
                 'time' => microtime(true),
                 'memory_usage' => memory_get_peak_usage(true)
-            );
+            ];
     }
     
     /**
@@ -44,11 +44,11 @@ class Benchmark
      *
      */
     static public function elapsed($start, $end) {
-        return array(
+        return [
                 'time_elapsed' => self::elapsedTime($start, $end),
                 'memory_usage_gap' => self::elapsedMemory($start, $end),
                 'real_memory_usage' => self::elapsedMemory($start, $end, true)
-            );
+            ];
     }
     
     /**

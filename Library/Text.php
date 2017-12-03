@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Text Class 
  *
- * @version     2.2.1
+ * @version     2.2.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -137,7 +137,7 @@ class Text
      * @return  array
      */
     static function split($string, $token) {
-        $array = array();
+        $array = [];
         
         $tok = strtok($string, $token);
         

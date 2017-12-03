@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Inflector Class
  *
- * @version     1.1.1
+ * @version     1.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -45,7 +45,7 @@ class Inflector
      * @return 	string
      */
     static function filename($str) {
-        return strtolower(str_replace(array(' ', '\\', '/', ':', '*', '?', '<', '>', '|'), '_', $str));
+        return strtolower(str_replace([ ' ', '\\', '/', ':', '*', '?', '<', '>', '|' ], '_', $str));
     }
 
     /**

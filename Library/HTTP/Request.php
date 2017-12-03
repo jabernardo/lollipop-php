@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Request Class 
  *
- * @version     1.4.1
+ * @version     1.4.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -36,7 +36,7 @@ class Request
      * @var     array   Centralized session requests
      * 
      */
-    private $_all_requests = array();
+    private $_all_requests = [];
     
     /**
      * Check for request(s)
@@ -55,7 +55,7 @@ class Request
         $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
-            $returns = array();
+            $returns = [];
             
             foreach ($requests as $request) {
                 array_push($returns, isset($this->_all_requests[$request]));
@@ -94,7 +94,7 @@ class Request
      * 
      */
     function get($requests = null) {
-        $var = array();
+        $var = [];
         
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
@@ -213,7 +213,7 @@ class Request
         
         curl_setopt($c, CURLOPT_URL, $url);
         // Set empty headers as default: CURLOPT_HTTPHEADER
-        curl_setopt($c, CURLOPT_HTTPHEADER, fuse($options['headers'], array()));
+        curl_setopt($c, CURLOPT_HTTPHEADER, fuse($options['headers'], []));
         // Allow returning of headers
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         // Set timeout 0 as default: CURLOPT_TIMEOUT
@@ -249,7 +249,7 @@ class Request
         if (isset($options['parameters'])) {
             // POST parameters
             curl_setopt($c, CURLOPT_POST, true);
-            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query(fuse($options['parameters'], array())));
+            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query(fuse($options['parameters'], [])));
         }
         
         // Get response time
@@ -286,13 +286,13 @@ class Request
         
         if (isset($options['profile']) && $options['profile']) {
             // Profiled response
-            $return = array(
+            $return = [
                     'url' => $url,
-                    'headers' => fuse($options['headers'], array()),
+                    'headers' => fuse($options['headers'], []),
                     'time' => Benchmark::elapsedTime('curl_start', 'curl_stop'),
                     'status' => $response_status,
                     'payload' => $return,
-                );
+                ];
             
             if ($request_cache) {
                 $return['cache'] = true;

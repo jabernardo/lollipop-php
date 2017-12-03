@@ -11,8 +11,8 @@ use \Lollipop\Log;
 /**
  * Database Driver for MySQLi
  *
- * @package     Candy
- * @version     2.8.3
+ * @package     Lollipop
+ * @version     2.8.4
  * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
@@ -50,7 +50,7 @@ class Database
      * @type array
      * 
      */
-    private $_updates = array();
+    private $_updates = [];
     
     /**
      * Fields selected
@@ -72,7 +72,7 @@ class Database
      * @type array
      * 
      */
-    private $_where = array();
+    private $_where = [];
     
     /**
      * Or statements
@@ -80,7 +80,7 @@ class Database
      * @type array
      * 
      */
-    private $_or = array();
+    private $_or = [];
     
     /**
      * Select distinct only
@@ -95,7 +95,7 @@ class Database
      * @type array
      * 
      */
-    private $_joins = array();
+    private $_joins = [];
     
     /**
      * Unions
@@ -103,7 +103,7 @@ class Database
      * @type array
      * 
      */
-    private $_union = array();
+    private $_union = [];
     
     /**
      * Union All
@@ -111,7 +111,7 @@ class Database
      * @type array
      * 
      */
-    private $_union_all = array();
+    private $_union_all = [];
     
     /**
      * Group by
@@ -151,7 +151,7 @@ class Database
      * @type array
      * 
      */
-    private static $_last_commands = array();
+    private static $_last_commands = [];
     
     
     /**
@@ -340,8 +340,8 @@ class Database
     public function insert($fields) {
         // Create temporary variables for 
         // tokenized parameter
-        $_tmp_fields = array();
-        $_tmp_values = array();
+        $_tmp_fields = [];
+        $_tmp_values = [];
         
         if (is_array($fields)) {
             foreach ($fields as $key => $value) {
@@ -519,7 +519,7 @@ class Database
      */
     public function sum($field) {
         // Temporary key sum strings
-        $_tmp_sum = array();
+        $_tmp_sum = [];
         
         if (is_array($field)) {
             foreach($field as $key => $value) {
@@ -584,7 +584,7 @@ class Database
      */
     public function count($field) {
         // Temporary key sum strings
-        $_tmp_sum = array();
+        $_tmp_sum = [];
         
         if (is_array($field)) {
             foreach($field as $key => $value) {
@@ -625,7 +625,7 @@ class Database
      */
     public function max($field) {
         // Temporary key sum strings
-        $_tmp_sum = array();
+        $_tmp_sum = [];
         
         if (is_array($field)) {
             foreach($field as $key => $value) {
@@ -957,7 +957,7 @@ class Database
             array_push(self::$_last_commands, $this->_sql_query);
         
             // Return contents
-            $results = array();
+            $results = [];
             
             if (is_object($return) && isset($return->num_rows)) {
                 while ($row = $return->fetch_array()) {
