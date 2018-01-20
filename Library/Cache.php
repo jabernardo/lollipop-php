@@ -5,12 +5,11 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
-use \Lollipop\Log;
 
 /**
  * Lollipop Caching Library
  *
- * @version     4.2.1
+ * @version     4.2.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
