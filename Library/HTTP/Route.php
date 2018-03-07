@@ -67,22 +67,12 @@ class Route
     static private $_is_forwarded = false;
 
     /**
-     * @var mixed   Prepare callback
-     * 
-     */
-    static private $_prepare = [];
-
-    /**
-     * @var mixed   Clean callback
-     * 
-     */
-    static private $_clean = [];
-
-    /**
      * @var array   Active route
      * 
      */
     static private $_active_route = [];
+
+    static private $_kernel = null;
 
     /**
      * GET route
@@ -101,7 +91,9 @@ class Route
             'method' => ['GET'],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -122,7 +114,9 @@ class Route
             'method' => ['POST'],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -143,7 +137,9 @@ class Route
             'method' => ['PUT'],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -164,7 +160,9 @@ class Route
             'method' => ['DELETE'],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -185,7 +183,9 @@ class Route
             'method' => ['PATCH'],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -206,7 +206,9 @@ class Route
             'method' => [],
             'callback' => $callback,
             'cachable' => $cachable,
-            'cache_time' => $cache_time
+            'cache_time' => $cache_time,
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ]);
     }
 
@@ -243,8 +245,8 @@ class Route
             'callback' => fuse($route['callback'], function() {}),
             'cachable' => fuse($route['cachable'], false),
             'cache_time' => fuse($route['cache_time'], 1440),
-            'before' => fuse($route['before'], $middlewares_before),
-            'after' => fuse($route['after'], [])
+            'arguments' => [],
+            'middlewares' => fuse($route['middlewares'], [])
         ];
 
         // Register dispatcher once this function was called
@@ -335,31 +337,26 @@ class Route
 
             if ($rest_test && $parser->test($path)) {
                 $matches = $parser->getMatches();
-                // Cache key
-                $cache_key = $path;
+                
+                $route['arguments'] = $matches;
 
-                if ($matches) {
-                    // Make sure cache keys are unique by using parameters
-                    // sent to it
-                    $cache_key .= '|' . implode(',', $matches);
-                }
-                
-                // If page is not cacheable make sure to remove existing keys
-                if (!$cachable) {
-                    Cache::remove($cache_key);
-                }
-                
                 // Set route as active
-                self::$_active_route = [ $path => $route ];
+                self::$_active_route = $route;
 
                 // Create a new response
                 $response = new Response();
                 // New request object
                 $request = new Request();
+                
+                if (isset($route['middlewares']) && is_array($route['middlewares'])) {
+                    foreach ($route['middlewares'] as $mw) {
+                        self::addMiddleware($mw);
+                    }
+                }
 
                 // Now call the main callback
-                $response = self::_callback($callback, $request, $response, $matches);
-                
+                $response = self::process($request, $response, $matches);
+
                 // Forwarded header
                 if (self::$_is_forwarded) {
                     $response->header('lollipop-forwarded: true');
@@ -484,6 +481,55 @@ class Route
             // Mark as dispatched
             self::$_dispatch_registered = true;
         }
+    }
+
+    static public function process(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
+        if (is_null(self::$_kernel)) {
+            $active = self::$_active_route;
+            $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
+                return self::_callback($active['callback'], $req, $res, $active['arguments']);
+            };
+            self::$_kernel = $top;
+        }
+        
+        // Create a new address for the top callable
+        $start = self::$_kernel;
+        
+        // Start dequeue
+        //$this->_busy = true;
+        $new_response = $start($req, $res);
+        //$this->_busy = false;
+        
+        // Just want to make sure that processed response from middlewares
+        // are instance of \Calf\HTTP\Response
+        if ($new_response instanceof \Lollipop\HTTP\Response) {
+            $res = $new_response;
+        } else {
+            $res->set($new_response);
+        }
+
+        return $res;
+    }
+
+    static public function addMiddleware(Callable $callback) {
+        if (is_null(self::$_kernel)) {
+            $active = self::$_active_route;
+            $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
+                return self::_callback($active['callback'], $req, $res, $active['arguments']);
+            };
+            self::$_kernel = $top;
+        }
+
+        $next = self::$_kernel;
+
+        // The update the top function
+        self::$_kernel = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($callback, $next) {
+            // Pass the last function
+            $res = call_user_func($callback, $req, $res, $next);
+            
+            // Return the new result
+            return $res;
+        };
     }
 
     /**
