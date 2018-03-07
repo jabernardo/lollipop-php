@@ -98,7 +98,7 @@ class Route
     static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => 'GET',
+            'method' => ['GET'],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -119,7 +119,7 @@ class Route
     static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => 'POST',
+            'method' => ['POST'],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -140,7 +140,7 @@ class Route
     static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => 'PUT',
+            'method' => ['PUT'],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -161,7 +161,7 @@ class Route
     static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => 'DELETE',
+            'method' => ['DELETE'],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -182,7 +182,7 @@ class Route
     static public function patch($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => 'PATCH',
+            'method' => ['PATCH'],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -203,7 +203,7 @@ class Route
     static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
         self::serve([
             'path' => $path,
-            'method' => '',
+            'method' => [],
             'callback' => $callback,
             'cachable' => $cachable,
             'cache_time' => $cache_time
@@ -235,10 +235,11 @@ class Route
         
         // Default path to '/'
         $path = fuse($route['path'], '');
-        
+        $path = trim($path, '/');
+
         // Store route
         self::$_stored_routes[$path] = [
-            'method' => fuse($route['method'], ''),
+            'method' => fuse($route['method'], []),
             'callback' => fuse($route['callback'], function() {}),
             'cachable' => fuse($route['cachable'], false),
             'cache_time' => fuse($route['cache_time'], 1440),
@@ -347,6 +348,9 @@ class Route
      *
      */
     static private function _dispatch() {
+        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $parser = new \Lollipop\HTTP\URL\Parser($url);
+
         foreach (self::$_stored_routes as $path => $route) {
             // Callback for route
             $callback = fuse($route['callback'], function(){});
@@ -354,40 +358,23 @@ class Route
             $cachable = fuse($route['cachable'], false);
             // Cache time
             $cache_time = fuse($route['cache_time'], 1440);
-            // Translate regular expressions
-            $translated_path = str_replace([ '(%s)', '(%d)', '(%%)', '/' ], [ '(\w+)', '(\d+)', '(.*)', '\/' ], trim($path, '/'));
-            // Request URL
-            $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-            // Active script or running script (this is when no redirection is being done in .htaccess)
-            $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($translated_path ? '/' : ''));
-
-            // Check regex if matching our current path
-            $is_match = preg_match('/^' . $translated_path . '$/i', $url, $matches) ||
-                        preg_match('/^' . $as . $translated_path . '$/i', $url, $matches);
-
-            // Check if request method matches
-            if (isset($route['method'])) {
-                $_rm = $route['method'];
-                
-                if (is_array($_rm)) {
-                    // Make sure all request methods are in uppercase
-                    $_rm = array_map('strtoupper', $_rm);
-                }
-                
-                // Check if current request method matches our applications
-                // preferred request method
-                if ((is_array($_rm) && !in_array($_SERVER['REQUEST_METHOD'], $_rm)) ||
-                    (is_string($_rm) && $_rm !== $_SERVER['REQUEST_METHOD'] && $_rm !== '')) {
-                    $is_match = false;
-                }
+        
+            // Check if request method matchess
+            $request_method = isset($route['method']) ? $route['method'] : [];
+            
+            if (is_array($request_method)) {
+                // Make sure all request methods are in uppercase
+                // Most of servers are configured with uppercase
+                $request_method = array_map('strtoupper', $request_method);
             }
 
-            if ($is_match) {
-                // Remove unneeded data
-                array_shift($matches);
-
+            $rest_test = is_array($request_method) && 
+            (in_array($_SERVER['REQUEST_METHOD'], $request_method) || count($request_method) === 0);
+            
+            if ($rest_test && $parser->test($path)) {
+                $matches = $parser->getMatches();
                 // Cache key
-                $cache_key = $translated_path;
+                $cache_key = $path;
 
                 if ($matches) {
                     // Make sure cache keys are unique by using parameters
@@ -491,23 +478,15 @@ class Route
         // Create a new response onject
         $response = new Response();
         
-        foreach ($middlewares as $middleware) {
-            // Modified args
-            $mod_args = $args;
-            // Add request and response object
-            // to parameters the callback will take
-            // first parameter should be Request followed by Response
-            array_unshift($mod_args, $res);
-            array_unshift($mod_args, $req);
-            
+        foreach ($middlewares as $middleware) {    
             if (is_callable($middleware)) {
                 // For middlewares declared using anonymous functions
-                $res = call_user_func_array($middleware, $mod_args);
+                $res = call_user_func($middleware, $req, $res, $args);
             } else if (is_callable([ $middler = new $middleware(), 'handle' ])) {
                 // Middlewares that uses class
                 // make sure middleware class has `handle` function
                 // this is the entry point for all middlewares
-                $res = call_user_func_array([ $middler, 'handle' ], $mod_args);
+                $res = call_user_func([ $middler, 'handle' ], $req, $res, $args);
             }
         }
         
@@ -535,13 +514,7 @@ class Route
      * @return  mixed
      *
      */
-    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {
-        // Add request and response object
-        // to parameters the callback will take
-        // first parameter should be Request followed by Response
-        array_unshift($args, $res);
-        array_unshift($args, $req);
-        
+    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {        
         if (is_string($callback)) {
             // If callback was string then
             // Explode it by (dot) to determine the Controller and Action
@@ -556,7 +529,7 @@ class Route
                     }
                     
                     ob_start();
-                    $output = call_user_func_array($action, $args); // Update callback
+                    $output = call_user_func($action, $req, $res, $args); // Update callback
                     ob_get_clean();
                     
                     break;
@@ -565,7 +538,7 @@ class Route
                         is_callable([ $controller = new $ctoks[0], $action = $ctoks[1] ])) {
                         
                         ob_start();
-                        $output = call_user_func_array([ $controller, $action ], $args);
+                        $output = call_user_func([ $controller, $action ], $req, $res, $args);
                         ob_get_clean();
                     } else {
                         Log::error('Can\'t find controller and action', true);
@@ -583,7 +556,7 @@ class Route
         // Only if sent parameter is callable
         if (is_callable($callback)) {
             ob_start();
-            $output = call_user_func_array($callback, $args); // Return anonymous function
+            $output = call_user_func($callback, $req, $res, $args); // Return anonymous function
             ob_get_clean();
         }
         
