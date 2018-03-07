@@ -278,45 +278,7 @@ class Route
         // route wasn't found
         return new Response();
     }
-    
-    /**
-     * Prepare callback. Only one callback is allowed
-     * This will lessen unnecessary calls 
-     * 
-     * @access  public
-     * @param   function    $callback   Callback
-     * @return  bool        `true` if callback is registered as prepare, else
-     *                      `false`
-     * 
-     */
-    static public function prepare($callback) {
-        if (is_callable($callback)) {
-            // Middle wares only accepts array
-            // so we'll set prepare function to be in array format
-            self::$_prepare = [ $callback ]; 
-            
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Clean callback. Just like prepare function
-     * this clean middleware will only contain one callback
-     * 
-     * @access  public
-     * @param   function    $callback   Callback
-     * @return  bool        `true` if callback is registered as prepare, else
-     *                      `false`
-     * 
-     */
-    static public function clean($callback) {
-        if (is_callable($callback)) {
-            self::$_clean = [ $callback ]; 
-        }
-    }
-    
+
     /**
      * Get routes 
      * 
@@ -370,7 +332,7 @@ class Route
 
             $rest_test = is_array($request_method) && 
             (in_array($_SERVER['REQUEST_METHOD'], $request_method) || count($request_method) === 0);
-            
+
             if ($rest_test && $parser->test($path)) {
                 $matches = $parser->getMatches();
                 // Cache key
@@ -395,116 +357,34 @@ class Route
                 // New request object
                 $request = new Request();
 
-                // Prepare middleware
-                if (count(self::$_prepare)) {
-                    $response = self::_middleware(self::$_prepare, $request, $response, $matches);
-                }
+                // Now call the main callback
+                $response = self::_callback($callback, $request, $response, $matches);
                 
-                // Before middlewares
-                if (isset($route['before']) && is_array($route['before']) && count($route['before'])) {
-                    $response = self::_middleware($route['before'], $request, $response, $matches);
+                // Forwarded header
+                if (self::$_is_forwarded) {
+                    $response->header('lollipop-forwarded: true');
                 }
 
-                // Check if page cache is enabled and recover cache if available
-                // Also we could use ?nocache as parameter
-                // to force caching to be disabled
-                if ($cachable && !isset($_REQUEST['nocache']) && Cache::exists($cache_key)) {
-                    $page_cache = Cache::recover($cache_key);
-                    
-                    if (is_object($page_cache) && $page_cache instanceof Response) {
-                        $page_cache->header('lollipop-cache: true');
-                        
-                        $response = $page_cache;
-                    }
-                } else {
-                    // Now call the main callback
-                    $response = self::_callback($callback, $request, $response, $matches);
-
-                    // Forwarded header
-                    if (self::$_is_forwarded) {
-                        $response->header('lollipop-forwarded: true');
-                    }
-
-                    // Is gzip compression enabled in config
-                    if (Config::get('output.compression')) {
-                        $response->compress();
-                    }
-
-                    // Is gzip compression requested: `lollipop-gzip`, this will override config
-                    $req = new Request();
-                    $gzip_header = $req->header('lollipop-gzip');
-                    
-                    if (!is_null($gzip_header)) {
-                        $response->compress(!strcmp($gzip_header, 'true'));
-                    }
-                    
-                    // Save cache
-                    if ($cachable && !isset($_REQUEST['nocache']) && !Cache::exists($cache_key)) {
-                        Cache::save($cache_key, $response, false, $cache_time);
-                    }
+                // Is gzip compression enabled in config
+                if (Config::get('output.compression')) {
+                    $response->compress();
                 }
+
+                // Is gzip compression requested: `lollipop-gzip`, this will override config
+                $req = new Request();
+                $gzip_header = $req->header('lollipop-gzip');
                 
-                // After middlewares
-                if (isset($route['after']) && is_array($route['after']) && count($route['after'])) {
-                    $response = self::_middleware($route['after'], $request, $response, $matches);
+                if (!is_null($gzip_header)) {
+                    $response->compress(!strcmp($gzip_header, 'true'));
                 }
 
-                // Clean middleware
-                if (count(self::$_clean)) {
-                    $response = self::_middleware(self::$_clean, $request, $response, $matches);
-                }
-                
                 return $response;
             }
         }
         
         return new Response();
     }
-    
-    /**
-     * Middleware
-     * 
-     * @access  private
-     * @param   array                   $middlewares    Middle wares
-     * @param   \Lollipop\HTTP\Request  $req            Request object
-     * @param   \Lollipop\HTTP\Response $res            Response object
-     * @param   array                   $args           Arguments
-     * @return  \Lollipop\HTTP\Response
-     * 
-     */
-    static private function _middleware(array $middlewares, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {
-        ob_start();
 
-        // Create a new response onject
-        $response = new Response();
-        
-        foreach ($middlewares as $middleware) {    
-            if (is_callable($middleware)) {
-                // For middlewares declared using anonymous functions
-                $res = call_user_func($middleware, $req, $res, $args);
-            } else if (is_callable([ $middler = new $middleware(), 'handle' ])) {
-                // Middlewares that uses class
-                // make sure middleware class has `handle` function
-                // this is the entry point for all middlewares
-                $res = call_user_func([ $middler, 'handle' ], $req, $res, $args);
-            }
-        }
-        
-        // Make sure it was a clean return
-        // We don't want dumps on the ways
-        ob_get_clean();
-        
-        if ($res instanceof Response) {
-            // Middleware returns Response object
-            $response = $res;
-        } else {
-            // Else set Response data from the data middleware sent back
-            $response->set($res);
-        }
-        
-        return $response;
-    }
-    
     /**
      * Call callback and return data
      *
@@ -633,21 +513,11 @@ class Route
         // Request object
         $request = new Request();
         
-        // Prepare middleware
-        if (count(self::$_prepare)) {
-            $response = self::_middleware(self::$_prepare, $request, $response);
-        }
-        
         // Check if 404 pages are re-routed
         // via configuration
         if ($page_route = Config::get('page_not_found.route')) {
             // Get route information in stored routes
             $route_info = fuse(self::$_stored_routes[$page_route], []);
-            
-            // Before middlewares
-            if (isset($route_info['before'])) {
-                $response = self::_middleware($route_info['before'], $request, $response);
-            }
             
             // Forwarding 404 Pages
             $data = self::forward(Config::get('page_not_found.route'), $request, $response);
@@ -657,18 +527,8 @@ class Route
             } else {
                 $response->set($data);
             }
-            
-            // After middlewares
-            if (isset($route_info['after'])) {
-                $response = self::_middleware($route_info['after'], $request, $response);
-            }
         }
-        
-        // Clean middleware
-        if (count(self::$_clean)) {
-            $response = self::_middleware(self::$_clean, $request, $response);
-        }
-        
+
         // Execute
         return $response;
     }
