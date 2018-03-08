@@ -26,53 +26,44 @@ use \Lollipop\HTTP\Request;
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
- * @request-headers
- * 
- *      lollipop-gzip: true/false
- *          - Force gzip compression return
- * 
- * @response-headers
- * 
- *      lollipop-forwarded: true/false
- *          - If `Route::forward` is called
- * 
- *      lollipop-cache: true/false
- *          - If page is from cache
- * 
- * @configurations
- * 
- *      page_not_found
- *          route: '/'
- *          show: true/false
  * 
  */
 class Route
 {
     /**
-     * @var     bool    Is Dispatch function already registered on shutdown?
+     * @var     bool        Is Dispatch function already registered on shutdown?
      *
      */
     static private $_dispatch_registered = false;
 
     /**
-     * @var     array   Stored callbacks
+     * @var     array       Stored callbacks
      *
      */
     static private $_stored_routes = [];
-
     /**
-     * @var    bool     Is route forwarded?
+     * @var     array       Active route
      * 
      */
-    static private $_is_forwarded = false;
+    static private $_active_route = null;
 
     /**
-     * @var array   Active route
+     * @var     Callable    Top callable function
      * 
      */
-    static private $_active_route = [];
-
     static private $_kernel = null;
+    
+    /**
+     * @var     boolean     Is busy dequeueing
+     * 
+     */
+    static private $_busy = false;
+
+    /**
+     * @var     array       
+     * 
+     */
+    static private $_middlewares = [];
 
     /**
      * GET route
@@ -89,11 +80,7 @@ class Route
         self::serve([
             'path' => $path,
             'method' => ['GET'],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -112,11 +99,7 @@ class Route
         self::serve([
             'path' => $path,
             'method' => ['POST'],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -135,11 +118,7 @@ class Route
         self::serve([
             'path' => $path,
             'method' => ['PUT'],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -158,11 +137,7 @@ class Route
         self::serve([
             'path' => $path,
             'method' => ['DELETE'],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -181,11 +156,7 @@ class Route
         self::serve([
             'path' => $path,
             'method' => ['PATCH'],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -200,15 +171,11 @@ class Route
      * @return  void
      *
      */
-    static public function all($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function all($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => [],
-            'callback' => $callback,
-            'cachable' => $cachable,
-            'cache_time' => $cache_time,
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
+            'callback' => $callback
         ]);
     }
 
@@ -229,56 +196,42 @@ class Route
      * @return  void
      *
      */
-    static public function serve($route) {
-        // Default middlewares before
-        $middlewares_before = [
-                    '\\Lollipop\\HTTP\\Middleware\\AntiCsrf'
-                ];
+    static public function serve(array $route) {
+        if (!isset($route['path']) || !isset($route['callable']) || 
+            (isset($route['method']) && !is_string($route['method']))) {
+            Log::error('Invalid route.');
+        }
         
         // Default path to '/'
         $path = fuse($route['path'], '');
         $path = trim($path, '/');
 
+        if (!isset($route['method'])) {
+            $route['method'] = [];
+        }
+        
+        if (!isset($route['middlewares'])) {
+            $route['middlewares'] = [];
+        }
+        
+        if (!isset($route['arguments'])) {
+            $route['arguments'] = [];
+        }
+        
         // Store route
-        self::$_stored_routes[$path] = [
-            'method' => fuse($route['method'], []),
-            'callback' => fuse($route['callback'], function() {}),
-            'cachable' => fuse($route['cachable'], false),
-            'cache_time' => fuse($route['cache_time'], 1440),
-            'arguments' => [],
-            'middlewares' => fuse($route['middlewares'], [])
-        ];
+        self::$_stored_routes[$path] = $route;
 
         // Register dispatcher once this function was called
         self::_registerDispatch();
     }
     
     /**
-     * Route forwarding
-     *
-     * @access  public
-     * @param   string                  $path   Route
-     * @param   \Lollipop\HTTP\Request  $req    Request object
-     * @param   \Lollipop\HTTP\Response $res    Response object
-     * @param   array                   $params Arguments
-     *
+     * Add middleware
+     * 
+     * 
      */
-    static public function forward($path, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $params = []) {
-        self::$_is_forwarded = true;
-        
-        // Check if landing route is declared
-        // we don't want to go in a road without signs
-        if (isset(self::$_stored_routes[$path])) {
-            $callback = self::$_stored_routes[$path];
-            $callback = $callback['callback'];
-
-            // Call back requires
-            return self::_callback($callback, $req, $res, $params);
-        }
-        
-        // Create an empty response once 
-        // route wasn't found
-        return new Response();
+    static public function addMiddleware(Callable $callback) {
+        self::$_middlewares[] = $callback;
     }
 
     /**
@@ -314,6 +267,16 @@ class Route
     static private function _dispatch() {
         $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $parser = new \Lollipop\HTTP\URL\Parser($url);
+        
+        // Get 404 Page Not Found
+        self::$_active_route = isset(self::$_stored_routes['404']) ?
+            self::$_stored_routes['404'] :
+            self::_getDefaultPageNotFound();
+        
+        // Create a new response
+        $response = new Response();
+        // New request object
+        $request = new Request();
 
         foreach (self::$_stored_routes as $path => $route) {
             // Callback for route
@@ -339,47 +302,33 @@ class Route
                 $matches = $parser->getMatches();
                 
                 $route['arguments'] = $matches;
-
+                
                 // Set route as active
                 self::$_active_route = $route;
-
-                // Create a new response
-                $response = new Response();
-                // New request object
-                $request = new Request();
-                
-                if (isset($route['middlewares']) && is_array($route['middlewares'])) {
-                    foreach ($route['middlewares'] as $mw) {
-                        self::addMiddleware($mw);
-                    }
-                }
-
-                // Now call the main callback
-                $response = self::process($request, $response, $matches);
-
-                // Forwarded header
-                if (self::$_is_forwarded) {
-                    $response->header('lollipop-forwarded: true');
-                }
-
-                // Is gzip compression enabled in config
-                if (Config::get('output.compression')) {
-                    $response->compress();
-                }
-
-                // Is gzip compression requested: `lollipop-gzip`, this will override config
-                $req = new Request();
-                $gzip_header = $req->header('lollipop-gzip');
-                
-                if (!is_null($gzip_header)) {
-                    $response->compress(!strcmp($gzip_header, 'true'));
-                }
-
-                return $response;
             }
         }
         
-        return new Response();
+        if (isset($route['middlewares']) && is_array($route['middlewares'])) {
+            foreach ($route['middlewares'] as $mw) {
+                self::_stackMiddleware($mw);
+            }
+        }
+        
+        if (isset(self::$_middlewares) && is_array(self::$_middlewares)) {
+            foreach (self::$_middlewares as $mw) {
+                self::_stackMiddleware($mw);
+            }
+        }
+        
+        // Now call the main callback
+        $response = self::_process($request, $response, $matches);
+        
+        // Is gzip compression enabled in config
+        if (Config::get('output.compression')) {
+            $response->compress();
+        }
+
+        return $response;
     }
 
     /**
@@ -462,14 +411,6 @@ class Route
                 // Get response data from Dispatcher
                 $response = self::_dispatch();
                 
-                // Check if active route is not set
-                // and `page_not_found.show` configuration was `true`
-                if (empty(self::getActiveRoute()) &&
-                    Config::get('page_not_found.show', true)) {
-                    // Get 404 page from _checkNotFound function
-                    $response = self::_checkNotFound();
-                }
-                
                 // Render output from our application
                 if ($response instanceof Response) {
                     // `->render()` will set cookies, header and document
@@ -483,7 +424,16 @@ class Route
         }
     }
 
-    static public function process(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
+    /**
+     * Process middleware stack
+     * 
+     * @access  private
+     * @param   \Lollipop\HTTP\Request  $req    Request Object
+     * @param   \Lollipop\HTTP\Response $res    Response Object
+     * @return  \Lollipop\HTTP\Response Response object
+     * 
+     */
+    static private function _process(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
         if (is_null(self::$_kernel)) {
             $active = self::$_active_route;
             $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
@@ -496,9 +446,9 @@ class Route
         $start = self::$_kernel;
         
         // Start dequeue
-        //$this->_busy = true;
+        self::$_busy = true;
         $new_response = $start($req, $res);
-        //$this->_busy = false;
+        self::$_busy = false;
         
         // Just want to make sure that processed response from middlewares
         // are instance of \Calf\HTTP\Response
@@ -511,7 +461,20 @@ class Route
         return $res;
     }
 
-    static public function addMiddleware(Callable $callback) {
+    /**
+     * Stack middleware
+     * 
+     * @access  private
+     * @param   Callable    $callback   Middleware callable
+     * @return  void
+     *
+     */
+    static private function _stackMiddleware(Callable $callback) {
+        if (self::$_busy) {
+            // Make sure it's not busy before adding something.
+            throw new \Exception('Can\'t add new middleware while dequeue in progress.');
+        }
+        
         if (is_null(self::$_kernel)) {
             $active = self::$_active_route;
             $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
@@ -539,44 +502,31 @@ class Route
      * @return  \Lollipop\HTTP\Response
      *
      */
-    static private function _checkNotFound() {
-        // Create a default 404 page
-        $pagenotfound = '<!DOCTYPE html>'
-                . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
-                . '<html>'
-                . '<head><title>404 Not Found</title></head>'
-                . '<meta name="viewport" content="width=device-width, initial-scale=1">'
-                . '<body>'
-                . '<h1>404 Not Found</h1>'
-                . '<p>The page that you have requested could not be found.</p>'
-                . '</body>'
-                . '</html>';
-
-        // Create a new 404 Page Not Found Response
-        $response = new Response($pagenotfound);
-        // Set header for 404
-        $response->header('HTTP/1.0 404 Not Found');
-        // Request object
-        $request = new Request();
+    static private function _getDefaultPageNotFound() {
+        return [
+            'path' => '404',
+            'callback' => function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, $args = []) {
+                // Create a default 404 page
+                $pagenotfound = '<!DOCTYPE html>'
+                        . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
+                        . '<html>'
+                        . '<head><title>404 Not Found</title></head>'
+                        . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                        . '<body>'
+                        . '<h1>404 Not Found</h1>'
+                        . '<p>The page that you have requested could not be found.</p>'
+                        . '</body>'
+                        . '</html>';
         
-        // Check if 404 pages are re-routed
-        // via configuration
-        if ($page_route = Config::get('page_not_found.route')) {
-            // Get route information in stored routes
-            $route_info = fuse(self::$_stored_routes[$page_route], []);
-            
-            // Forwarding 404 Pages
-            $data = self::forward(Config::get('page_not_found.route'), $request, $response);
-            
-            if ($data instanceof Response) {
-                $response = $data;
-            } else {
-                $response->set($data);
+                // Create a new 404 Page Not Found Response
+                $response = new Response($pagenotfound);
+                // Set header for 404
+                $response->header('HTTP/1.0 404 Not Found');
+        
+                // Execute
+                return $response;
             }
-        }
-
-        // Execute
-        return $response;
+        ];
     }
 }
 
