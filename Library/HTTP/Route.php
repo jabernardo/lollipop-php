@@ -13,7 +13,6 @@ if (!isset($_SERVER['REQUEST_URI'])) {
     exit('Lollipop Application must be run on a web server.' . PHP_EOL);
 }
 
-use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\Log;
 use \Lollipop\HTTP\Response;
@@ -70,13 +69,10 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
-    static public function get($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function get($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => ['GET'],
@@ -89,13 +85,10 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
-    static public function post($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function post($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => ['POST'],
@@ -108,13 +101,10 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
-    static public function put($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function put($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => ['PUT'],
@@ -127,13 +117,10 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
-    static public function delete($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function delete($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => ['DELETE'],
@@ -146,13 +133,10 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
-    static public function patch($path, $callback, $cachable = false, $cache_time = 1440) {
+    static public function patch($path, $callback) {
         self::serve([
             'path' => $path,
             'method' => ['PATCH'],
@@ -165,9 +149,6 @@ class Route
      *
      * @param   string      $path       Route
      * @param   function    $callback   Callback function
-     * @param   bool        $cachable   Is page cache enable? (default is false)
-     * @param   int         $cache_time Cache time (in minutes 1440 or 24 hrs default)
-     *
      * @return  void
      *
      */
@@ -189,16 +170,14 @@ class Route
      *          'path' => '/',
      *          'callback' => 'MyController.index',
      *          'method' => ['GET', 'POST'],
-     *          'before' => ['MiddleWare1', 'MiddleWare2'],
-     *          'after' => ['MiddleWare3', function(Response $res, $args)]
      *      ]
      * 
      * @return  void
      *
      */
     static public function serve(array $route) {
-        if (!isset($route['path']) || !isset($route['callable']) || 
-            (isset($route['method']) && !is_string($route['method']))) {
+        if (!isset($route['path']) || !isset($route['callback']) || 
+            (isset($route['method']) && is_string($route['method']))) {
             Log::error('Invalid route.');
         }
         
@@ -228,6 +207,9 @@ class Route
     /**
      * Add middleware
      * 
+     * @access  public
+     * @param   Callable    $callback   Middleware callable
+     * @return  void
      * 
      */
     static public function addMiddleware(Callable $callback) {
@@ -265,10 +247,15 @@ class Route
      *
      */
     static private function _dispatch() {
+        // Get URL Path property only
         $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        
+        // Create an instance of URL parser for checking if current
+        // path matches any route
         $parser = new \Lollipop\HTTP\URL\Parser($url);
         
         // Get 404 Page Not Found
+        // Check if `404` route was declared
         self::$_active_route = isset(self::$_stored_routes['404']) ?
             self::$_stored_routes['404'] :
             self::_getDefaultPageNotFound();
@@ -295,25 +282,27 @@ class Route
                 $request_method = array_map('strtoupper', $request_method);
             }
 
+            // Check if request method matches the expected from route information
             $rest_test = is_array($request_method) && 
             (in_array($_SERVER['REQUEST_METHOD'], $request_method) || count($request_method) === 0);
-
+            
             if ($rest_test && $parser->test($path)) {
-                $matches = $parser->getMatches();
-                
-                $route['arguments'] = $matches;
+                // Set the route arguments based from the matches from the url
+                $route['arguments'] = $parser->getMatches();;
                 
                 // Set route as active
                 self::$_active_route = $route;
             }
         }
         
+        // Stack specific route level middleware
         if (isset($route['middlewares']) && is_array($route['middlewares'])) {
             foreach ($route['middlewares'] as $mw) {
                 self::_stackMiddleware($mw);
             }
         }
         
+        // Stack route level middleware
         if (isset(self::$_middlewares) && is_array(self::$_middlewares)) {
             foreach (self::$_middlewares as $mw) {
                 self::_stackMiddleware($mw);
@@ -321,7 +310,7 @@ class Route
         }
         
         // Now call the main callback
-        $response = self::_process($request, $response, $matches);
+        $response = self::_process($request, $response);
         
         // Is gzip compression enabled in config
         if (Config::get('output.compression')) {
@@ -390,7 +379,7 @@ class Route
         if ($output instanceof Response) {
             $res = $output;
         } else {
-            $res->set($output);
+            $res = new Response($output);
         }
         
         return $res;
@@ -412,11 +401,13 @@ class Route
                 $response = self::_dispatch();
                 
                 // Render output from our application
-                if ($response instanceof Response) {
-                    // `->render()` will set cookies, header and document
-                    // content
-                    $response->render();
+                if (!($response instanceof Response)) {
+                    $response = new Response($response);
                 }
+                
+                // `->render()` will set cookies, header and document
+                // content
+                $response->render();
             });
             
             // Mark as dispatched
