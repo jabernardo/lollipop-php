@@ -516,7 +516,8 @@ class Route
         
                 // Execute
                 return $response;
-            }
+            },
+            'arguments' => []
         ];
     }
 }
