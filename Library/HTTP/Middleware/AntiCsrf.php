@@ -21,7 +21,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.0.3
+ * @version     1.1.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -38,7 +38,7 @@ class AntiCsrf
      * @return  \Lollipop\HTTP\Response
      * 
      */
-    public function handle(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) {
+    public function __invoke(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, Callable $next) {
         $acsrf_enable = Config::get('anti_csrf.enable', true);
         $acsrf_name = CsrfToken::getName();
         $expiration = Config::get('anti_csrf.expiration', 18000);
@@ -62,18 +62,16 @@ class AntiCsrf
                 $output_config = Config::get('output');
                 $output_compression = !is_null($output_config) && isset($output_config->compression) && $output_config->compression;
                 
-                if (!is_null($req->header('lollipop-gzip'))) {
-                    $output_compression = !strcmp($req->header('lollipop-gzip'), 'true');
-                }
-                
                 $res = new Response($output);
                 $res->compress($output_compression);
                 $res->render();
                 exit();
             }
         }
+        
+        $res = $next($req, $res);
 
-       return $res;
+        return $res;
     }
 }
 
