@@ -296,8 +296,8 @@ class Route
         }
         
         // Stack specific route level middleware
-        if (isset($route['middlewares']) && is_array($route['middlewares'])) {
-            foreach ($route['middlewares'] as $mw) {
+        if (isset(self::$_active_route['middlewares']) && is_array(self::$_active_route['middlewares'])) {
+            foreach (self::$_active_route['middlewares'] as $mw) {
                 self::_stackMiddleware($mw);
             }
         }
