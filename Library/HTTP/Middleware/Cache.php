@@ -4,15 +4,6 @@ namespace Lollipop\HTTP\Middleware;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-/**
- * Check application if running on web server
- * else just terminate
- * 
- */
-if (!isset($_SERVER['REQUEST_URI'])) {
-    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
-}
-
 use \Lollipop\Config;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Route;
