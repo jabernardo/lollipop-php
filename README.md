@@ -35,15 +35,14 @@ A simple `Hello World` Page
 <?php
 
 require('/path/to/lollipop-php/autoload.php');
-// or if using composer
-// require('./vendor/autoload.php');
 
 // Your index page
 \Lollipop\HTTP\Route::get('/', function($request, $response) {
     return $response->set('Hello World!');
-}, true);
+});
 
 ```
+
 ###### DOWNLOAD
 Get the latest version of Lollipop-PHP framework from our Git repository hosted on GitHub
 ```bash
@@ -57,7 +56,7 @@ and start the development of your projects.
 
 ###### RESOURCES
 
-See libraries documentation [here](https://github.com/jabernardo/lollipop-php/tree/master/Documentation).
+See documentation [here](https://github.com/jabernardo/lollipop-php/wiki).
 
 ## License
 
