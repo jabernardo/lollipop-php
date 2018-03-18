@@ -10,7 +10,7 @@ use \Lollipop\Text;
 /**
  * Session Class 
  *
- * @version     1.2.2
+ * @version     1.2.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -106,6 +106,18 @@ class Session
         } else {
             return '';
         }
+    }
+
+    /**
+     * Get all session variables
+     * 
+     * @access  public
+     * @return  void
+     */
+    static function getAll() {
+        self::start();
+
+        return $_SESSION;
     }
 
     /**
