@@ -10,7 +10,7 @@ use \Lollipop\Log;
 /**
  * Lollipop Cache File Library
  *
- * @version     1.0.2
+ * @version     1.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -145,7 +145,7 @@ class File
             }
         }
         
-        return '';
+        return null;
     }
     
     /**
