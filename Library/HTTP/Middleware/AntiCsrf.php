@@ -12,7 +12,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.1.0
+ * @version     1.1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -42,8 +42,10 @@ class AntiCsrf
                 $output = '<!DOCTYPE html>'
                         . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
                         . '<html>'
-                        . '<head><title>Not Enough Tokens</title></head>'
+                        . '<head>'
+                        . '<title>Not Enough Tokens</title>'
                         . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                        . '</head>'
                         . '<body>'
                         . '<h1>Not Enough Tokens</h1>'
                         . '<p>Oops! Make sure you have enough tokens before you can play.</p>'
