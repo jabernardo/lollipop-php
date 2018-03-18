@@ -1,15 +1,6 @@
 <?php
 
 /**
- * Lollipop-PHP Bootstrap File
- * 
- * @version 6.2.2
- * @author  John Aldrich Bernardo
- * @email   4ldrich@protonmail.com
- * 
- */
-
-/**
  * Check if PHP version is >= 5.4
  * 
  */

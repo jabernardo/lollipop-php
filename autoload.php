@@ -1,18 +1,6 @@
 <?php
 
 /**
- * Lollipop Autoload 
- * 
- * Set application constant variables for directory structure
- * and register autoload for loading libraries.
- * 
- * @version 4.1.2
- * @author  John Aldrich Bernardo
- * @email   4ldrich@protonmail.com
- * 
- */
-
-/**
  * Application Sugar
  * 
  */
@@ -115,5 +103,3 @@ spl_autoload_register(function ($class) {
  * 
  */
 require_once(LOLLIPOP_BASE . 'bootstrap.php');
-
-?>
