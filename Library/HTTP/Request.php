@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Response;
 /**
  * Request Class 
  *
- * @version     1.4.2
+ * @version     1.4.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -175,7 +175,7 @@ class Request
      * @return  mixed
      * 
      */
-    function send(array $options) {
+    public static function send(array $options) {
         // Get localdb location in config
         $localdb = Config::get('localdb.folder', LOLLIPOP_STORAGE_LOCALDB);
         
