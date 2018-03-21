@@ -37,7 +37,7 @@ A simple `Hello World` Page
 require('/path/to/lollipop-php/autoload.php');
 
 // Your index page
-\Lollipop\HTTP\Route::get('/', function($request, $response) {
+\Lollipop\HTTP\Router::get('/', function($request, $response) {
     return $response->set('Hello World!');
 });
 
