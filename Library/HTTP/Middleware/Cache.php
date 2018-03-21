@@ -6,7 +6,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
 use \Lollipop\HTTP\Response;
-use \Lollipop\HTTP\Route;
+use \Lollipop\HTTP\Router;
 
 /**
  * Lollipop Cache Middleware
@@ -30,7 +30,7 @@ class Cache
      */
     public function __invoke(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, Callable $next) {
         // Get current route information
-        $active_route = Route::getActiveRoute();
+        $active_route = Router::getActiveRoute();
 
         // Check if cache is enabled in route
         $cache_enabled = isset($active_route['cache']) && $active_route['cache'];
