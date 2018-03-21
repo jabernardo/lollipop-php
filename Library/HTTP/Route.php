@@ -242,11 +242,11 @@ class Route
     /**
      * Dispath function
      *
-     * @access  private
+     * @access  public
      * @return  void
      *
      */
-    static private function _dispatch() {
+    static public function dispatch() {
         // Get URL Path property only
         $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         
@@ -394,11 +394,15 @@ class Route
      */
     static private function _registerDispatch() {
         // Register dispatch function
-        if (!self::$_dispatch_registered) {
+        $auto_dispatch = !is_null(Config::get('router.auto_dispatch')) ?
+            Config::get('router.auto_dispatch') :
+            true;
+        
+        if (!self::$_dispatch_registered && $auto_dispatch) {
             // Make sure things ends here...
             register_shutdown_function(function() {
                 // Get response data from Dispatcher
-                $response = self::_dispatch();
+                $response = self::dispatch();
                 
                 // Render output from our application
                 if (!($response instanceof Response)) {
