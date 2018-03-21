@@ -243,10 +243,11 @@ class Router
      * Dispath function
      *
      * @access  public
+     * @param   boolean $render     Render response (true)
      * @return  void
      *
      */
-    static public function dispatch() {
+    static public function dispatch($render = true) {
         // Get URL Path property only
         $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         
@@ -312,9 +313,20 @@ class Router
         // Now call the main callback
         $response = self::_process($request, $response);
         
+        // Render output from our application
+        if (!($response instanceof Response)) {
+            $response = new Response($response);
+        }
+        
         // Is gzip compression enabled in config
         if (Config::get('output.compression')) {
             $response->compress();
+        }
+
+        if ($render) {
+            // `->render()` will set cookies, header and document
+            // content
+            $response->render();
         }
 
         return $response;
@@ -403,15 +415,6 @@ class Router
             register_shutdown_function(function() {
                 // Get response data from Dispatcher
                 $response = self::dispatch();
-                
-                // Render output from our application
-                if (!($response instanceof Response)) {
-                    $response = new Response($response);
-                }
-                
-                // `->render()` will set cookies, header and document
-                // content
-                $response->render();
             });
             
             // Mark as dispatched
