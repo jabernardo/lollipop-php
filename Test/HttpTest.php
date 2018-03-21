@@ -28,7 +28,7 @@ class HttpTest extends TestCase
             return $res;
         });
 
-        $res = \Lollipop\HTTP\Router::dispatch();
+        $res = \Lollipop\HTTP\Router::dispatch(false);
 
         $this->assertEquals($res->get(), 'Hello World!');
     }
