@@ -19,15 +19,15 @@ use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
 
 /**
- * Lollipop Route Class
+ * Lollipop Router Class
  *
- * @version     3.0.2
+ * @version     3.1.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
  * 
  */
-class Route
+class Router
 {
     /**
      * @var     bool        Is Dispatch function already registered on shutdown?
