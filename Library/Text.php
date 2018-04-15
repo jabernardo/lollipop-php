@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Text Class 
  *
- * @version     2.2.3
+ * @version     2.2.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -106,7 +106,6 @@ class Text
      * @return  string
      */
     static function entities($string) {
-        $string = stripslashes($string);
         $string = htmlentities($string);
         $string = nl2br($string);
         
