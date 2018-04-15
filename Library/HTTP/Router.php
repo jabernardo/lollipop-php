@@ -15,13 +15,14 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 
 use \Lollipop\Config;
 use \Lollipop\Log;
+use \Lollipop\HTTP\Route;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
 
 /**
  * Lollipop Router Class
  *
- * @version     3.1.0
+ * @version     3.1.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -269,11 +270,6 @@ class Router
         foreach (self::$_stored_routes as $path => $route) {
             // Callback for route
             $callback = fuse($route['callback'], function(){});
-            // Check if route or url is cachable (defaults to false)
-            $cachable = fuse($route['cachable'], false);
-            // Cache time
-            $cache_time = fuse($route['cache_time'], 1440);
-        
             // Check if request method matchess
             $request_method = isset($route['method']) ? $route['method'] : [];
             
@@ -333,71 +329,6 @@ class Router
     }
 
     /**
-     * Call callback and return data
-     *
-     * @access  private
-     * @param   mixed   $callback   (string or callable) string must be {abc}.{abc} format to use controller action
-     * @param   array   $args       Parameters to be passed to callback
-     * @return  mixed
-     *
-     */
-    static private function _callback($callback, \Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {        
-        if (is_string($callback)) {
-            // If callback was string then
-            // Explode it by (dot) to determine the Controller and Action
-            $ctoks = explode('.', $callback);
-            
-            $output = '';
-            
-            switch (count($ctoks)) {
-                case 1: // Function only
-                    if (!function_exists($action = $ctoks[0])) {
-                        Log::error('Callback is not a function', true);
-                    }
-                    
-                    ob_start();
-                    $output = call_user_func($action, $req, $res, $args); // Update callback
-                    ob_get_clean();
-                    
-                    break;
-                case 2: // Controller and Action
-                    if (class_exists($ctoks[0]) &&
-                        is_callable([ $controller = new $ctoks[0], $action = $ctoks[1] ])) {
-                        
-                        ob_start();
-                        $output = call_user_func([ $controller, $action ], $req, $res, $args);
-                        ob_get_clean();
-                    } else {
-                        Log::error('Can\'t find controller and action', true);
-                    }
-                
-                    break;
-                
-                default: // Invalid callback
-                    Log::error('Callback is not a function', true);
-                    
-                    break;
-            }
-        }
-        
-        // Only if sent parameter is callable
-        if (is_callable($callback)) {
-            ob_start();
-            $output = call_user_func($callback, $req, $res, $args); // Return anonymous function
-            ob_get_clean();
-        }
-        
-        // Set response object
-        if ($output instanceof Response) {
-            $res = $output;
-        } else {
-            $res = new Response($output);
-        }
-        
-        return $res;
-    }
-
-    /**
      * Register dispatch function on shutdown
      *
      * @access  private
@@ -435,7 +366,7 @@ class Router
         if (is_null(self::$_kernel)) {
             $active = self::$_active_route;
             $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
-                return self::_callback($active['callback'], $req, $res, $active['arguments']);
+                return Route::resolve($active['callback'], $req, $res, $active['arguments']);
             };
             self::$_kernel = $top;
         }
@@ -476,7 +407,7 @@ class Router
         if (is_null(self::$_kernel)) {
             $active = self::$_active_route;
             $top = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($active) {
-                return self::_callback($active['callback'], $req, $res, $active['arguments']);
+                return Route::resolve($active['callback'], $req, $res, $active['arguments']);
             };
             self::$_kernel = $top;
         }
