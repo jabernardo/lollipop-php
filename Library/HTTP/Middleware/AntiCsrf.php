@@ -7,18 +7,20 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 use \Lollipop\Config;
 use \Lollipop\Cookie;
 use \Lollipop\CsrfToken;
+use \Lollipop\HTTP\Request;
 use \Lollipop\HTTP\Response;
+use \Lollipop\HTTP\Middleware;
 
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.1.2
+ * @version     1.1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
  * 
  */
-class AntiCsrf
+class AntiCsrf implements Middleware
 {
     /**
      * Middleware Handler

@@ -6,18 +6,20 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
 use \Lollipop\HTTP\Response;
+use \Lollipop\HTTP\Request;
+use \Lollipop\HTTP\Middleware;
 use \Lollipop\HTTP\Router;
 
 /**
  * Lollipop Cache Middleware
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
  * 
  */
-class Cache
+class Cache implements Middleware
 {
     /**
      * Middleware Handler
