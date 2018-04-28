@@ -9,7 +9,7 @@ use \Lollipop\Config;
 /**
  * Text Class 
  *
- * @version     2.2.4
+ * @version     2.2.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
