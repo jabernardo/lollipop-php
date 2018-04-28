@@ -128,6 +128,23 @@ class Text
     }
 
     /**
+     * Repeat text
+     * 
+     * @param   string  $str    String to be repeated
+     * @param   int     $n      Number of repetition
+     * 
+     */
+    static function repeat($str, $n) {
+        $nstr = '';
+
+        for ($i = 0; $i < $n; $i++) {
+            $nstr .= $str;
+        }
+
+        return $nstr;
+    }
+
+    /**
      * Splits string
      * 
      * @param   string  $string     String to be split

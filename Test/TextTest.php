@@ -22,4 +22,11 @@ class TextTest extends TestCase
                 Text::unlock($locked, 12345)
             );
     }
+
+    public function testRepeat() {
+        $this->assertEquals(
+            Text::repeat('h', 3),
+            'hhh'
+        );
+    }
 }
