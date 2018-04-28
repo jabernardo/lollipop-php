@@ -7,7 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Inflector Class
  *
- * @version     1.1.2
+ * @version     1.1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -78,7 +78,24 @@ class Inflector
      * @return  string
      */
     static function url($str) {
-        return str_replace(' ', '-', $str);
+        return str_replace(' ', '-', urldecode($str));
+    }
+
+    /**
+     * Censor words
+     * 
+     * @param   string  $str    Input string
+     * @param   array   $censored   Bad words
+     * @param   string  $replacement    Replacement string ('')
+     * @return  string
+     * 
+     */
+    static function censor($str, array $censored, $replacement = '') {
+        foreach ($censored as $bad) {
+            $str = preg_replace("/$bad/i", $replacement, $str);
+        }
+
+        return $str;
     }
 }
 
