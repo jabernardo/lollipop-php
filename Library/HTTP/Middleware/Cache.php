@@ -13,7 +13,7 @@ use \Lollipop\HTTP\Router;
 /**
  * Lollipop Cache Middleware
  *
- * @version     1.0.1
+ * @version     1.0.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -34,14 +34,11 @@ class Cache implements Middleware
         // Get current route information
         $active_route = Router::getActiveRoute();
 
-        // Check if cache is enabled in route
-        $cache_enabled = isset($active_route['cache']) && $active_route['cache'];
-
         // Make a unique key per route
         $params = http_build_query($req->get());
         $cache_key = $active_route['path'] . '/' . implode(',', $active_route['arguments']) . '?' . $params;
 
-        if ($cache_enabled && \Lollipop\Cache::exists($cache_key)) {
+        if (\Lollipop\Cache::exists($cache_key)) {
             $cached = \Lollipop\Cache::recover($cache_key);
 
             if (is_object($cached) && $cached instanceof \Lollipop\HTTP\Response) {
@@ -54,12 +51,10 @@ class Cache implements Middleware
         // Next stack...
         $res = $next($req, $res);
 
-        if ($cache_enabled) {
-            // Cache expiration
-            $exp = isset($active_route['cache_time']) ? $active_route['cache_time'] : 1440;
-            // Save cache
-            \Lollipop\Cache::save($cache_key, $res, true, $exp);
-        }
+        // Cache expiration
+        $exp = isset($active_route['cache_time']) ? $active_route['cache_time'] : 1440;
+        // Save cache
+        \Lollipop\Cache::save($cache_key, $res, true, $exp);
 
         return $res;
     }
