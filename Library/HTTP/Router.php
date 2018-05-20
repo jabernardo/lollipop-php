@@ -22,7 +22,7 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Router Class
  *
- * @version     3.1.1
+ * @version     3.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -198,6 +198,12 @@ class Router
             $route['arguments'] = [];
         }
         
+        // Report duplicated path
+        if (isset(self::$_stored_routes[$path])) {
+            Log::error('Duplicated path: "' . $path . '"');
+            return false;
+        }
+
         // Store route
         self::$_stored_routes[$path] = $route;
 
