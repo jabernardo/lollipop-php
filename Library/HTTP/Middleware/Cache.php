@@ -38,7 +38,7 @@ class Cache implements Middleware
         $cache_key = $active_route['path'] . '/' . implode(',', $active_route['arguments']) . '?' . $params;
 
         if (\Lollipop\Cache::exists($cache_key)) {
-            $cached = \Lollipop\Cache::recover($cache_key);
+            $cached = \Lollipop\Cache::get($cache_key);
 
             if (is_object($cached) && $cached instanceof \Lollipop\HTTP\Response) {
                 // Make sure that recovered route is a valid serialized response object
