@@ -9,7 +9,6 @@ use \Lollipop\Config;
 /**
  * Lollipop Caching Library
  *
- * @version     4.2.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -22,7 +21,7 @@ class Cache
      * 
      */
     static private $_driver = null;
-    
+
     /**
      * Get cache driver
      * 
@@ -32,20 +31,30 @@ class Cache
     static private function getDriver() {
         if (self::$_driver != null) return self::$_driver;
         
-        $driver = Config::get('cache.driver', 'file');
-        
+        $driver = spare(Config::get('cache.driver'), 'file');
+
         switch (strtolower($driver)) {
             case 'memcached':
-                self::$_driver = new \Lollipop\Cache\Memcached();
+                self::$_driver = new \Lollipop\Cache\MemcachedAdapter();
                 break;
                 
             case 'file':
             default:
-                self::$_driver = new \Lollipop\Cache\File();
+                self::$_driver = new \Lollipop\Cache\FileAdapter();
                 break;
         }
         
         return self::$_driver;
+    }
+
+    /**
+     * Reload cache driver
+     *
+     * @return void
+     */
+    static function reload() {
+        // Reload cache driver
+        self::$_driver = null;
     }
     
     /**
@@ -75,15 +84,15 @@ class Cache
     }
     
     /**
-     * Recover cache
+     * Get cache
      * 
      * @access  public
      * @param   string  $key    Cache key
      * @return  mixed
      *
      */
-    static function recover($key) {
-        return self::getDriver()->recover($key);
+    static function get($key) {
+        return self::getDriver()->get($key);
     }
     
     /**
@@ -109,5 +118,3 @@ class Cache
         return self::getDriver()->purge();
     }
 }
-
-?>

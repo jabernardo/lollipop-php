@@ -9,14 +9,13 @@ use \Lollipop\Log;
 
 /**
  * Lollipop Cache File Library
- *
- * @version     1.0.3
+ * 
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
  * 
  */
-class File
+class FileAdapter implements \Lollipop\Cache\AdapterInterface
 {
     /**
      * @var     string  $_storage_path  Cache storage path
@@ -126,14 +125,14 @@ class File
     }
     
     /**
-     * Recover cache
+     * Get cache
      * 
      * @access  public
      * @param   string  $key    Cache key
      * @return  mixed
      *
      */
-    public function recover($key) {
+    public function get($key) {
         if ($this->exists($key)) {
             $key = $this->_encrypt($key);
             $contents = file_get_contents($this->_storage_path . $key);
@@ -186,5 +185,3 @@ class File
         }
     }
 }
-
-?>

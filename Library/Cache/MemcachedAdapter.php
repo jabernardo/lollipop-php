@@ -9,14 +9,13 @@ use \Lollipop\Log;
 
 /**
  * Lollipop Cache Memcached Library
- *
- * @version     1.0.1
+ * 
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
  * 
  */
-class Memcached
+class MemcachedAdapter
 {
     /**
      * @var object  $_memcached Memcache library
@@ -103,14 +102,14 @@ class Memcached
     }
     
     /**
-     * Recover cache
+     * Get cache
      * 
      * @access  public
      * @param   string  $key    Cache key
      * @return  mixed
      *
      */
-    public function recover($key) {
+    public function get($key) {
         return $this->_memcached->get($this->_encrypt($key));
     }
     
@@ -144,5 +143,3 @@ class Memcached
         $this->_memcached->flush();
     }
 }
-
-?>

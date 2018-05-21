@@ -20,17 +20,17 @@ class CacheTest extends TestCase
         
         $this->assertEquals(
                 'hello',
-                Cache::recover('message')
+                Cache::get('message')
             );
     }
     
-    public function testCacheSQLite() {
-        Config::set('cache.driver', 'sqlite3');
+    public function testCacheMemcached() {
+        Config::set('cache.driver', 'memcached');
         Cache::save('message', 'hello');
         
         $this->assertEquals(
                 'hello',
-                Cache::recover('message')
+                Cache::get('message')
             );
     }
 
@@ -43,8 +43,8 @@ class CacheTest extends TestCase
             );
     }
 
-    public function testRemoveSQLite() {
-        Config::set('cache.driver', 'sqlite3');
+    public function testRemoveMemcached() {
+        Config::set('cache.driver', 'memcached');
         Cache::save('message', 'hello');
         
         $this->assertEquals(
@@ -63,8 +63,8 @@ class CacheTest extends TestCase
             );
     }
 
-    public function testExistsSQLite() {
-        Config::set('cache.driver', 'sqlite3');
+    public function testExistsMemcached() {
+        Config::set('cache.driver', 'memcached');
         Cache::save('message', 'hello');
         Cache::remove('message');
 
@@ -85,8 +85,9 @@ class CacheTest extends TestCase
             );
     }
 
-    public function testPurgeSQLite3() {
-        Config::set('cache.driver', 'sqlite3');
+    public function testPurgeMemcached() {
+        Config::set('cache.driver', 'memcached');
+        Cache::reload();
         Cache::save('message', 'hello');
         Cache::save('name', 'Aldrich');
         Cache::purge();
