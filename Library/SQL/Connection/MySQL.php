@@ -16,34 +16,45 @@ use \Lollipop\Log;
  * @email       4ldrich@protonmail.com
  * 
  */
-class MySQL
+class MySQL implements \Lollipop\SQL\ConnectionInterface
 {
     use \Lollipop\SQL\BuilderTrait;
 
     /**
+     * Database object
+     *
+     * @var object
+     */
+    private $db;
+
+    /**
      * Connect to MySQL server
      *
-     * @return  void
+     * @return  boolean
      *
      */
     private function __connect() {
-        $db = Config::get('db');
+        if (!is_null($db)) return true;
 
-        if (!is_null($db)) {
-            $host = isset($db->host) ?  $db->host : 'localhost';
-            $uid = isset($db->username) ?  $db->username : 'root';
-            $pwd = isset($db->password) ?  $db->password : '';
-            $db = isset($db->database) ?  $db->database : 'lollipop';
-                   
-            // Instantiate MySQLi
-            $this->_mysqli = new \mysqli($host, $uid, $pwd, $db);
-            
-            if ($this->_mysqli->connect_errno > 0) {
-                Log::error($this->_mysqli->connect_error, true);
-            }
-        } else {
+        $config = Config::get('db');
+
+        if (is_null($config)) {
             Log::error('Lollipop is initialized with wrong database configuration', true);
         }
+
+        $host = isset($config->host) ?  $config->host : 'localhost';
+        $uid = isset($config->username) ?  $config->username : 'root';
+        $pwd = isset($config->password) ?  $config->password : '';
+        $db = isset($config->database) ?  $config->database : 'lollipop';
+        
+        // Instantiate MySQLi
+        $this->db = new \mysqli($host, $uid, $pwd, $db);
+        
+        if ($this->db->connect_errno > 0) {
+            Log::error($this->db->connect_error, true);
+        }
+
+        return true;
     }
 
     /**
@@ -70,20 +81,21 @@ class MySQL
                 }
             }
             
+            // Return contents
+            $results = [];
+
             // Open connection
             $this->__connect();
 
             // Execute command
-            $return = $this->_mysqli->query($this->_sql_query);
+            $return = $this->db->query($this->_sql_query);
 
             // Close connection
-            $this->_mysqli->close();
+            $this->db->close();
             
             // Log executed query
             array_push(self::$_last_commands, $this->_sql_query);
         
-            // Return contents
-            $results = [];
             
             if (is_object($return) && isset($return->num_rows)) {
                 while ($row = $return->fetch_array()) {
