@@ -938,7 +938,7 @@ class Database
             
             if ($cache_enable) {
                 if (Cache::exists($cache_key) && $cache) {
-                    return Cache::recover($cache_key);
+                    return Cache::get($cache_key);
                 }
             }
             
