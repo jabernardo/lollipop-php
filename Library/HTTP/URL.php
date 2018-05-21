@@ -24,7 +24,7 @@ use \Lollipop\Config;
  * @description Class containing usable functions for URI
  * 
  */
-class Url 
+class URL 
 {
     /**
      * Get base url
