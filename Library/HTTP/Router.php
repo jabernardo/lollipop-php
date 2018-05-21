@@ -259,7 +259,7 @@ class Router
         
         // Create an instance of URL parser for checking if current
         // path matches any route
-        $parser = new \Lollipop\HTTP\URL\Parser($url);
+        $parser = new \Lollipop\HTTP\URL\Pretty($url);
         
         // Get 404 Page Not Found
         // Check if `404` route was declared
