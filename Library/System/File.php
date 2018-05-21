@@ -9,7 +9,7 @@ use \Lollipop\Number;
 /**
  * System\File Class
  *
- * @version     1.0.0
+ * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -19,6 +19,26 @@ use \Lollipop\Number;
 class File
 {
     /**
+     * Alias is_readable
+     *
+     * @param  string   $filename   Filename
+     * @return boolean
+     */
+    static function isReadable($filename) {
+        return \is_readable($filename);
+    }
+
+    /**
+     * Alias is_writable
+     *
+     * @param  string   $filename
+     * @return boolean
+     */
+    static function isWritable($filename) {
+        return \is_writable($filename);
+    }
+
+    /**
      * Create or updates file
      *
      * @param   string  $filename   File to create or update
@@ -26,7 +46,7 @@ class File
      * @param   bool    $overwriteExisting  Overwrite existing file
      */
     static function write($filename, $contents, $overwriteExisting = true) {
-        if (file_exists($filename)) {
+        if (file_exists($filename) && self::isWritable($filename)) {
             if ($overwriteExisting) unlink($filename);
         }
 
@@ -41,7 +61,7 @@ class File
      * @return  string
      */
     static function read($filename) {
-        if (file_exists($filename)) {
+        if (file_exists($filename) && self::isReadable($filename)) {
             return file_get_contents($filename);
         }
 
@@ -57,7 +77,7 @@ class File
      * @return  long
      */
     static function size($filename, $returnFormatted = false) {
-        if ($returnFormatted) {
+        if ($returnFormatted && self::isReadable($filename)) {
             return Number::readableSize((double)filesize($filename));
         }
 
@@ -86,5 +106,3 @@ class File
         return file_exists($filename);
     }
 }
-
-?>
