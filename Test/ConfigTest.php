@@ -48,7 +48,7 @@ class ConfigTest extends TestCase
 
         $this->assertEquals(
                 null,
-                Config::get('log')->enable
+                Config::get('log.enable')
             );
     }
 }
