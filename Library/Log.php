@@ -9,7 +9,6 @@ use \Lollipop\Config;
 /**
  * Log Class
  * 
- * @version     2.1.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -123,5 +122,3 @@ class Log
         return is_null($type) ? self::$_messages : (isset(self::$_messages[$type]) ? self::$_messages[$type] : []);
     }
 }
-
-?>

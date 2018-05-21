@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Filter Class
  *
- * @version     1.2.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -71,5 +70,3 @@ class Filter
         return filter_var($string, FILTER_VALIDATE_IP) ? $string : false;
     }
 }
-
-?>

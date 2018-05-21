@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Lollipop Config Class
  *
- * @version     2.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -175,5 +174,3 @@ class Config
         }
     }
 }
-
-?>

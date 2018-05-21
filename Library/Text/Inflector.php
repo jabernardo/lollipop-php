@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Inflector Class
  *
- * @version     1.1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -98,5 +97,3 @@ class Inflector
         return $str;
     }
 }
-
-?>

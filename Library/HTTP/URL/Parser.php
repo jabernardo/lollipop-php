@@ -5,7 +5,6 @@ namespace Lollipop\HTTP\URL;
 /**
  * Route Parser Class
  * 
- * @version 1.1
  * @author  John Aldrich Bernardo <4ldrich@protonmail.com>
  * @link    https://github.com/jabernardo/calf/blob/master/src/Calf/HTTP/RouteParser.php
  * 

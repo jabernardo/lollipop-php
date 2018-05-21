@@ -27,7 +27,7 @@ function fuse(&$opt1, $opt2) {
 }
 
 /**
- * Set spare value for empty values
+ * Set spare value for empty variables
  * 
  * @param   mixed   $value  Primary value
  * @param   mixed   $spare  Spare value
@@ -39,7 +39,7 @@ function spare($value, $spare) {
 }
 
 /**
- * Set spare value for null values
+ * Set spare value for null variables
  * 
  * @param   mixed   $value  Primary value
  * @param   mixed   $spare  Spare value

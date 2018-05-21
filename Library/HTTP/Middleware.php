@@ -5,7 +5,6 @@ namespace Lollipop\HTTP;
 /**
  * Middleware Interface
  * 
- * @version 1.0
  * @author  John Aldrich Bernardo <4ldrich@protonmail.com>
  * 
  */

@@ -12,8 +12,7 @@ use \Lollipop\HTTP\Router;
 
 /**
  * Lollipop Cache Middleware
- *
- * @version     1.0.2
+ * 
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -59,5 +58,3 @@ class Cache implements Middleware
         return $res;
     }
 }
-
-?>

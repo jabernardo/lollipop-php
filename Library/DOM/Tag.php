@@ -7,14 +7,10 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * HTML Tags Class
  * 
- * @version     2.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
  * @description Class for HTML elements
- * @changes
- *      1.0     HTML Class initial
- *      2.0     Renamed HTML to Tag
  * 
  */
 class Tag
@@ -152,5 +148,3 @@ class Tag
         return $elem;
     }
 }
-
-?>

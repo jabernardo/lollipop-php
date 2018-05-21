@@ -10,7 +10,6 @@ use \Lollipop\Text;
 /**
  * Csrf Token Class
  *
- * @version     1.2.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -82,5 +81,3 @@ class CsrfToken
         return $computed <= $expiration;
     }
 }
-
-?>

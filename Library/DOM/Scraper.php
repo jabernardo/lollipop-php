@@ -9,7 +9,6 @@ use \Lollipop\Log;
 /**
  * Web Scraper Class
  * 
- * @version     1.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -258,5 +257,3 @@ class Scraper
         return $contents;
     }
 }
-
-?>

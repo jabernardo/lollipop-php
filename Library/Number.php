@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Number Class
  *
- * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -20,11 +19,11 @@ class Number
      * Constant for currency
      * 
      */
-    CONST CURRENCY_EURO	= 128;
-    CONST CURRENCY_GBP	= 163;
-    CONST CURRENCY_USD	= 36;
-    CONST CURRENCY_PESO	= 80;
-    CONST CURRENCY_YEN	= 165;
+    CONST CURRENCY_EURO = 128;
+    CONST CURRENCY_GBP  = 163;
+    CONST CURRENCY_USD  = 36;
+    CONST CURRENCY_PESO = 80;
+    CONST CURRENCY_YEN  = 165;
     
     /**
      * Checks if number is in between the given range
@@ -128,5 +127,3 @@ class Number
         return $size . ' Bytes';
     }
 }
-
-?>

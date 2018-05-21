@@ -16,9 +16,8 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 use \Lollipop\Cookie;
 
 /**
- * Lollipop Route Class
+ * Lollipop Response Class
  *
- * @version     1.0.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -221,5 +220,3 @@ class Response
         print($res);
     }
 }
-
-?>

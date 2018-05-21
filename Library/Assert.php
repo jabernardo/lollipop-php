@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Assertion Tests Class
  *
- * @version     1.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -132,5 +131,3 @@ class Assert
         return true;
     }
 }
-
-?>

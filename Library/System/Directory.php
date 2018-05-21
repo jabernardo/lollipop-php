@@ -9,7 +9,6 @@ use \Lollipop\Number;
 /**
  * System\Directory Class
  *
- * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -92,5 +91,3 @@ class Directory
         return false;
     }
 }
-
-?>

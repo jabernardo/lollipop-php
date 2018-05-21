@@ -14,7 +14,6 @@ use \Lollipop\HTTP\Middleware;
 /**
  * Lollipop AntiCsrf Middleware
  *
- * @version     1.1.4
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -66,5 +65,3 @@ class AntiCsrf implements Middleware
         return $res;
     }
 }
-
-?>

@@ -9,7 +9,6 @@ use \Lollipop\Text;
 /**
  * Cookie Class
  * 
- * @version     1.1.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -69,5 +68,3 @@ class Cookie
         setcookie($key, '', time() - 2650000, $path);
     }
 }
-
-?>

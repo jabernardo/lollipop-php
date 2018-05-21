@@ -11,7 +11,6 @@ use \Lollipop\Text;
 /**
  * Page Class 
  *
- * @version     1.3.7
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -62,5 +61,3 @@ class Page
         return false;
     }
 }
-
-?>

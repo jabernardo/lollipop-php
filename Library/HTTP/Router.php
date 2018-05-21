@@ -22,7 +22,6 @@ use \Lollipop\HTTP\Request;
 /**
  * Lollipop Router Class
  *
- * @version     3.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -465,5 +464,3 @@ class Router
         ];
     }
 }
-
-?>

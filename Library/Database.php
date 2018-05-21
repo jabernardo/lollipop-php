@@ -12,8 +12,6 @@ use \Lollipop\Log;
  * Database Driver for MySQLi
  *
  * @package     Lollipop
- * @version     2.8.4
- * @uses        \Lollipop\Cache
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @description MySQLi Database Adapter
@@ -976,5 +974,3 @@ class Database
         }
     }
 }
-
-?>

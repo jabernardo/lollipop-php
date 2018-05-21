@@ -17,6 +17,14 @@ use \Lollipop\Log;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
 
+/**
+ * Lollipop Route Class
+ *
+ * @author      John Aldrich Bernardo
+ * @email       4ldrich@protonmail.com
+ * @package     Lollipop
+ * 
+ */
 class Route
 {
     /**

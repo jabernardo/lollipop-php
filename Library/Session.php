@@ -10,7 +10,6 @@ use \Lollipop\Text;
 /**
  * Session Class 
  *
- * @version     1.2.3
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -138,5 +137,3 @@ class Session
         return $key;
     }
 }
-
-?>

@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Benchmark Class
  *
- * @version     1.1.2
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -87,5 +86,3 @@ class Benchmark
         return $start ? round($end - $start, 10) : null;
     }
 }
-
-?>

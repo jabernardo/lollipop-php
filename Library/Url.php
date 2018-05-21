@@ -18,7 +18,6 @@ use \Lollipop\Config;
 /**
  * Url Class
  *
- * @version     1.5.5
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -100,5 +99,3 @@ class Url
         exit();
     }
 }
-
-?>

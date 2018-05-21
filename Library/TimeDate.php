@@ -7,7 +7,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 /**
  * Date Class
  *
- * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -132,5 +131,3 @@ class TimeDate
         return $r->format('H:i:s');
     }
 }
-
-?>

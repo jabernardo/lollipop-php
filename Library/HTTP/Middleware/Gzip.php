@@ -13,7 +13,6 @@ use \Lollipop\HTTP\Middleware;
 /**
  * Lollipop Gzip Middleware
  *
- * @version     1.0.0
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -42,5 +41,3 @@ class Gzip implements Middleware
         return $res;
     }
 }
-
-?>
