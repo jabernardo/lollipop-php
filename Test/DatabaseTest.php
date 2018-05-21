@@ -9,16 +9,28 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
 
-use \Lollipop\Database;
+use \Lollipop\SQL\Builder as SQLBuilder;
+use \Lollipop\SQL\Connection\MySQL as MySQLDatabase;
 use \PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
     public function testObject() {
-        $db = Database::table('messages')
+        $db = SQLBuilder::table('messages')
             ->where('id', 1)
             ->selectAll();
             
+        $this->assertEquals(
+                'SELECT * FROM messages WHERE id = \'1\'',
+                (string)$db
+            );
+    }
+
+    public function testObjectConnection() {
+        $db = MySQLDatabase::table('messages')
+            ->where('id', 1)
+            ->selectAll();
+        
         $this->assertEquals(
                 'SELECT * FROM messages WHERE id = \'1\'',
                 (string)$db
