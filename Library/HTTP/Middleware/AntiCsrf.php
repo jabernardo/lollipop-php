@@ -6,7 +6,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
 use \Lollipop\Cookie;
-use \Lollipop\CsrfToken;
+use \Lollipop\Security\CsrfToken;
 use \Lollipop\HTTP\Request;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Middleware;
