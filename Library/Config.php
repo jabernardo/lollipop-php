@@ -131,8 +131,9 @@ class Config
      *          'environment'   =>  'stg' or 'staging'
      *          'environment'   =>  'prd' or 'production'
      *
+     * @throws  \Lollipop\Exception\Configuration
      * @return  void
-     *
+     * 
      */
     static private function _setEnvironment() {
         switch(strtolower(spare(self::get('environment'), 'dev'))) {
@@ -152,7 +153,7 @@ class Config
                 error_reporting(0);
                 break;
             default:
-                Log::error('Invalid application environment: ' . self::get('environment'), true);
+                throw new \Lollipop\Exception\Configuration('Invalid environment configured');
                 break;
         }
         

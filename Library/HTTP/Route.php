@@ -13,7 +13,6 @@ if (!isset($_SERVER['REQUEST_URI'])) {
     exit('Lollipop Application must be run on a web server.' . PHP_EOL);
 }
 
-use \Lollipop\Log;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
 
@@ -35,6 +34,7 @@ class Route
      * @param   \Lollipop\HTTP\Request  $req    Request Object
      * @param   \Lollipop\HTTP\Response $res    Response Object
      * @param   array   $args       Parameters to be passed to callback
+     * @throws  \Lollipop\Exception\HTTP\Route
      * @return  \Lollipop\HTTP\Response
      *
      */
@@ -48,9 +48,8 @@ class Route
             
             switch (count($ctoks)) {
                 case 1: // Function only
-                    if (!function_exists($action = $ctoks[0])) {
-                        Log::error('Callback is not a function', true);
-                    }
+                    if (!function_exists($action = $ctoks[0]))
+                        throw new \Lollipop\Exception\HTTP\Route('Callback is not a function');
                     
                     ob_start();
                     $output = call_user_func($action, $req, $res, $args); // Update callback
@@ -65,13 +64,13 @@ class Route
                         $output = call_user_func([ $controller, $action ], $req, $res, $args);
                         ob_get_clean();
                     } else {
-                        Log::error('Can\'t find controller and action', true);
+                        throw new \Lollipop\Exception\HTTP\Route('Can\'t find controller and action');
                     }
                 
                     break;
                 
                 default: // Invalid callback
-                    Log::error('Callback is not a function', true);
+                    throw new \Lollipop\Exception\HTTP\Route('Callback is not a function');
                     
                     break;
             }

@@ -16,7 +16,6 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
-use \Lollipop\Log;
 use \Lollipop\HTTP\Response;
 
 /**
@@ -171,6 +170,8 @@ class Request
      *          ]
      *  ]
      * 
+     * @throws  \Lollipop\Exception\Argument
+     * 
      * @return  mixed
      * 
      */
@@ -195,7 +196,7 @@ class Request
         $url = isset($options['url']) ? $options['url'] : false;
         
         if (!$url) {
-            Log::error('URL missing on Request', true);
+            throw new \Lollipop\Exception\Argument('URL missing on Request');
         }
         
         // Auth: CURLOPT_USERPWD

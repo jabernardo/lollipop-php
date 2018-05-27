@@ -5,7 +5,6 @@ namespace Lollipop\Cache;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
-use \Lollipop\Log;
 
 /**
  * Lollipop Cache File Library
@@ -26,6 +25,7 @@ class FileAdapter implements \Lollipop\Cache\AdapterInterface
     /**
      * Class construct
      * 
+     * @throws  \Lollipop\Exception\Runtime
      * @return  void
      * 
      */
@@ -37,11 +37,11 @@ class FileAdapter implements \Lollipop\Cache\AdapterInterface
         
         // For `filesystem` check storage path
         if (!is_dir($this->_storage_path)) {
-            Log::error('Can\'t find app/cache folder', true);
+            throw new \Lollipop\Exception\Runtime('Can\'t find app/cache folder');
         }
         
         if (!is_writable($this->_storage_path)) {
-            Log::error('Permission denied for app/cache', true);
+            throw new \Lollipop\Exception\Runtime('Permission denied for app/cache');
         }
     }
     

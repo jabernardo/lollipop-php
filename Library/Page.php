@@ -5,7 +5,6 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
-use \Lollipop\Log;
 use \Lollipop\Text;
 
 /**
@@ -24,7 +23,8 @@ class Page
      * 
      * @param   string  $view   File address
      * @param   array   $data   Data
-     *
+     * @throws  \Lollipop\Exception\Runtime
+     * 
      * @return  string
      */
     static function render($view, array $data = []) {
@@ -38,7 +38,7 @@ class Page
                     $$_data = $_value;
                 }
             } else {
-                Log::error('Lollipop Exception: Can\'t define variable');
+                throw new \Lollipop\Exception\Runtime('Can\'t define variable');
             }
         
             $file = new \SplFileInfo($view);

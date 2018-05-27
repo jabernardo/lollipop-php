@@ -85,14 +85,15 @@ class URL
      * Redirect page to another urldecode
      *
      * @access  public
-     * @param   string     $uri    Web address 
+     * @param   string     $uri    Web address
+     * @throws  \Lollipop\Exception\Argument
      * @return  void
      * 
      */
     static function redirect($uri) {
         // Check first if given string is a valid URL 
         if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-            Log::error('URL is invalid', true);
+            throw new \Lollipop\Exception\Argument('URL is invalid', true);
         }
         
         header('location: ' . $uri);

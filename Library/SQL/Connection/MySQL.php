@@ -6,7 +6,6 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Cache;
 use \Lollipop\Config;
-use \Lollipop\Log;
 
 /**
  * MySQLi Connection Adapter
@@ -30,6 +29,8 @@ class MySQL implements \Lollipop\SQL\ConnectionInterface
     /**
      * Connect to MySQL server
      *
+     * @throws  \Lollipop\Exception\Configuration
+     * @throws  \Lollipop\Exception\Connection
      * @return  boolean
      *
      */
@@ -39,7 +40,7 @@ class MySQL implements \Lollipop\SQL\ConnectionInterface
         $config = Config::get('db');
 
         if (is_null($config)) {
-            Log::error('Lollipop is initialized with wrong database configuration', true);
+            throw new \Lollipop\Exception\Configuration('Lollipop is initialized with wrong database configuration');
         }
 
         $host = isset($config->host) ?  $config->host : 'localhost';
@@ -51,7 +52,7 @@ class MySQL implements \Lollipop\SQL\ConnectionInterface
         $this->db = new \mysqli($host, $uid, $pwd, $db);
         
         if ($this->db->connect_errno > 0) {
-            Log::error($this->db->connect_error, true);
+            throw new \Lollipop\Exception\Connection($this->db->connect_error);
         }
 
         return true;

@@ -4,8 +4,6 @@ namespace Lollipop\DOM;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-use \Lollipop\Log;
-
 /**
  * Web Scraper Class
  * 
@@ -45,12 +43,14 @@ class Scraper
      * Web Scrapper
      *
      * @param    string    $url    URI of webpage to scrap
-     *
+     * @throws   \Lollipop\Exception\Argument
+     * @throws   \Lollipop\Exception\Connection
+     * 
      */
     function __construct($url, $post = null, $user_agent = null) {
         // Check first if given string is a valid URL 
         if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-            Log::error('URL is invalid', true);
+            throw new \Lollipop\Exception\Argument('URL is invalid');
         }
         
         // Set current url
@@ -81,7 +81,7 @@ class Scraper
         $resp = curl_exec($curl);
         
         if (!$resp) {
-            Log::error($url . ' not Found!');
+            throw new \Lollipop\Exception\Connection($url . ' not Found!');
         }
         
         // Close request to clear up some resources

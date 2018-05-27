@@ -5,7 +5,6 @@ namespace Lollipop\Cache;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
-use \Lollipop\Log;
 
 /**
  * Lollipop Cache Memcached Library
@@ -26,13 +25,15 @@ class MemcachedAdapter
     /**
      * Class construct
      * 
+     * @throws  \Lollipop\Exception\Runtime
+     * @throws  \Lollipop\Exception\Connection
      * @return  void
      * 
      */
     function __construct() {
         // Check if `Memcached` extension is enabled
         if (!class_exists('\\Memcached')) {
-            Log::error('`Memcached` extension was not found.', true);
+            throw new \Lollipop\Exception\Runtime('`Memcached` extension was not found');
         }
         
         // Get storage path
@@ -44,7 +45,7 @@ class MemcachedAdapter
         
         // Test connection
         if (!$this->save('sugar_' . rand(), Config::get('sugar', SUGAR))) {
-            Log::error('Memcached connection failed.', true);
+            throw new \Lollipop\Exception\Connection('Memcached connection failed.');
         }
     }
     

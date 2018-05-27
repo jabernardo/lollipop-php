@@ -14,7 +14,6 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 }
 
 use \Lollipop\Config;
-use \Lollipop\Log;
 use \Lollipop\HTTP\Route;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
@@ -172,13 +171,14 @@ class Router
      *          'method' => ['GET', 'POST'],
      *      ]
      * 
+     * @throws \Lollipop\Exception\HTTP\Router
      * @return  void
      *
      */
     static public function serve(array $route) {
         if (!isset($route['path']) || !isset($route['callback']) || 
             (isset($route['method']) && is_string($route['method']))) {
-            Log::error('Invalid route.');
+            throw new \Lollipop\Exception\HTTP\Router('Invalid route');
         }
         
         // Default path to '/'
@@ -198,10 +198,8 @@ class Router
         }
         
         // Report duplicated path
-        if (isset(self::$_stored_routes[$path])) {
-            Log::error('Duplicated path: "' . $path . '"');
-            return false;
-        }
+        if (isset(self::$_stored_routes[$path]))
+            throw new \Lollipop\Exception\HTTP\Router("Duplicate path: $path");
 
         // Store route
         self::$_stored_routes[$path] = $route;
@@ -400,13 +398,14 @@ class Router
      * 
      * @access  private
      * @param   Callable    $callback   Middleware callable
+     * @throws  \Lollipop\Exception\HTTP\Router
      * @return  void
      *
      */
     static private function _stackMiddleware(Callable $callback) {
         if (self::$_busy) {
             // Make sure it's not busy before adding something.
-            throw new \Exception('Can\'t add new middleware while dequeue in progress.');
+            throw new \Lollipop\Exception\HTTP\Router('Can\'t add new middleware while dequeue in progress');
         }
         
         if (is_null(self::$_kernel)) {
