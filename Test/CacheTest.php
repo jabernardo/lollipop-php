@@ -23,16 +23,6 @@ class CacheTest extends TestCase
                 Cache::get('message')
             );
     }
-    
-    public function testCacheMemcached() {
-        Config::set('cache.driver', 'memcached');
-        Cache::save('message', 'hello');
-        
-        $this->assertEquals(
-                'hello',
-                Cache::get('message')
-            );
-    }
 
     public function testRemove() {
         Cache::save('message', 'hello');
@@ -43,16 +33,6 @@ class CacheTest extends TestCase
             );
     }
 
-    public function testRemoveMemcached() {
-        Config::set('cache.driver', 'memcached');
-        Cache::save('message', 'hello');
-        
-        $this->assertEquals(
-                true,
-                Cache::remove('message')
-            );
-    }
-    
     public function testExists() {
         Cache::save('message', 'hello');
         Cache::remove('message');
@@ -63,31 +43,7 @@ class CacheTest extends TestCase
             );
     }
 
-    public function testExistsMemcached() {
-        Config::set('cache.driver', 'memcached');
-        Cache::save('message', 'hello');
-        Cache::remove('message');
-
-        $this->assertEquals(
-                false,
-                Cache::exists('message')
-            );
-    }
-    
     public function testPurge() {
-        Cache::save('message', 'hello');
-        Cache::save('name', 'Aldrich');
-        Cache::purge();
-        
-        $this->assertEquals(
-                false,
-                Cache::exists('message') && Cache::exists('message')
-            );
-    }
-
-    public function testPurgeMemcached() {
-        Config::set('cache.driver', 'memcached');
-        Cache::reload();
         Cache::save('message', 'hello');
         Cache::save('name', 'Aldrich');
         Cache::purge();
