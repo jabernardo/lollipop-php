@@ -9,7 +9,7 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
 
-use \Lollipop\CsrfToken;
+use \Lollipop\Security\CsrfToken;
 use \PHPUnit\Framework\TestCase;
 
 class CsrfTokenTest extends TestCase
