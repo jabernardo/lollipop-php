@@ -26,34 +26,58 @@ class Log
             'info' => [],
             'warn' => [],
             'error' => [],
-            'notice' => []
+            'fatal' => [],
+            'debug' => []
         ];
+    
+    /**
+     * Check if log file is busy
+     * This is will make sure of file locking with file_put_contents
+     * 
+     * @type    boolean
+     * 
+     */
+    private static $_busy ;
     
     /**
      * Append to log file
      * 
      * @param   string  $message    Message log
      * 
+     * @throws  \Lollipop\Exception\Runtime
+     * @throws  \Lollipop\Exception\Argument
+     * 
      * @return  bool
      * 
      */
-    private static function __writeOutLog($message) {
+    private static function _write($type, $message) {
         $log_path = Config::get('log.folder', LOLLIPOP_STORAGE_LOG);
         $log_enable = Config::get('log.enable', true);
         $log_hourly = Config::get('log.hourly', false);
         
-        if (!is_dir($log_path)) {
-           die('Lollipop Application has been terminated due to unhandled error: Log folder doesn\'t exists.'); 
+        if (!is_dir($log_path))
+           throw new \Lollipop\Exception\Runtime('Log folder doesn\'t exists'); 
+        
+        if (!is_writeable($log_path))
+           throw new \Lollipop\Exception\Runtime('Log folder is not writeable'); 
+
+        if (!isset(self::$_messages[$type]))
+            throw new \Lollipop\Exception\Argument('Invalid log type');
+        
+        // Save to memory
+        array_push(self::$_messages[$type], $message);
+        
+        if ($log_enable && !self::$_busy) {
+            self::$_busy = true;
+            
+            // Create filename base on configuration (daily or hourly)
+            $filename = $log_path . DIRECTORY_SEPARATOR . ($log_hourly ? date('Y-m-d-H') : date('Y-m-d')) . '.log';
+            
+            // Save to file
+            file_put_contents($filename, date('Y-m-d H:i:s') . ' [' . strtoupper($type) . '] ' . $message . "\n", FILE_APPEND);
+            
+            self::$_busy = false;
         }
-        
-        if (!is_writeable($log_path)) {
-           die('Lollipop Application has been terminated due to unhandled error: Log folder is not writeable.'); 
-        }
-        
-        $filename = $log_path . DIRECTORY_SEPARATOR . ($log_hourly ? date('Y-m-d-H') : date('Y-m-d')) . '.log';
-        
-        if ($log_enable)
-            file_put_contents($filename, $message . "\n", FILE_APPEND);
     }
     
     /**
@@ -65,8 +89,7 @@ class Log
      * 
      */
     public static function info($message) {
-        array_push(self::$_messages['info'], $message);
-        self::__writeOutLog('INFO: ' . date('H:i:s') . ': ' . $message);
+        self::_write('info', $message);
     }
     
     /**
@@ -78,37 +101,43 @@ class Log
      * 
      */
     public static function warn($message) {
-        array_push(self::$_messages['warn'], $message);
-        self::__writeOutLog('WARNING: ' . date('H:i:s') . ': ' . $message);
+        self::_write('warn', $message);
     }
     
     /**
      * Log error message
      * 
      * @param   string  $message    Message
-     * @param   bool    $die        Die
      * 
      * @return  void
      * 
      */
-    public static function error($message, $die = false) {
-        array_push(self::$_messages['error'], $message);
-        self::__writeOutLog('ERROR: ' . date('H:i:s') . ': ' . $message);
-        
-        if ($die) exit('Lollipop Application has been terminated due to unhandled error: ' . $message);
+    public static function error($message) {
+        self::_write('error', $message);
     }
     
     /**
-     * Log notification message
+     * Log fatal message
      * 
      * @param   string  $message    Message
      * 
      * @return  void
      * 
      */
-    public static function notice($message) {
-        array_push(self::$_messages['notice'], $message);
-        self::__writeOutLog('NOTICE: ' . date('H:i:s') . ': ' . $message);
+    public static function fatal($message) {
+        self::_write('fatal', $message);
+    }
+    
+    /**
+     * Log debug message
+     * 
+     * @param   string  $message    Message
+     * 
+     * @return  void
+     * 
+     */
+    public static function debug($message) {
+        self::_write('debug', $message);
     }
     
     /**
