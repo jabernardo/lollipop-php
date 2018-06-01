@@ -142,6 +142,17 @@ class Request
     }
     
     /**
+     * File Uploads
+     * 
+     * @access  public
+     * @return  object
+     * 
+     */
+    public function file($name) {
+        return new \Lollipop\HTTP\Upload($name);
+    }
+    
+    /**
      * Simple cURL Wrapper
      * 
      * @access  public
