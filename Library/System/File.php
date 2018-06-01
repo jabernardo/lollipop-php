@@ -115,7 +115,7 @@ class File
      */
     static function rename($src, $dest) {
         if (self::exists($dest)) {
-            throw new \Lollipop\Exception\Runtime('File already exists');
+            throw new \Lollipop\Exception\Runtime('File already exists: ' . $dest);
         }
         
         if (is_uploaded_file($src)) {
