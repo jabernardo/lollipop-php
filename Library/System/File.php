@@ -114,21 +114,14 @@ class File
      * 
      */
     static function rename($src, $dest) {
-        return \rename($src, $dest);
-    }
-    
-    /**
-     * Move uploaded files
-     * 
-     * @throws  \Lollipop\Exception\Runtime
-     * @return  int
-     * 
-     */
-    static function moveUploaded($src, $dest) {
         if (self::exists($dest)) {
             throw new \Lollipop\Exception\Runtime('File already exists');
         }
         
-        return move_uploaded_file($src, $dest);
+        if (is_uploaded_file($src)) {
+            return \move_uploaded_file($src, $dest);
+        }
+        
+        return \rename($src, $dest);
     }
 }
