@@ -13,20 +13,10 @@ Or see [LMVC](http://github.com/jabernardo/lmvc) for routing using
 [Lollipop](https://github.com/jabernardo/lollipop-php)
 
 ```apache
-# Enable running of scripts
-AddHandler cgi-script .pl .cgi
-Options +ExecCGI +FollowSymLinks
-
-# Disable Indexing of Directories
-Options -Indexes
-
-# Enable RewriteEngine
-RewriteEngine on
-
-# Redirect request to index
+RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$/? index.php [L]
+RewriteRule ^ index.php [QSA,L]
 ```
 
 A simple `Hello World` Page
