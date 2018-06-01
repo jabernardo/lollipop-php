@@ -9,7 +9,6 @@ use \Lollipop\Number;
 /**
  * System\File Class
  *
- * @version     1.0.1
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
@@ -104,5 +103,32 @@ class File
      */
     static function exists($filename) {
         return file_exists($filename);
+    }
+    
+    /**
+     * Alias rename file
+     * 
+     * @param   string  $src    Source file
+     * @param   string  $dest   Destination file
+     * @return  int
+     * 
+     */
+    static function rename($src, $dest) {
+        return \rename($src, $dest);
+    }
+    
+    /**
+     * Move uploaded files
+     * 
+     * @throws  \Lollipop\Exception\Runtime
+     * @return  int
+     * 
+     */
+    static function moveUploaded($src, $dest) {
+        if (self::exists($dest)) {
+            throw new \Lollipop\Exception\Runtime('File already exists');
+        }
+        
+        return move_uploaded_file($src, $dest);
     }
 }
