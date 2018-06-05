@@ -5,69 +5,65 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
-use \Lollipop\Text;
 
 /**
- * Session Class 
+ * Lollipop Session Library
  *
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
- * @description Class containing usable functions for a secured session
+ * 
  */
 class Session
 {
     /**
-     * Starts session
-     *
-     * @access  public
-     * @return  void
+     * @var object  $_driver    Driver Object
      * 
      */
-    static function start() {
-        if (!isset($_SESSION)) session_start();
+    static private $_driver = null;
+
+    /**
+     * Get session driver
+     * 
+     * @return  object
+     * 
+     */
+    static private function getDriver() {
+        if (self::$_driver != null) return self::$_driver;
+        
+        $driver = spare(Config::get('session.driver'), 'default');
+
+        switch (strtolower($driver)) {
+            case 'default':
+            default:
+                self::$_driver = new \Lollipop\Session\Session();
+                break;
+        }
+        
+        return self::$_driver;
     }
 
     /**
-     * Stops current session
+     * Reload session driver
      *
-     * @access  public
-     * @return  void
-     * 
+     * @return void
      */
-    static function stop() {
-        if (isset($_SESSION)) session_destroy();
+    static function reload() {
+        // Reload session driver
+        self::$_driver = null;
     }
-
+    
     /**
-     * Checks if a session variable exists
-     *
-     * @access  public
-     * @param   string  $key    Session variable name
+     * Check if session exists
+     * 
+     * @param   string  $key    Cache key
      * @return  bool
      * 
      */
     static function exists($key) {
-        self::start();
-        
-        $key = substr(sha1($key), 0, 10);
-        
-        if (isset($_SESSION[$key])) return true;
-        
-        return false;
+        return self::getDriver()->exists($key);
     }
-
-    /**
-     * Returns the key used in encrypting session variables
-     *
-     * @access  public
-     * @return  string
-     * 
-     */
-    static function key() {
-        return md5(Config::get('sugar', Text::lock(SUGAR)));
-    }
-
+    
     /**
      * Creates a new session or sets an existing sesssion
      *
@@ -78,47 +74,31 @@ class Session
      * 
      */
     static function set($key, $value) {
-        self::start();
-        
-        $key = substr(sha1($key), 0, 10);
-        
-        $_SESSION[$key] = Text::lock($value, self::key());
-        
-        return $key;
+        return self::getDriver()->set($key, $value);
     }
-
+    
     /**
-     * Gets session variable's value
-     *
-     * @access  public
-     * @param   string  $key    Session variable name
-     * @return  string
+     * Get session
      * 
+     * @access  public
+     * @param   string  $key    Cache key
+     * @return  mixed
+     *
      */
     static function get($key) {
-        self::start();
-        
-        $key = substr(sha1($key), 0, 10);
-        
-        if (isset($_SESSION[$key])) {
-            return trim(Text::unlock($_SESSION[$key], self::key()));
-        } else {
-            return '';
-        }
+        return self::getDriver()->get($key);
     }
-
+    
     /**
      * Get all session variables
      * 
      * @access  public
-     * @return  void
+     * @return  array
      */
     static function getAll() {
-        self::start();
-
-        return $_SESSION;
+        return self::getDriver()->getAll();
     }
-
+    
     /**
      * Removes a session variable
      *
@@ -127,13 +107,17 @@ class Session
      * @return  string  Deleted encrypted key
      * 
      */
-    static function drop($key) {
-        self::start();
-        
-        $key = substr(sha1($key), 0, 10);
-        
-        if (isset($_SESSION[$key])) unset($_SESSION[$key]);
-        
-        return $key;
+    static function remove($key) {
+        return self::getDriver()->remove($key);
+    }
+    
+    /**
+     * Remove all registered session variables
+     * 
+     * @return  bool
+     * 
+     */
+    static function removeAll() {
+        return self::getDriver()->removeAll();
     }
 }
