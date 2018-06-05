@@ -8,12 +8,12 @@ use \Lollipop\Config;
 use \Lollipop\Text;
 
 /**
- * Session Class 
+ * Secured Session Class using PHP Build-it Session 
  *
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop 
- * @description Class containing usable functions for a secured session
+ * 
  */
 class Session implements \Lollipop\Session\AdapterInterface
 {
@@ -27,17 +27,6 @@ class Session implements \Lollipop\Session\AdapterInterface
         if (!isset($_SESSION)) {
             session_start();
         }
-    }
-    
-    /**
-     * Returns the key used in encrypting session variables
-     *
-     * @access  private
-     * @return  string
-     * 
-     */
-    private function sugar() {
-        return md5(Config::get('sugar', Text::lock(SUGAR)));
     }
     
     /**
@@ -59,7 +48,9 @@ class Session implements \Lollipop\Session\AdapterInterface
      * 
      */
     private function secureValue($text) {
-        return Text::lock($text, $this->sugar());
+        $sugar = md5(Config::get('sugar', Text::lock(SUGAR)));
+        
+        return Text::lock($text, $sugar);
     }
     
     /**
