@@ -41,6 +41,15 @@ interface AdapterInterface
     public function get($key);
     
     /**
+     * Get session id
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public function getId();
+    
+    /**
      * Get all session variables
      * 
      * @access  public

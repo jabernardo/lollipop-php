@@ -30,6 +30,17 @@ class Session implements \Lollipop\Session\AdapterInterface
     }
     
     /**
+     * Returns the key used in encrypting session variables
+     *
+     * @access  private
+     * @return  string
+     * 
+     */
+    private function sugar() {
+        return md5(Config::get('sugar', Text::lock(SUGAR)));
+    }
+    
+    /**
      * Secure Key
      * 
      * @access  private
@@ -48,9 +59,7 @@ class Session implements \Lollipop\Session\AdapterInterface
      * 
      */
     private function secureValue($text) {
-        $sugar = md5(Config::get('sugar', Text::lock(SUGAR)));
-        
-        return Text::lock($text, $sugar);
+        return Text::lock($text, $this->sugar());
     }
     
     /**
@@ -101,6 +110,17 @@ class Session implements \Lollipop\Session\AdapterInterface
         } else {
             return '';
         }
+    }
+    
+    /**
+     * Get session id
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    public function getId() {
+        return session_id();
     }
 
     /**

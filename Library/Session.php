@@ -90,6 +90,17 @@ class Session
     }
     
     /**
+     * Get session id
+     * 
+     * @access  public
+     * @return  string
+     * 
+     */
+    static function getId() {
+        return self::getDriver()->getId();
+    }
+    
+    /**
      * Get all session variables
      * 
      * @access  public
