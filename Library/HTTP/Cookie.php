@@ -27,8 +27,8 @@ class Cookie
      * @return  void
      *
      */
-    static function set($key, $value, $path = '/', $expiration = 2592000) {
-        setcookie($key, $value, time() + $expiration, $path);
+    static function set($name, $value = "", $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false) {
+        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 
     /**
@@ -64,7 +64,7 @@ class Cookie
      * @return  void
      *
      */
-    static function drop($key, $path = '/') {
-        setcookie($key, '', time() - 2650000, $path);
+    static function drop($name, $path = "", $domain = "") {
+        setcookie($name, '', time() - 2650000, $path, $domain);
     }
 }
