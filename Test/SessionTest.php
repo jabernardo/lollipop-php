@@ -32,9 +32,9 @@ class SessionTest extends TestCase
             );
     }
     
-    public function testDrop() {
+    public function testRemove() {
         Session::set('message', 'hello');
-        Session::drop('message');
+        Session::remove('message');
         
         $this->assertEquals(
                 false,
