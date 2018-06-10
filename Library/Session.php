@@ -34,6 +34,10 @@ class Session
         $driver = spare(Config::get('session.driver'), 'default');
 
         switch (strtolower($driver)) {
+            case 'cookie':
+                self::$_driver = new \Lollipop\Session\Cookie();
+                break;
+                
             case 'default':
             default:
                 self::$_driver = new \Lollipop\Session\Session();
