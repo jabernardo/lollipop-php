@@ -31,7 +31,7 @@ class Page
         if (file_exists($view)) {
             if (is_array($data)) {
                 foreach ($data as $_data => $_value) {
-                    if (Config::get('anti_xss') && is_string($_value)) {
+                    if (Config::get('security.anti_xss') && is_string($_value)) {
                         $_value = Text::entities($_value);
                     }
                     

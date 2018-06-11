@@ -25,7 +25,7 @@ class Text
      * 
      */
     private static function _getSecMethod() {
-        return Config::get('text.security.method', 'AES256');
+        return Config::get('security.text.method', 'AES256');
     }
     
     /**
@@ -36,7 +36,7 @@ class Text
      * 
      */
     private static function _geteSecKey() {
-        return md5(Config::get('text.security.key', SUGAR));
+        return md5(Config::get('security.text.key', SUGAR));
     }
     
     /**
@@ -47,7 +47,7 @@ class Text
      * 
      */
     private static function _getSecIv() {
-        return Config::get('text.security.iv', substr(md5(SUGAR), 0, 16));
+        return Config::get('security.text.iv', substr(md5(SUGAR), 0, 16));
     }
     
     /**

@@ -31,9 +31,9 @@ class AntiCsrf implements Middleware
      * 
      */
     public function __invoke(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, Callable $next) {
-        $acsrf_enable = Config::get('anti_csrf.enable', true);
+        $acsrf_enable = Config::get('security.anti_csrf.enable', true);
         $acsrf_name = CsrfToken::getName();
-        $expiration = Config::get('anti_csrf.expiration', 18000);
+        $expiration = Config::get('security.anti_csrf.expiration', 18000);
         $failed = false;
         
         if (!$req->isMethod('get') && $acsrf_enable &&

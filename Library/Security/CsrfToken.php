@@ -37,7 +37,7 @@ class CsrfToken
      * 
      */
     public static function getKey() {
-        return Config::get('anti_csrf.key', SUGAR);
+        return Config::get('security.anti_csrf.key', SUGAR);
     }
     
     /**
@@ -48,7 +48,7 @@ class CsrfToken
      * 
      */
     public static function getName() {
-        return Config::get('anti_csrf.name', 'sugar');
+        return Config::get('security.anti_csrf.name', 'sugar');
     }
     
     /**
@@ -74,7 +74,7 @@ class CsrfToken
      */
     public static function isValid($token) {
         // Get configuration
-        $expiration = Config::get('anti_csrf.expiration', 18000);
+        $expiration = Config::get('security.anti_csrf.expiration', 18000);
         // Compute for token availablity
         $computed = microtime(true) - (double)Text::unlock($token, self::getKey());
         
