@@ -1,4 +1,6 @@
-# [Lollipop](http://github.com/jabernardo/lollipop-php) ![Travis: Build Status](https://travis-ci.org/jabernardo/lollipop-php.svg?branch=master "Travis: Build Status")
+# [Lollipop](http://github.com/jabernardo/lollipop-php)
+![Travis: Build Status](https://travis-ci.org/jabernardo/lollipop-php.svg?branch=master "Travis: Build Status")
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A slim and very flexible framework for PHP
 
