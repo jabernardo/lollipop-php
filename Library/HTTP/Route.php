@@ -64,7 +64,7 @@ class Route
                         $output = call_user_func([ $controller, $action ], $req, $res, $args);
                         ob_get_clean();
                     } else {
-                        throw new \Lollipop\Exception\HTTP\Route('Can\'t find controller and action');
+                        throw new \Lollipop\Exception\HTTP\Route("Cannot find controller and action");
                     }
                 
                     break;

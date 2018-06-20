@@ -405,7 +405,7 @@ class Router
     static private function _stackMiddleware(Callable $callback) {
         if (self::$_busy) {
             // Make sure it's not busy before adding something.
-            throw new \Lollipop\Exception\HTTP\Router('Can\'t add new middleware while dequeue in progress');
+            throw new \Lollipop\Exception\HTTP\Router('Cannot add new middleware while dequeue in progress');
         }
         
         if (is_null(self::$_kernel)) {

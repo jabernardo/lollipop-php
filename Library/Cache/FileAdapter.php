@@ -37,7 +37,7 @@ class FileAdapter implements \Lollipop\Cache\AdapterInterface
         
         // For `filesystem` check storage path
         if (!is_dir($this->_storage_path)) {
-            throw new \Lollipop\Exception\Runtime('Can\'t find app/cache folder');
+            throw new \Lollipop\Exception\Runtime('Cannot find app/cache folder');
         }
         
         if (!is_writable($this->_storage_path)) {

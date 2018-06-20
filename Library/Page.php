@@ -38,7 +38,7 @@ class Page
                     $$_data = $_value;
                 }
             } else {
-                throw new \Lollipop\Exception\Runtime('Can\'t define variable');
+                throw new \Lollipop\Exception\Runtime('Cannot define variable');
             }
         
             $file = new \SplFileInfo($view);
