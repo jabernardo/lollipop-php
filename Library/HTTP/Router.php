@@ -421,7 +421,13 @@ class Router
         // The update the top function
         self::$_kernel = function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res) use ($callback, $next) {
             // Pass the last function
-            $res = call_user_func($callback, $req, $res, $next);
+            $new_response = call_user_func($callback, $req, $res, $next);
+            
+            if ($new_response instanceof \Lollipop\HTTP\Response) {
+                $res = $new_response;
+            } else {
+                $res->set($new_response);
+            }
             
             // Return the new result
             return $res;
