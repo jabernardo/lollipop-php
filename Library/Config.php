@@ -4,6 +4,8 @@ namespace Lollipop;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
+use \Lollipop\Utils;
+
 /**
  * Lollipop Config Class
  *
@@ -136,7 +138,7 @@ class Config
      * 
      */
     static private function _setEnvironment() {
-        switch(strtolower(spare(self::get('environment'), 'dev'))) {
+        switch(strtolower(Utils::spare(self::get('environment'), 'dev'))) {
             case 'dev':
             case 'development':
                 // Report all errors

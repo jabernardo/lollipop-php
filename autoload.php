@@ -1,5 +1,14 @@
 <?php
 
+
+/**
+ * Check if PHP version is >= 5.4
+ * 
+ */
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+    exit('You PHP is too old! Try upgrading.' . PHP_EOL);
+}
+
 /**
  * Application Sugar
  * 
@@ -96,10 +105,3 @@ spl_autoload_register(function ($class) {
         require $file;
     }
 });
-
-
-/**
- * Execute bootstrap file for Application
- * 
- */
-require_once(LOLLIPOP_BASE . 'bootstrap.php');

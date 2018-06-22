@@ -5,6 +5,7 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
+use \Lollipop\Utils;
 
 /**
  * Text Class 
@@ -71,7 +72,7 @@ class Text
      * @return  string
      */
     static function lock($string, $key = null) {
-        return openssl_encrypt($string, self::_getSecMethod(), spare($key, self::_geteSecKey()), false, self::_getSecIv());
+        return openssl_encrypt($string, self::_getSecMethod(), Utils::spare($key, self::_geteSecKey()), false, self::_getSecIv());
     }
 
     /**
@@ -83,7 +84,7 @@ class Text
      * @return  string
      */
     static function unlock($cipher, $key = null) {
-        return openssl_decrypt($cipher, self::_getSecMethod(), spare($key, self::_geteSecKey()), false, self::_getSecIv());
+        return openssl_decrypt($cipher, self::_getSecMethod(), Utils::spare($key, self::_geteSecKey()), false, self::_getSecIv());
     }
 
     /**

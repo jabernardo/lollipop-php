@@ -5,6 +5,7 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
+use \Lollipop\Utils;
 
 /**
  * Lollipop Caching Library
@@ -31,7 +32,7 @@ class Cache
     static private function getDriver() {
         if (self::$_driver != null) return self::$_driver;
         
-        $driver = spare(Config::get('cache.driver'), 'file');
+        $driver = Utils::spare(Config::get('cache.driver'), 'file');
 
         switch (strtolower($driver)) {
             case 'memcached':

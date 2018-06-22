@@ -5,6 +5,7 @@ namespace Lollipop\Cache;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
+use \Lollipop\Utils;
 
 /**
  * Lollipop Cache Memcached Library
@@ -37,7 +38,7 @@ class MemcachedAdapter
         }
         
         // Get storage path
-        $servers = spare(Config::get('cache.servers'), [['127.0.0.1', '11211']]);
+        $servers = Utils::spare(Config::get('cache.servers'), [['127.0.0.1', '11211']]);
         
         // Connect to `Memcached`
         $this->_memcached = new \Memcached();

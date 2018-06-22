@@ -17,6 +17,7 @@ use \Lollipop\Config;
 use \Lollipop\HTTP\Route;
 use \Lollipop\HTTP\Response;
 use \Lollipop\HTTP\Request;
+use \Lollipop\Utils;
 
 /**
  * Lollipop Router Class
@@ -182,7 +183,7 @@ class Router
         }
         
         // Default path to '/'
-        $path = fuse($route['path'], '');
+        $path = Utils::fuse($route['path'], '');
         $path = trim($path, '/');
 
         if (!isset($route['method'])) {
@@ -272,7 +273,7 @@ class Router
 
         foreach (self::$_stored_routes as $path => $route) {
             // Callback for route
-            $callback = fuse($route['callback'], function(){});
+            $callback = Utils::fuse($route['callback'], function(){});
             // Check if request method matchess
             $request_method = isset($route['method']) ? $route['method'] : [];
             

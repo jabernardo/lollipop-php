@@ -17,6 +17,7 @@ use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
 use \Lollipop\HTTP\Response;
+use \Lollipop\Utils;
 
 /**
  * Request Class 
@@ -224,23 +225,23 @@ class Request
         
         curl_setopt($c, CURLOPT_URL, $url);
         // Set empty headers as default: CURLOPT_HTTPHEADER
-        curl_setopt($c, CURLOPT_HTTPHEADER, fuse($options['headers'], []));
+        curl_setopt($c, CURLOPT_HTTPHEADER, Utils::fuse($options['headers'], []));
         // Allow returning of headers
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         // Set timeout 0 as default: CURLOPT_TIMEOUT
-        curl_setopt($c, CURLOPT_TIMEOUT, fuse($options['timeout'], 0));
+        curl_setopt($c, CURLOPT_TIMEOUT, Utils::fuse($options['timeout'], 0));
         // Follow URL `true` as default: CURLOPT_FOLLOWLOCATION
-        curl_setopt($c, CURLOPT_FOLLOWLOCATION, fuse($options['follow'], true));
+        curl_setopt($c, CURLOPT_FOLLOWLOCATION, Utils::fuse($options['follow'], true));
         // Set max redirections: CURLOPT_MAXREDIRS
-        curl_setopt($c, CURLOPT_MAXREDIRS, fuse($options['max-redirections'], 5));
+        curl_setopt($c, CURLOPT_MAXREDIRS, Utils::fuse($options['max-redirections'], 5));
         // Set cookie jar: CURLOPT_COOKIEJAR
-        curl_setopt($c, CURLOPT_COOKIEJAR, fuse($options['cookie-jar'], $localdb . 'cookies'));
+        curl_setopt($c, CURLOPT_COOKIEJAR, Utils::fuse($options['cookie-jar'], $localdb . 'cookies'));
         // Set cookie file: CURLOPT_COOKIEFILE
-        curl_setopt($c, CURLOPT_COOKIEFILE, fuse($options['cookie-file'], $localdb . 'cookies'));
+        curl_setopt($c, CURLOPT_COOKIEFILE, Utils::fuse($options['cookie-file'], $localdb . 'cookies'));
         // Allow returning of headers
-        curl_setopt($c, CURLOPT_HEADER, fuse($options['return-headers'], false));
+        curl_setopt($c, CURLOPT_HEADER, Utils::fuse($options['return-headers'], false));
         // Allow no-body
-        curl_setopt($c, CURLOPT_NOBODY, fuse($options['no-body'], false));
+        curl_setopt($c, CURLOPT_NOBODY, Utils::fuse($options['no-body'], false));
         
         if (isset($options['user-agent'])) {
             // User agent
@@ -260,7 +261,7 @@ class Request
         if (isset($options['parameters'])) {
             // POST parameters
             curl_setopt($c, CURLOPT_POST, true);
-            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query(fuse($options['parameters'], [])));
+            curl_setopt($c, CURLOPT_POSTFIELDS, http_build_query(Utils::fuse($options['parameters'], [])));
         }
         
         // Get response time
@@ -299,7 +300,7 @@ class Request
             // Profiled response
             $return = [
                     'url' => $url,
-                    'headers' => fuse($options['headers'], []),
+                    'headers' => Utils::fuse($options['headers'], []),
                     'time' => Benchmark::elapsedTime('curl_start', 'curl_stop'),
                     'status' => $response_status,
                     'payload' => $return,

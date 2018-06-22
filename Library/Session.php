@@ -5,6 +5,7 @@ namespace Lollipop;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\Config;
+use \Lollipop\Utils;
 
 /**
  * Lollipop Session Library
@@ -31,7 +32,7 @@ class Session
     static private function getDriver() {
         if (self::$_driver != null) return self::$_driver;
         
-        $driver = spare(Config::get('session.driver'), 'default');
+        $driver = Utils::spare(Config::get('session.driver'), 'default');
 
         switch (strtolower($driver)) {
             case 'cookie':

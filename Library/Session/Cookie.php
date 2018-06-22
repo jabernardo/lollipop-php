@@ -7,6 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 use \Lollipop\Config;
 use \Lollipop\Text;
 use \Lollipop\HTTP\Cookie as HTTPCookie;
+use \Lollipop\Utils;
 
 /**
  * Secured Session Class using PHP Build-it Session 
@@ -61,14 +62,14 @@ class Cookie implements \Lollipop\Session\AdapterInterface
      * 
      */
     function __construct() {
-        $this->name     = sha1(spare_nan(Config::get('session.name'), 'session'));
-        $this->path     = spare_nan(Config::get('session.path'), '');
-        $this->domain   = spare_nan(Config::get('session.domain'), '');
+        $this->name     = sha1(Utils::spare_nan(Config::get('session.name'), 'session'));
+        $this->path     = Utils::spare_nan(Config::get('session.path'), '');
+        $this->domain   = Utils::spare_nan(Config::get('session.domain'), '');
         
         $this->data = $this->restore();
         
         if (!isset($this->data->sugar)) {
-            $this->data->sugar = fuse($this->data->sugar, sha1(Text::random(10)));
+            $this->data->sugar = Utils::fuse($this->data->sugar, sha1(Text::random(10)));
             
             $this->store($this->data);
         }
@@ -136,7 +137,7 @@ class Cookie implements \Lollipop\Session\AdapterInterface
      * 
      */
     public function get($key) {
-        return fuse($this->data->$key, '');
+        return Utils::fuse($this->data->$key, '');
     }
     
     /**
