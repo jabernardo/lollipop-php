@@ -60,14 +60,9 @@ class Config
      * 
      */
     static public function set($key, $value) {
-        $toks = explode('.', $key);
-        $addr = &self::$_config;
+        $config = &self::$_config;
         
-        for ($i = 0; $i < count($toks); $i++) {
-            $addr = &$addr[$toks[$i]];
-        }
-        
-        $addr = $value;
+        Utils::array_set($config, $key, $value);
         
         if (!strcasecmp($key, 'environment'))
             self::_setEnvironment();
@@ -85,16 +80,9 @@ class Config
     static public function get($key = null, $default = null) {
         if (is_null($key)) return json_decode(json_encode(self::$_config));
         
-        $toks = explode('.', $key);
-        $addr = &self::$_config;
+        $config = &self::$_config;
         
-        for ($i = 0; $i < count($toks); $i++) {
-            $addr = &$addr[$toks[$i]];
-        }
-        
-        return is_array($addr) || is_object($addr)
-                    ? json_decode(json_encode($addr))
-                    : (is_null($addr) && !is_null($default) ? $default : $addr) ;
+        return Utils::array_get($config, $key, $default);
     }
 
     /**
@@ -106,20 +94,9 @@ class Config
      * 
      */
     static public function remove($key) {
-        $toks = explode('.', $key);
-        $toks_len = count($toks);
-        $addr = &self::$_config;
-        $last = null;
-
-        for ($i = 0; $i < $toks_len - 1; $i++) {
-            $addr = &$addr[$toks[$i]];
-        }
-
-        if (isset($toks[$toks_len - 1])) {
-            $last = $toks[$toks_len - 1];
-        }
-
-        if ($last) unset($addr[$last]);
+        $config = &self::$_config;
+        
+        Utils::array_unset($config, $key);
         
         if (!strcasecmp($key, 'environment'))
             self::_setEnvironment();

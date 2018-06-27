@@ -12,9 +12,17 @@ namespace Lollipop;
  */
 class Utils
 {
+    
+    /**
+     * Array utility functions
+     * 
+     */
+    use \Lollipop\Utils\Collection;
+    
     /**
      * Variable Util Functions
      * 
      */
     use \Lollipop\Utils\Vars;
+
 }
