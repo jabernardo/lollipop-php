@@ -240,10 +240,12 @@ class Router
      *
      * @access  public
      * @param   boolean $render     Render response (true)
+     * @param   \Lollipop\HTTP\Request  $req    Request object (null default)
+     * @param   \Lollipop\HTTP\Response $res    Response object (null default)
      * @return  void
      *
      */
-    static public function dispatch(\Lollipop\HTTP\Request $response = null, \Lollipop\HTTP\Response $request = null, $render = true) {
+    static public function dispatch($render = true, \Lollipop\HTTP\Request $response = null, \Lollipop\HTTP\Response $request = null) {
         if (is_null($response)) {
             // Create a new response
             $response = new Response();
