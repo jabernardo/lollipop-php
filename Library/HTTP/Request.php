@@ -4,15 +4,6 @@ namespace Lollipop\HTTP;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-/**
- * Check application if running on web server
- * else just terminate
- * 
- */
-if (!isset($_SERVER['REQUEST_URI'])) {
-    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
-}
-
 use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
@@ -111,6 +102,21 @@ class Request
         }
         
         return $var;
+    }
+    
+    /**
+     * Get request URL
+     * 
+     * @access  public
+     * @param   int     $component  URL parse_url component
+     * @return  string
+     * 
+     */
+    public function getURL($component = -1) {
+        if ($component > -1) {
+            return parse_url($_SERVER['REQUEST_URI'], $component);
+        }
+        return $_SERVER['REQUEST_URI'];
     }
     
     /**

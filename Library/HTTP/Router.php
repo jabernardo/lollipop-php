@@ -4,15 +4,6 @@ namespace Lollipop\HTTP;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-/**
- * Check application if running on web server
- * else just terminate
- * 
- */
-if (!isset($_SERVER['REQUEST_URI'])) {
-    exit('Lollipop Application must be run on a web server.' . PHP_EOL);
-}
-
 use \Lollipop\Config;
 use \Lollipop\HTTP\Route;
 use \Lollipop\HTTP\Response;
@@ -252,9 +243,19 @@ class Router
      * @return  void
      *
      */
-    static public function dispatch($render = true) {
+    static public function dispatch(\Lollipop\HTTP\Request $response = null, \Lollipop\HTTP\Response $request = null, $render = true) {
+        if (is_null($response)) {
+            // Create a new response
+            $response = new Response();
+        }
+        
+        if (is_null($request)) {
+            // New request object
+            $request = new Request();
+        }
+
         // Get URL Path property only
-        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $url = trim($request->getUrl(PHP_URL_PATH), '/');
         
         // Create an instance of URL parser for checking if current
         // path matches any route
@@ -266,11 +267,6 @@ class Router
             self::$_stored_routes['404'] :
             self::_getDefaultPageNotFound();
         
-        // Create a new response
-        $response = new Response();
-        // New request object
-        $request = new Request();
-
         foreach (self::$_stored_routes as $path => $route) {
             // Callback for route
             $callback = Utils::fuse($route['callback'], function(){});
@@ -285,7 +281,7 @@ class Router
 
             // Check if request method matches the expected from route information
             $rest_test = is_array($request_method) && 
-            (in_array($_SERVER['REQUEST_METHOD'], $request_method) || count($request_method) === 0);
+            (in_array($request->getMethod(), $request_method) || count($request_method) === 0);
             
             if ($rest_test && $parser->test($path)) {
                 // Set the route arguments based from the matches from the url
