@@ -12,6 +12,8 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
 use \Lollipop\Session;
 use \PHPUnit\Framework\TestCase;
 
+session_start();
+
 class SessionTest extends TestCase
 {
     public function testSetGet() {
