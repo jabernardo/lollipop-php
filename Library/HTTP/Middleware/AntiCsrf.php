@@ -37,7 +37,7 @@ class AntiCsrf implements Middleware
         $failed = false;
         
         if (!$req->isMethod('get') && $acsrf_enable &&
-            !CsrfToken::isValid($req->header($acsrf_name)) && !CsrfToken::isValid($req->get($acsrf_name))) {
+            !CsrfToken::isValid($req->header($acsrf_name)) && !CsrfToken::isValid($req->input($acsrf_name))) {
             $output = '<!DOCTYPE html>'
             . '<!-- Lollipop for PHP by John Aldrich Bernardo -->'
             . '<html>'

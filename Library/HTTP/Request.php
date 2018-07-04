@@ -7,6 +7,7 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 use \Lollipop\Benchmark;
 use \Lollipop\Cache;
 use \Lollipop\Config;
+use \Lollipop\HTTP\Cookie;
 use \Lollipop\HTTP\Response;
 use \Lollipop\Utils;
 
@@ -29,6 +30,20 @@ class Request
     private $_all_requests = [];
     
     /**
+     * @access  private
+     * @var     array   Queries
+     * 
+     */
+    private $_all_queries = [];
+    
+    /**
+     * @access  private
+     * @var     string  Request method
+     * 
+     */
+    private $_method = 'GET';
+    
+    /**
      * Class construct
      * 
      */
@@ -36,42 +51,107 @@ class Request
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
+        $this->_all_requests = array_merge($this->_all_requests, array_merge($_POST, $_php_request));
+        
+        // Get url queries
+        $this->_all_queries = $_GET;
+        
+        // Request method
+        $this->_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
     }
     
     /**
-     * Check for request(s)
-     *
-     * @param   mixed   $requests   Request names
-     *
-     * @return bool
+     * Get input data
+     * 
+     * @access  public
+     * @param   string  $name   Input name
+     * @param   string  $val    Default value if input doesn't exists
+     * @return  mixed
      * 
      */
-    public function is($requests) {
-        $is = true;
+    public function input($name, $val = null) {
+        return isset($this->_all_requests[$name]) ?
+                    $this->_all_requests[$name] :
+                    $val;
+    }
+    
+    /**
+     * Get query string from url
+     * 
+     * @access  public
+     * @param   string  $name   Input name
+     * @param   string  $val    Default value if query doesn't exists
+     * @return  mixed
+     * 
+     */
+    public function query($name, $val = null) {
+        return isset($this->_all_queries[$name]) ?
+                    $this->_all_queries[$name] :
+                    $val;
+    }
+    
+    /**
+     * Getting segments of inputs
+     * 
+     * @access  public
+     * @param   array   $name   Input names
+     * @return  array
+     * 
+     */
+    public function only(array $name = []) {
+        $var = [];
         
-        // Also support PUT and DELETE
-        parse_str(file_get_contents("php://input"), $_php_request);
-        // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
-        
-        if (is_array($requests)) {
-            $returns = [];
-            
-            foreach ($requests as $request) {
-                array_push($returns, isset($this->_all_requests[$request]));
-            }
-            
-            foreach ($returns as $return) {
-                if ($return == false) {
-                    $is = false;
-                }
-            }
-        } else {
-            $is = isset($this->_all_requests[$requests]);
+        foreach ($name as $in) {
+            $var[$in] = isset($this->_all_requests[$var]) ? 
+                $this->_all_requests[$var] :
+                null;
         }
         
-        return $is;
+        return $var;
+    }
+    
+    /**
+     * Get data input except some
+     * 
+     * @access  public
+     * @param   array   $name   Input names
+     * @return  array
+     * 
+     */
+    public function except(array $name = []) {
+        $var = [];
+        
+        foreach ($this->_all_requests as $k => $v) {
+            if (!in_array($k, $name)) {
+                $var[$k] = $v;
+            }
+        }
+        
+        return $var;
+    }
+    
+    /**
+     * Check if input is received
+     * 
+     * @access  public
+     * @param   string  $name   Input name
+     * @return  bool
+     * 
+     */
+    public function has($name) {
+        return isset($this->_all_requests[$name]);
+    }
+    
+    /**
+     * Check if query is received
+     * 
+     * @access  public
+     * @param   string  $name   Input name
+     * @return  bool
+     * 
+     */
+    public function hasQuery($name) {
+        return isset($this->_all_queries[$name]);
     }
     
     /**
@@ -82,30 +162,8 @@ class Request
      * @return  bool
      * 
      */
-    function isMethod($method) {
-        return !strcasecmp($method, $_SERVER['REQUEST_METHOD']);
-    }
-    
-    /**
-     * Gets values of request(s)
-     *
-     * @param   array   $requests   Request names
-     *
-     * @return  array
-     * 
-     */
-    public function get($requests) {
-        if (is_array($requests)) {
-            $var = [];
-            
-            foreach ($requests as $request) {
-                $var[$request] = isset($this->_all_requests[$request]) ? $this->_all_requests[$request] : null;
-            }
-            
-            return $var;
-        }
-        
-        return isset($this->_all_requests[$requests]) ? $this->_all_requests[$requests] : null;
+    public function isMethod($method) {
+        return !strcasecmp($method, $this->_method);
     }
     
     /**
@@ -114,7 +172,7 @@ class Request
      * @return  array
      * 
      */
-    public function getAll() {
+    public function all() {
         return $this->_all_requests;
     }
     
@@ -141,7 +199,7 @@ class Request
      * 
      */
     public function getMethod() {
-        return $_SERVER['REQUEST_METHOD'];
+        return $this->_method;
     }
     
     /**
@@ -160,6 +218,18 @@ class Request
         }
         
         return null;
+    }
+    
+    /**
+     * Get request cookie value
+     * 
+     * @access  public
+     * @param   string  $name   Cookie name
+     * @return  string
+     * 
+     */
+    public function cookie($name) {
+        return Cookie::get($name);
     }
     
     /**

@@ -32,7 +32,7 @@ class Gzip implements Middleware
     public function __invoke(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, Callable $next) {
         $res = $next($req, $res);
 
-        if (Config::get('debugger') && !$req->is('disable-debugger')) {
+        if (Config::get('debugger') && !$req->hasQuery('disable-debugger')) {
             Session::set('debugger-compress-output', true);
         } else {
             $res->compress(true);
