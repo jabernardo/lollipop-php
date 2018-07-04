@@ -29,6 +29,17 @@ class Request
     private $_all_requests = [];
     
     /**
+     * Class construct
+     * 
+     */
+    function __construct() {
+        // Also support PUT and DELETE
+        parse_str(file_get_contents("php://input"), $_php_request);
+        // Merge with POST and GET
+        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
+    }
+    
+    /**
      * Check for request(s)
      *
      * @param   mixed   $requests   Request names
@@ -36,7 +47,7 @@ class Request
      * @return bool
      * 
      */
-    function is($requests) {
+    public function is($requests) {
         $is = true;
         
         // Also support PUT and DELETE
@@ -83,25 +94,28 @@ class Request
      * @return  array
      * 
      */
-    function get($requests = null) {
-        $var = [];
-        
-        // Also support PUT and DELETE
-        parse_str(file_get_contents("php://input"), $_php_request);
-        // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
-        
+    public function get($requests) {
         if (is_array($requests)) {
+            $var = [];
+            
             foreach ($requests as $request) {
                 $var[$request] = isset($this->_all_requests[$request]) ? $this->_all_requests[$request] : null;
             }
-        } else if (is_null($requests)) {
-            $var = $this->_all_requests;
-        } else {
-            $var = (isset($this->_all_requests[$requests])) ? $this->_all_requests[$requests] : null;
+            
+            return $var;
         }
         
-        return $var;
+        return isset($this->_all_requests[$requests]) ? $this->_all_requests[$requests] : null;
+    }
+    
+    /**
+     * Get all request variables
+     * 
+     * @return  array
+     * 
+     */
+    public function getAll() {
+        return $this->_all_requests;
     }
     
     /**
