@@ -106,6 +106,27 @@ class Request
     }
     
     /**
+     * Getting querie from url parameters
+     * 
+     * @access  public
+     * @param   array   $name       Query names
+     * @param   mixed   $default    Default value
+     * @return  array
+     * 
+     */
+    public function queries(array $names = [], $default = null) {
+        $var = [];
+        
+        foreach ($names as $in) {
+            $var[$in] = isset($this->_all_queries[$in]) ? 
+                $this->_all_queries[$in] :
+                $default;
+        }
+        
+        return $var;
+    }
+    
+    /**
      * Getting segments of inputs
      * 
      * @access  public
