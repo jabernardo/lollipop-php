@@ -78,6 +78,19 @@ class Request
     }
     
     /**
+     * Alias only
+     * 
+     * @access  public
+     * @param   array   $names   Input names
+     * @param   mixed   $default    Default value (null)
+     * @return  array
+     * 
+     */
+    public function inputs($names, $val) {
+        return $this->only($names, $val);
+    }
+    
+    /**
      * Get query string from url
      * 
      * @access  public
@@ -96,17 +109,18 @@ class Request
      * Getting segments of inputs
      * 
      * @access  public
-     * @param   array   $name   Input names
+     * @param   array   $names   Input names
+     * @param   mixed   $default    Default value (null)
      * @return  array
      * 
      */
-    public function only(array $name = []) {
+    public function only(array $names = [], $default = null) {
         $var = [];
         
-        foreach ($name as $in) {
-            $var[$in] = isset($this->_all_requests[$var]) ? 
-                $this->_all_requests[$var] :
-                null;
+        foreach ($names as $in) {
+            $var[$in] = isset($this->_all_requests[$in]) ? 
+                $this->_all_requests[$in] :
+                $default;
         }
         
         return $var;
@@ -145,6 +159,35 @@ class Request
     }
     
     /**
+     * Alias has
+     * 
+     * @access  public
+     * @param   string  $name   Input name
+     * @return  bool
+     * 
+     */
+    public function hasInput($name) {
+        return $this->has($name);
+    }
+    
+    /**
+     * Check if inputs are received
+     * 
+     * @access  public
+     * @param   array   $names  Input names
+     * @return  bool
+     * 
+     */
+    public function hasInputs(array $names) {
+        foreach ($names as $name) {
+            if (!$this->has($name))
+                return false;
+        }
+        
+        return true;
+    }
+    
+    /**
      * Check if query is received
      * 
      * @access  public
@@ -154,6 +197,23 @@ class Request
      */
     public function hasQuery($name) {
         return isset($this->_all_queries[$name]);
+    }
+    
+    /**
+     * Check if queries exists
+     * 
+     * @access  public
+     * @param   string  $names   Query names
+     * @return  bool
+     * 
+     */
+    public function hasQueries($names) {
+        foreach ($names as $name) {
+            if (!$this->hasQuery($name))
+                return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -186,7 +246,7 @@ class Request
      * @return  string
      * 
      */
-    public function getURL($component = -1) {
+    public function url($component = -1) {
         if ($component > -1) {
             return parse_url($_SERVER['REQUEST_URI'], $component);
         }
@@ -200,7 +260,7 @@ class Request
      * @return  string
      * 
      */
-    public function getMethod() {
+    public function method() {
         return $this->_method;
     }
     

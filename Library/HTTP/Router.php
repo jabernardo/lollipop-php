@@ -257,7 +257,7 @@ class Router
         }
 
         // Get URL Path property only
-        $url = trim($request->getUrl(PHP_URL_PATH), '/');
+        $url = trim($request->url(PHP_URL_PATH), '/');
         
         // Create an instance of URL parser for checking if current
         // path matches any route
@@ -283,7 +283,7 @@ class Router
 
             // Check if request method matches the expected from route information
             $rest_test = is_array($request_method) && 
-            (in_array($request->getMethod(), $request_method) || count($request_method) === 0);
+            (in_array($request->method(), $request_method) || count($request_method) === 0);
             
             if ($rest_test && $parser->test($path)) {
                 // Set the route arguments based from the matches from the url
