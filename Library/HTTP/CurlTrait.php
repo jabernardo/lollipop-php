@@ -63,6 +63,11 @@ trait CurlTrait
         // Override cache
         $request_cache = isset($options['cache']) ? $options['cache'] : $request_cache;
         
+        // Also if request method isn't GET
+        if (strtoupper($options['method']) != 'GET') {
+            $request_cache = false;
+        }
+        
         $request_cache_time = Config::get('request.cache.time', 1440);
         
         // Auto JSON
