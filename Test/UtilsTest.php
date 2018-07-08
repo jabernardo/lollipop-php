@@ -45,4 +45,23 @@ class UtilsTest extends TestCase
             Utils::getvar($test2)
         );
     }
+
+    public function testCollection() {
+        $arr1 = [
+            'key' => 'val'
+        ];
+
+        $arr2 = [
+            3 => 'test'
+        ];
+
+        // Array merge
+        $this->assertEquals(
+            Utils::array_merge($arr1, $arr2),
+            [
+                'key' => 'val',
+                '3' => 'test'
+            ]
+        );
+    }
 }
