@@ -35,8 +35,8 @@ class Cache implements Middleware
 
         // Make a unique key per route
         $params = http_build_query($req->all());
-        $cache_key = $active_route['path'] . '/' . implode(',', $active_route['arguments']) . '?' . $params;
-
+        $cache_key = $req->url() . '[' . $params . ']';
+        
         if (\Lollipop\Cache::exists($cache_key)) {
             $cached = \Lollipop\Cache::get($cache_key);
 
