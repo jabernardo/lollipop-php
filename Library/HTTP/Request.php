@@ -29,15 +29,21 @@ class Request
      * @var     array   Centralized session requests
      * 
      */
-    private $_all_requests = [];
+    private $_requests = [];
     
     /**
      * @access  private
      * @var     array   Queries
      * 
      */
-    private $_all_queries = [];
+    private $_queries = [];
     
+    /**
+     * @access  private
+     * @var     array   Headers
+     */
+    private $_headers = [];
+
     /**
      * @access  private
      * @var     string  Request method
@@ -53,10 +59,13 @@ class Request
         // Also support PUT and DELETE
         parse_str(file_get_contents("php://input"), $_php_request);
         // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_POST, $_php_request));
+        $this->_requests = array_merge($this->_requests, array_merge($_POST, $_php_request));
         
         // Get url queries
-        $this->_all_queries = $_GET;
+        $this->_queries = $_GET;
+
+        // Headers
+        $this->_headers = \getallheaders();
         
         // Request method
         $this->_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
@@ -72,8 +81,8 @@ class Request
      * 
      */
     public function input($name, $val = null) {
-        return isset($this->_all_requests[$name]) ?
-                    $this->_all_requests[$name] :
+        return isset($this->_requests[$name]) ?
+                    $this->_requests[$name] :
                     $val;
     }
     
@@ -86,7 +95,7 @@ class Request
      * @return  array
      * 
      */
-    public function inputs($names, $val) {
+    public function inputs(array $names, $val = null) {
         return $this->only($names, $val);
     }
     
@@ -100,8 +109,8 @@ class Request
      * 
      */
     public function query($name, $val = null) {
-        return isset($this->_all_queries[$name]) ?
-                    $this->_all_queries[$name] :
+        return isset($this->_queries[$name]) ?
+                    $this->_queries[$name] :
                     $val;
     }
     
@@ -114,12 +123,12 @@ class Request
      * @return  array
      * 
      */
-    public function queries(array $names = [], $default = null) {
+    public function queries(array $names, $default = null) {
         $var = [];
         
         foreach ($names as $in) {
-            $var[$in] = isset($this->_all_queries[$in]) ? 
-                $this->_all_queries[$in] :
+            $var[$in] = isset($this->_queries[$in]) ? 
+                $this->_queries[$in] :
                 $default;
         }
         
@@ -135,12 +144,12 @@ class Request
      * @return  array
      * 
      */
-    public function only(array $names = [], $default = null) {
+    public function only(array $names, $default = null) {
         $var = [];
         
         foreach ($names as $in) {
-            $var[$in] = isset($this->_all_requests[$in]) ? 
-                $this->_all_requests[$in] :
+            $var[$in] = isset($this->_requests[$in]) ? 
+                $this->_requests[$in] :
                 $default;
         }
         
@@ -155,10 +164,10 @@ class Request
      * @return  array
      * 
      */
-    public function except(array $name = []) {
+    public function except(array $name) {
         $var = [];
         
-        foreach ($this->_all_requests as $k => $v) {
+        foreach ($this->_requests as $k => $v) {
             if (!in_array($k, $name)) {
                 $var[$k] = $v;
             }
@@ -176,7 +185,7 @@ class Request
      * 
      */
     public function has($name) {
-        return isset($this->_all_requests[$name]);
+        return isset($this->_requests[$name]);
     }
     
     /**
@@ -217,7 +226,7 @@ class Request
      * 
      */
     public function hasQuery($name) {
-        return isset($this->_all_queries[$name]);
+        return isset($this->_queries[$name]);
     }
     
     /**
@@ -256,7 +265,7 @@ class Request
      * 
      */
     public function all() {
-        return $this->_all_requests;
+        return $this->_requests;
     }
     
     /**
@@ -294,13 +303,22 @@ class Request
      * 
      */
     public function header($header) {
-        foreach(getallheaders() as $k => $v) {
+        foreach($this->_headers as $k => $v) {
             if (!strcasecmp($k, $header)) {
                 return $v;
             }
         }
         
         return null;
+    }
+
+    /**
+     * Return all request headers
+     *
+     * @return array
+     */
+    public function headers() {
+        return $this->_headers();
     }
     
     /**
@@ -313,6 +331,15 @@ class Request
      */
     public function cookie($name) {
         return Cookie::get($name);
+    }
+
+    /**
+     * Get all request cookies
+     *
+     * @return array
+     */
+    public function cookies() {
+        return Cookie::getAll();
     }
     
     /**

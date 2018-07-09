@@ -44,6 +44,15 @@ class Cookie
     }
 
     /**
+     * Get all cookies
+     *
+     * @return array
+     */
+    static function getAll() {
+        return $_COOKIE;
+    }
+
+    /**
      * Check if cookie exists
      *
      * @param   string $key     Cookie name
