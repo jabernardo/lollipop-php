@@ -5,6 +5,7 @@ namespace Lollipop\HTTP;
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
 use \Lollipop\HTTP\Cookie;
+use \Lollipop\HTTP\URL;
 
 /**
  * Request Class 
@@ -277,10 +278,12 @@ class Request
      * 
      */
     public function url($component = -1) {
+        $active_url = URL::here();
+
         if ($component > -1) {
-            return parse_url($_SERVER['REQUEST_URI'], $component);
+            return parse_url($active_url, $component);
         }
-        return $_SERVER['REQUEST_URI'];
+        return $active_url;
     }
     
     /**

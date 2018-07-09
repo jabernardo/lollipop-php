@@ -30,9 +30,14 @@ class HttpTest extends TestCase
     public function testRun() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['SCRIPT_NAME'] = 'index.php';
-
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+        
         \Lollipop\Config::set('router.auto_dispatch', false);
 
         \Lollipop\HTTP\Router::get('/', function(\Lollipop\HTTP\Request $req, \Lollipop\HTTP\Response $res, array $args = []) {
