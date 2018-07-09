@@ -11,7 +11,7 @@ You can use Lollipop when you're creating a simple and powerful web application.
 
 > Configure [.htaccess](http://www.htaccess-guide.com/).
 Use below code as the default for your ```.htaccess```
-Or see [LMVC](http://github.com/jabernardo/lmvc) for routing using 
+Or see [Appogato](https://github.com/jabernardo/appogato) for routing using
 [Lollipop](https://github.com/jabernardo/lollipop-php)
 
 ```apache
@@ -52,4 +52,4 @@ See documentation [here](https://github.com/jabernardo/lollipop-php/wiki).
 
 ## License
 
-The LMVC framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The Lollipop-PHP framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

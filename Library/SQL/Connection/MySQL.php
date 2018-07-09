@@ -86,13 +86,18 @@ class MySQL implements \Lollipop\SQL\ConnectionInterface
             $results = [];
 
             // Open connection
-            $this->__connect();
+            if (is_null($this->db) ||
+                ($this->db instanceof \mysqli && !$this->db->ping())) {
+                $this->__connect();
+            }
 
             // Execute command
             $return = $this->db->query($this->_sql_query);
-
+            
             // Close connection
+            $thread = $this->db->thread_id;
             $this->db->close();
+            $this->db->kill($thread);
             
             // Log executed query
             array_push(self::$_last_commands, $this->_sql_query);
