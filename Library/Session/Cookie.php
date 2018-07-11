@@ -62,9 +62,9 @@ class Cookie implements \Lollipop\Session\AdapterInterface
      * 
      */
     function __construct() {
-        $this->name     = sha1(Utils::spare_nan(Config::get('session.name'), 'session'));
-        $this->path     = Utils::spare_nan(Config::get('session.path'), '');
-        $this->domain   = Utils::spare_nan(Config::get('session.domain'), '');
+        $this->name     = sha1(Utils::spareNan(Config::get('session.name'), 'session'));
+        $this->path     = Utils::spareNan(Config::get('session.path'), '');
+        $this->domain   = Utils::spareNan(Config::get('session.domain'), '');
         
         $this->data = $this->restore();
         

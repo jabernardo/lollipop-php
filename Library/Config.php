@@ -62,7 +62,7 @@ class Config
     static public function set($key, $value) {
         $config = &self::$_config;
         
-        Utils::array_set($config, $key, $value);
+        Utils::arraySet($config, $key, $value);
         
         if (!strcasecmp($key, 'environment'))
             self::_setEnvironment();
@@ -82,7 +82,7 @@ class Config
         
         $config = &self::$_config;
         
-        return Utils::array_get($config, $key, $default);
+        return Utils::arrayGet($config, $key, $default);
     }
 
     /**
@@ -96,7 +96,7 @@ class Config
     static public function remove($key) {
         $config = &self::$_config;
         
-        Utils::array_unset($config, $key);
+        Utils::arrayUnset($config, $key);
         
         if (!strcasecmp($key, 'environment'))
             self::_setEnvironment();

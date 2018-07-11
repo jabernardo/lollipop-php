@@ -29,7 +29,7 @@ class UtilsTest extends TestCase
 
         // Spare Nan
         $this->assertFalse(
-            Utils::spare_nan(false, true)
+            Utils::spareNan(false, true)
         );
 
         // Get var
@@ -37,12 +37,12 @@ class UtilsTest extends TestCase
         $test2 = '!';
 
         $this->assertFalse(
-            Utils::getvar($test)
+            Utils::getVar($test)
         );
 
         $this->assertEquals(
             '!',
-            Utils::getvar($test2)
+            Utils::getVar($test2)
         );
     }
 
@@ -57,7 +57,7 @@ class UtilsTest extends TestCase
 
         // Array merge
         $this->assertEquals(
-            Utils::array_merge($arr1, $arr2),
+            Utils::arrayMerge($arr1, $arr2),
             [
                 'key' => 'val',
                 '3' => 'test'

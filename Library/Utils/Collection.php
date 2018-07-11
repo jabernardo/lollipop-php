@@ -19,7 +19,7 @@ trait Collection
      * @return  array
      * 
      */
-    static function array_merge() {
+    static function arrayMerge() {
         $output = [];
         
         foreach(func_get_args() as $array) {
@@ -38,7 +38,7 @@ trait Collection
      * @example
      * 
      *  $arr = ['test' => ['word' => 'hello']];
-     *  print_r(array_get($arr, 'test.word'));
+     *  print_r(arrayGet($arr, 'test.word'));
      * 
      * @access  public
      * @param   array   $var    Local declared variable
@@ -47,7 +47,7 @@ trait Collection
      * @return  mixed
      * 
      */
-    static function array_get(&$var, $key, $default = null) {
+    static function arrayGet(&$var, $key, $default = null) {
         $toks = explode('.', $key);
         
         for ($i = 0; $i < count($toks); $i++) {
@@ -65,7 +65,7 @@ trait Collection
      * @example
      * 
      *  $arr = [];
-     *  array_set($arr, 'sample.word', 'Hello');
+     *  arraySet($arr, 'sample.word', 'Hello');
      * 
      * @access  public
      * @param   array   $var    Local declared variable
@@ -74,7 +74,7 @@ trait Collection
      * @return  void
      * 
      */
-    static function array_set(&$var, $key, $val) {
+    static function arraySet(&$var, $key, $val) {
         $toks = explode('.', $key);
         
         for ($i = 0; $i < count($toks); $i++) {
@@ -88,7 +88,7 @@ trait Collection
      * Remove array key using dots to traverse keys
      * 
      *  $arr = ['test' => ['word' => 'hello']];
-     *  array_unset($arr, 'sample.word');
+     *  arrayUnset($arr, 'sample.word');
      * 
      * @access  public
      * @param   array   $var    Local declared variable
@@ -97,7 +97,7 @@ trait Collection
      * @return  void
      * 
      */
-    static function array_unset(&$var, $key) {
+    static function arrayUnset(&$var, $key) {
         $toks = explode('.', $key);
         $toks_len = count($toks);
         $last = null;

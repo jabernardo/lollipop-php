@@ -44,7 +44,7 @@ trait Vars
      * @return  mixed
      * 
      */
-    static function spare_nan($value, $spare) {
+    static function spareNan($value, $spare) {
         return !is_null($value) ? $value : $spare;
     }
     
@@ -55,7 +55,7 @@ trait Vars
      * @return   mixed
      *
      */
-    static function getvar(&$var) {
+    static function getVar(&$var) {
         return isset($var) && $var ? $var : false;
     }
 }
