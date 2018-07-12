@@ -41,13 +41,13 @@ class Number
     /**
      * Returns currency value
      *
-     * @param   int     $currency   Currency symbol
      * @param   double  $number     Number
      * @param   int     $decimal    Decimal places
+     * @param   int     $currency   Currency symbol
      * 
      * @return  string
      */
-    static function currency($currency = self::CURRENCY_PESO, $number, $decimal = 2) {
+    static function currency($number, $decimal = 2, $currency = self::CURRENCY_PESO) {
         if (!self::parsable($number)) return null;
 
         return chr($currency) . ' ' . number_format(round($number, $decimal), $decimal);
