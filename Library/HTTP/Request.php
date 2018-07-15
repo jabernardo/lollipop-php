@@ -234,11 +234,11 @@ class Request
      * Check if queries exists
      * 
      * @access  public
-     * @param   string  $names   Query names
+     * @param   array  $names   Query names
      * @return  bool
      * 
      */
-    public function hasQueries($names) {
+    public function hasQueries(array $names) {
         foreach ($names as $name) {
             if (!$this->hasQuery($name))
                 return false;
