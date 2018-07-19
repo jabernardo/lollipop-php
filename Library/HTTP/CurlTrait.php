@@ -58,7 +58,7 @@ trait CurlTrait
         // Request cache
         $request_cache = !is_null(Config::get('request.cache.enable'))
                             ? Config::get('request.cache.enable') 
-                            : true;
+                            : false;
         
         // Override cache
         $request_cache = isset($options['cache']) ? $options['cache'] : $request_cache;
