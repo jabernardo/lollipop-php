@@ -239,17 +239,17 @@ trait BuilderTrait
         }
         
         // Group By
-        if (count($this->_group_by)) {
+        if (strlen($this->_group_by)) {
             $sql_query .= $this->_group_by;
         }
         
         // Order By
-        if (count($this->_order)) {
+        if (strlen($this->_order)) {
             $sql_query .= $this->_order;
         }
         
         // Limit
-        if (count($this->_limit)) {
+        if (strlen($this->_limit)) {
             $sql_query .= $this->_limit;
         }
         
@@ -302,17 +302,17 @@ trait BuilderTrait
         }
         
         // Group By
-        if (count($this->_group_by)) {
+        if (strlen($this->_group_by)) {
             $sql_query .= $this->_group_by;
         }
         
         // Order By
-        if (count($this->_order)) {
+        if (strlen($this->_order)) {
             $sql_query .= $this->_order;
         }
         
         // Limit
-        if (count($this->_limit)) {
+        if (strlen($this->_limit)) {
             $sql_query .= $this->_limit;
         }
         
