@@ -31,6 +31,13 @@ class Router
      *
      */
     static private $_stored_routes = [];
+
+    /**
+     * @var     array       Stored names
+     * 
+     */
+    static private $_stored_names = [];
+
     /**
      * @var     array       Active route
      * 
@@ -190,11 +197,20 @@ class Router
         }
         
         // Report duplicated path
-        if (isset(self::$_stored_routes[$path]))
+        if (isset(self::$_stored_routes[$path])) {
             throw new \Lollipop\Exception\HTTP\Router("Duplicate path: $path");
+        }
+
+        if (isset($route['name']) && isset(self::$_stored_names[$route['name']])) {
+            throw new \Lollipop\Exception\HTTP\Router('Duplicate name: ' . $route['name']);
+        }
 
         // Store route
         self::$_stored_routes[$path] = $route;
+
+        if (isset($route['name'])) {
+            self::$_stored_names[$route['name']] = $path;
+        }
 
         // Register dispatcher once this function was called
         self::_registerDispatch();
@@ -210,6 +226,26 @@ class Router
      */
     static public function addMiddleware(Callable $callback) {
         self::$_middlewares[] = $callback;
+    }
+
+    /**
+     * Get route by name
+     * 
+     * @access  public
+     * @param   string  $name   Route name
+     * @return  route
+     * 
+     */
+    static public function getRoute($name) {
+        $route_by_name = isset(self::$_stored_names[$name]) ?
+            self::$_stored_names[$name] :
+            null;
+        
+        if (!is_null($route_by_name) && isset(self::$_stored_routes[$route_by_name])) {
+            return self::$_stored_routes[$route_by_name];
+        }
+
+        return null;
     }
 
     /**
