@@ -7,6 +7,20 @@ defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 use \Lollipop\HTTP\Cookie;
 use \Lollipop\HTTP\URL;
 
+// Since `getallheaders` was set by cgi sapi, it wasn't available on cgi
+// We just want to make it was available for cli calls also
+if (!function_exists('getallheaders')) {
+    function getallheaders() {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
 /**
  * Request Class 
  *
@@ -66,7 +80,7 @@ class Request
         $this->_queries = $_GET;
 
         // Headers
-        $this->_headers = \getallheaders();
+        $this->_headers = getallheaders();
         
         // Request method
         $this->_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
