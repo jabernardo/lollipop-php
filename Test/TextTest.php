@@ -37,4 +37,18 @@ class TextTest extends TestCase
             'beep you'
         );
     }
+
+    public function testCamelCase() {
+        $this->assertEquals(
+            Inflector::camelize('Hello World'),
+            'helloWorld'
+        );
+    }
+
+    public function testStudlyCase() {
+        $this->assertEquals(
+            Inflector::studly('Hello World'),
+            'HelloWorld'
+        );
+    }
 }

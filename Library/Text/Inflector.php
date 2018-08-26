@@ -33,6 +33,26 @@ class Inflector
         // John Aldrich -> JohnAldrich
         $str = str_replace(' ', '', $str);
 
+        return lcfirst($str);
+    }
+
+    /**
+     * Changes word format to studly
+     *
+     * @param   string  $str    String
+     *
+     * @return  string
+     */
+    static function studly($str) {
+        // john_aldrich -> john aldrich
+        $str = str_replace('_', ' ', $str);
+
+        // john aldrich -> John Aldrich
+        $str = ucwords($str);
+
+        // John Aldrich -> JohnAldrich
+        $str = str_replace(' ', '', $str);
+
         return $str;
     }
 
