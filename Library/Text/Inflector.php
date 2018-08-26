@@ -97,7 +97,7 @@ class Inflector
      * @return  string
      */
     static function url($str) {
-        return str_replace(' ', '-', urldecode($str));
+        return str_replace(' ', '-', urlencode($str));
     }
 
     /**
