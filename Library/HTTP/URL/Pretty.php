@@ -123,6 +123,47 @@ class Pretty
         // Return test results
         return $test;
     }
+
+    /**
+     * Get route URL with parameters passed on.
+     * 
+     * @example
+     *      // Url: /categories/pages/{page}
+     *      $pretty->getUrl(['page' => 10]);
+     *      // Ouput: /categories/pages/10
+     * 
+     * @access  public
+     * @param   array   $data   URL parameters
+     * @return  string  Generated URL
+     * 
+     */
+    public function getUrl(array $data = []) {
+        // Guess the what URL should be looked like
+        $translation_guess = preg_replace(['/\[([^\[]+)\]/is', '/{(\w*?)}/is', '/{(\w*?):(:?.*?)}/is'], '{$1}', $this->_path);
+        
+        $keys = [];
+        preg_match_all('/{(\w*?)}/is', $translation_guess, $keys);
+
+        foreach ($keys[1] as $key) {
+            $translation_guess = str_replace('{'.$key.'}', isset($data[$key]) ? $data[$key] : 'null', $translation_guess);
+        }
+
+        $translation_guess;
+
+        // Get raw pattern from route
+        $translation = preg_replace(['/\//is', '/\[([^\[]+)\]/is', '/{(\w*?)}/is'],['\/', '(?:$1)?', '{$1:([^\/]+)}'], $this->_path);
+        $keyex = [];
+        preg_match_all('/{(\w*?):(.*?)}/', $translation, $keyex);
+        $groups = array_map(function($val) {
+            return '(' . trim(trim($val, ')'), '(') . ')';
+        }, $keyex[2]);
+        $translation = str_replace($keyex[0], $groups, $translation);
+
+        // Check if guess is valid
+        $test = preg_match("#^$translation$#is", $translation_guess, $vals);
+
+        return $test ? $translation_guess : '';
+    }
     
     /**
      * Get pattern from last test
