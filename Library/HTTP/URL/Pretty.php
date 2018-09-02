@@ -148,8 +148,6 @@ class Pretty
             $translation_guess = str_replace('{'.$key.'}', isset($data[$key]) ? $data[$key] : 'null', $translation_guess);
         }
 
-        $translation_guess;
-
         // Get raw pattern from route
         $translation = preg_replace(['/\//is', '/\[([^\[]+)\]/is', '/{(\w*?)}/is'],['\/', '(?:$1)?', '{$1:([^\/]+)}'], $this->_path);
         $keyex = [];
