@@ -14,6 +14,9 @@ use \Lollipop\Utils;
 /**
  * Lollipop Router Class
  *
+ * @todo
+ *      - Refactor
+ * 
  * @author      John Aldrich Bernardo
  * @email       4ldrich@protonmail.com
  * @package     Lollipop
@@ -31,7 +34,13 @@ class Router
      * @var     array       Stored callbacks
      *
      */
-    static private $_stored_routes = [];
+    static private $_stored_routes = [
+        'GET'       => [],
+        'POST'      => [],
+        'PUT'       => [],
+        'DELETE'    => [],
+        'PATCH'     => []
+    ];
 
     /**
      * @var     array       Stored names
@@ -154,7 +163,7 @@ class Router
     static public function all($path, $callback) {
         self::serve([
             'path' => $path,
-            'method' => [],
+            'method' => ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
             'callback' => $callback
         ]);
     }
@@ -222,16 +231,18 @@ class Router
         }
         
         // Report duplicated path
-        if (isset(self::$_stored_routes[$path])) {
-            throw new \Lollipop\Exception\HTTP\Router("Duplicate path: $path");
-        }
+        // if (isset(self::$_stored_routes[$path])) {
+        //     throw new \Lollipop\Exception\HTTP\Router("Duplicate path: $path");
+        // }
 
-        if (isset($route['name']) && isset(self::$_stored_names[$route['name']])) {
-            throw new \Lollipop\Exception\HTTP\Router('Duplicate name: ' . $route['name']);
-        }
+        // if (isset($route['name']) && isset(self::$_stored_names[$route['name']])) {
+        //     throw new \Lollipop\Exception\HTTP\Router('Duplicate name: ' . $route['name']);
+        // }
 
         // Store route
-        self::$_stored_routes[$path] = $route;
+        foreach ($route['method'] as $method) {
+            self::$_stored_routes[$method][$path] = $route;
+        }
 
         if (isset($route['name'])) {
             self::$_stored_names[$route['name']] = $path;
@@ -334,7 +345,7 @@ class Router
             self::$_stored_routes['404'] :
             self::_getDefaultPageNotFound();
         
-        foreach (self::$_stored_routes as $path => $route) {
+        foreach (self::$_stored_routes[$request->method()] as $path => $route) {
             // Callback for route
             $callback = Utils::fuse($route['callback'], function(){});
             // Check if request method matchess
@@ -346,11 +357,7 @@ class Router
                 $request_method = array_map('strtoupper', $request_method);
             }
 
-            // Check if request method matches the expected from route information
-            $rest_test = is_array($request_method) && 
-            (in_array($request->method(), $request_method) || count($request_method) === 0);
-            
-            if ($rest_test && $parser->test($path)) {
+            if ($parser->test($path)) {
                 // Set the route arguments based from the matches from the url
                 $route['arguments'] = $parser->getMatches();;
                 
