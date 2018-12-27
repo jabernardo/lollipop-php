@@ -4,7 +4,6 @@ namespace Lollipop\HTTP;
 
 defined('LOLLIPOP_BASE') or die('Lollipop wasn\'t loaded correctly.');
 
-use \Lollipop\App;
 use \Lollipop\Config;
 use \Lollipop\HTTP\Route;
 use \Lollipop\HTTP\Response;
@@ -169,30 +168,6 @@ class Router
     }
 
     /**
-     * Route prefix
-     * 
-     * @param   string  $prefix Prefix
-     * @param   array   $routes Routes to be registered
-     * @return  void
-     * @throws  \Lollipop\Exception\HTTP\Router Invalid route
-     * 
-     */
-    static public function prefix($prefix, array $routes) {
-        $prefix = rtrim($prefix, '/') . '/';
-
-        foreach ($routes as $route => $info) {
-            if (is_string($info) || is_callable($info)) {
-                self::all($prefix . $route, $info);
-            } else if (is_array($info)) {
-                $info['path'] = $prefix . $info['path'];
-                self::serve($info);
-            } else {
-                throw new \Lollipop\Exception\HTTP\Router('Invalid route');
-            }
-        }
-    }
-
-    /**
      * Serve route
      *
      * @param   array   $route  Route settings
@@ -318,10 +293,6 @@ class Router
      *
      */
     static public function dispatch($render = true, \Lollipop\HTTP\Request $response = null, \Lollipop\HTTP\Response $request = null) {
-        if (App::isRunning()) {
-            throw new \Lollipop\Exception\Runtime('Application is already running.');
-        }
-        
         if (is_null($response)) {
             // Create a new response
             $response = new Response();
@@ -413,7 +384,7 @@ class Router
         // Register dispatch function
         $auto_dispatch = !is_null(Config::get('router.auto_dispatch')) ?
             Config::get('router.auto_dispatch') :
-            false;
+            true;
         
         if (!self::$_dispatch_registered && $auto_dispatch) {
             // Make sure things ends here...
