@@ -312,26 +312,15 @@ class Router
         
         // Get 404 Page Not Found
         // Check if `404` route was declared
-        self::$_active_route = isset(self::$_stored_routes['404']) ?
-            self::$_stored_routes['404'] :
+        self::$_active_route = isset(self::$_stored_routes[$request->method()]['404']) ?
+            self::$_stored_routes[$request->method()]['404'] :
             self::_getDefaultPageNotFound();
         
         foreach (self::$_stored_routes[$request->method()] as $path => $route) {
-            // Callback for route
-            $callback = Utils::fuse($route['callback'], function(){});
-            // Check if request method matchess
-            $request_method = isset($route['method']) ? $route['method'] : [];
-            
-            if (is_array($request_method)) {
-                // Make sure all request methods are in uppercase
-                // Most of servers are configured with uppercase
-                $request_method = array_map('strtoupper', $request_method);
-            }
-
             if ($parser->test($path)) {
                 // Set the route arguments based from the matches from the url
                 $route['arguments'] = $parser->getMatches();;
-                
+
                 // Set route as active
                 self::$_active_route = $route;
             }
